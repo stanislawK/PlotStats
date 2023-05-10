@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import List, Optional, TYPE_CHECKING
 from sqlmodel import SQLModel, Field, Relationship
 
-from . import SearchEvent, SearchEventEstate
+from .search_event import SearchEvent, SearchEventEstate
 
 if TYPE_CHECKING:
     from . import Price
