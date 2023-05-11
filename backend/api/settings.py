@@ -1,12 +1,15 @@
-import os
+from pydantic import BaseSettings
 
-"""db config"""
-DB_HOST = os.environ["DB_HOST"]
-DB_PORT = os.environ["DB_PORT"]
-DB_NAME = os.environ["DB_NAME"]
-DB_USER = os.environ["DB_USER"]
-DB_PASSWORD = os.environ["DB_PASSWORD"]
+class Settings(BaseSettings):
+    debug: bool
+    db_host: str
+    db_port: int
+    db_name: str
+    db_user: str
+    db_pass: str
 
-SQLALCHEMY_DATABASE_URI = (
-    f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-)
+    @property
+    def db_uri(self) -> str:
+        return f"postgresql+asyncpg://{self.db_user}:{self.db_pass}@{self.db_host}:{self.db_port}/{self.db_name}"
+
+settings = Settings()

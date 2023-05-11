@@ -60,6 +60,3 @@ def test_search_event(_db_session: Session):
     assert from_db.search == search
     assert from_db.prices[0] == price
     assert from_db.estates[0] == estate
-
-
-

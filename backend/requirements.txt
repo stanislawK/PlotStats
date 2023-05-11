@@ -10,6 +10,8 @@ anyio==3.6.2
     # via
     #   starlette
     #   watchfiles
+asyncpg==0.27.0
+    # via -r requirements.in
 black==23.3.0
     # via -r requirements.in
 build==0.10.0

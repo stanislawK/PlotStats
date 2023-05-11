@@ -5,6 +5,7 @@ uvicorn[standard]
 pydantic[email]
 sqlalchemy
 sqlmodel
+asyncpg
 
 # dev-packages
 black==23.3.0
