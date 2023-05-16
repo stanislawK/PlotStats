@@ -31,6 +31,8 @@ exceptiongroup==1.1.1
     # via pytest
 execnet==1.9.0
     # via pytest-xdist
+faker==18.7.0
+    # via polyfactory
 fastapi==0.95.0
     # via
     #   -r requirements.in
@@ -81,6 +83,8 @@ platformdirs==3.2.0
     # via black
 pluggy==1.0.0
     # via pytest
+polyfactory==2.1.0
+    # via -r requirements.in
 pycodestyle==2.10.0
     # via flake8
 pydantic[email]==1.10.7
@@ -115,6 +119,7 @@ pytest-xdist==3.2.1
     # via -r requirements.in
 python-dateutil==2.8.2
     # via
+    #   faker
     #   freezegun
     #   strawberry-graphql
 python-dotenv==1.0.0
@@ -152,6 +157,7 @@ tomli==2.0.1
 typing-extensions==4.5.0
     # via
     #   alembic
+    #   polyfactory
     #   pydantic
     #   sqlalchemy2-stubs
     #   strawberry-graphql
