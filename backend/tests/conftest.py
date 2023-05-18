@@ -1,8 +1,10 @@
+from typing import Generator
+
 import pytest
 from sqlmodel import Session, SQLModel, create_engine
 from sqlmodel.pool import StaticPool
 
-examples = {
+examples: dict[str, dict[str, str | int]] = {
     "category": {"name": "Plot"},
     "search": {
         "location": "London",
@@ -32,7 +34,7 @@ examples = {
 
 
 @pytest.fixture
-def _db_session():
+def _db_session() -> Generator[Session, None, None]:
     """Create temporary database for tests"""
     engine = create_engine(
         "sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool

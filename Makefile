@@ -11,12 +11,14 @@ lint-backend:
 		isort .;\
 		black .;\
 		flake8 .;\
+		mypy . --strict;\
 	"
 lint-backend-locally:
 	cd ./backend;\
 	isort .;\
 	black .;\
 	flake8 .;\
+	mypy . --strict;\
 
 lint: lint-backend
 

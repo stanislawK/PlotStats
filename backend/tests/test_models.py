@@ -8,7 +8,7 @@ from api.models import Category, Estate, Price, Search, SearchEvent, User
 from .conftest import examples
 
 
-def test_category(_db_session: Session):
+def test_category(_db_session: Session) -> None:
     category = Category(**examples["category"])
     _db_session.add(category)
     _db_session.commit()
@@ -17,23 +17,26 @@ def test_category(_db_session: Session):
         assert getattr(from_db, key) == value
 
 
-def test_search(_db_session: Session):
+def test_search(_db_session: Session) -> None:
     category = Category(**examples["category"])
     search = Search(**examples["search"], category=category)
     _db_session.add(search)
     _db_session.commit()
-    from_db = _db_session.exec(select(Search)).first()
+    from_db: Search | None = _db_session.exec(select(Search)).first()
+    assert from_db is not None
     for key, value in examples["search"].items():
         assert getattr(from_db, key) == value
+    assert from_db.category is not None
     assert from_db.category.name == category.name
 
 
-def test_user(_db_session: Session):
+def test_user(_db_session: Session) -> None:
     search = Search(**examples["search"])
     user = User(**examples["user"], searches=[search])
     _db_session.add(user)
     _db_session.commit()
-    from_db = _db_session.exec(select(User)).first()
+    from_db: User | None = _db_session.exec(select(User)).first()
+    assert from_db is not None
     for key, value in examples["user"].items():
         assert getattr(from_db, key) == value
     assert from_db.searches[0] == search
@@ -55,14 +58,15 @@ def test_user(_db_session: Session):
             assert False, f"Unexpected exception type {exc_type}"
 
 
-def test_search_event(_db_session: Session):
+def test_search_event(_db_session: Session) -> None:
     estate = Estate(**examples["estate"])
     search = Search(**examples["search"])
     price = Price(**examples["price"], estate=estate)
     search_event = SearchEvent(estates=[estate], search=search, prices=[price])
     _db_session.add(search_event)
     _db_session.commit()
-    from_db = _db_session.exec(select(SearchEvent)).first()
+    from_db: SearchEvent | None = _db_session.exec(select(SearchEvent)).first()
+    assert from_db is not None
     assert from_db.search == search
     assert from_db.prices[0] == price
     assert from_db.estates[0] == estate

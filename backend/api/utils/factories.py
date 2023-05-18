@@ -1,4 +1,5 @@
 import asyncio
+from typing import cast
 
 from faker import Faker
 from polyfactory import Ignore, Use
@@ -16,7 +17,9 @@ class UserFactory(ModelFactory[User]):
 class CategoryFactory(ModelFactory[Category]):
     __model__ = Category
     id = Ignore()
-    name = Use(ModelFactory.__random__.choice, ["Plot", "Apartment"])
+    name: str = Use(
+        ModelFactory.__random__.choice, choices=["Plot", "Apartment"]
+    )  # type: ignore
 
 
 class SearchFactory(ModelFactory[Search]):
@@ -26,7 +29,7 @@ class SearchFactory(ModelFactory[Search]):
 
     @classmethod
     def location(cls) -> str:
-        return cls.__faker__.city()
+        return cast(str, cls.__faker__.city())
 
 
 class EstateFactory(ModelFactory[Estate]):
@@ -36,27 +39,27 @@ class EstateFactory(ModelFactory[Estate]):
 
     @classmethod
     def title(cls) -> str:
-        return cls.__faker__.sentence()
+        return cast(str, cls.__faker__.sentence())
 
     @classmethod
     def street(cls) -> str:
-        return cls.__faker__.street_address()
+        return cast(str, cls.__faker__.street_address())
 
     @classmethod
     def city(cls) -> str:
-        return cls.__faker__.city()
+        return cast(str, cls.__faker__.city())
 
     @classmethod
     def province(cls) -> str:
-        return cls.__faker__.administrative_unit()
+        return cast(str, cls.__faker__.administrative_unit())
 
     @classmethod
     def location(cls) -> str:
-        return cls.__faker__.address()
+        return cast(str, cls.__faker__.address())
 
     @classmethod
     def url(cls) -> str:
-        return cls.__faker__.url()
+        return cast(str, cls.__faker__.url())
 
 
 class PriceFactory(ModelFactory[Price]):
