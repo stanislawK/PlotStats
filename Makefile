@@ -12,6 +12,11 @@ lint-backend:
 		black .;\
 		flake8 .;\
 	"
+lint-backend-locally:
+	cd ./backend;\
+	isort .;\
+	black .;\
+	flake8 .;\
 
 lint: lint-backend
 
@@ -29,3 +34,6 @@ bash:
 setup:
 	git config blame.ignoreRevsFile .git-blame-ignore-revs
 	pre-commit install
+
+populate-db:
+	$(COMPOSE_DEV) run --rm backend python api/utils/factories.py

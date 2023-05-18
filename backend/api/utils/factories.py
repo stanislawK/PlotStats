@@ -1,18 +1,23 @@
 import asyncio
-from api.database import get_async_session
-from api.models import *
+
 from faker import Faker
-from polyfactory import Use, Ignore
+from polyfactory import Ignore, Use
 from polyfactory.factories.pydantic_factory import ModelFactory
+
+from api.database import get_async_session
+from api.models import Category, Estate, Price, Search, SearchEvent, User
+
 
 class UserFactory(ModelFactory[User]):
     __model__ = User
     id = Ignore()
 
+
 class CategoryFactory(ModelFactory[Category]):
     __model__ = Category
     id = Ignore()
     name = Use(ModelFactory.__random__.choice, ["Plot", "Apartment"])
+
 
 class SearchFactory(ModelFactory[Search]):
     __model__ = Search
@@ -53,6 +58,7 @@ class EstateFactory(ModelFactory[Estate]):
     def url(cls) -> str:
         return cls.__faker__.url()
 
+
 class PriceFactory(ModelFactory[Price]):
     __model__ = Price
     id = Ignore()
@@ -60,6 +66,7 @@ class PriceFactory(ModelFactory[Price]):
     price = Use(ModelFactory.__random__.randint, 50000, 500000)
     price_per_square_meter = Use(ModelFactory.__random__.randint, 50, 500)
     area_in_square_meters = Use(ModelFactory.__random__.randint, 200, 10000)
+
 
 class SearchEventFactory(ModelFactory[SearchEvent]):
     __model__ = SearchEvent
@@ -75,11 +82,14 @@ async def main() -> None:
         prices = []
         for estate in estates:
             prices.append(PriceFactory.build(estate=estate))
-        search_event = SearchEventFactory.build(estates=estates, search=searches[0], prices=prices)
+        search_event = SearchEventFactory.build(
+            estates=estates, search=searches[0], prices=prices
+        )
 
         session.add(user)
         session.add(search_event)
         await session.commit()
+
 
 if __name__ == "__main__":
     asyncio.run(main())

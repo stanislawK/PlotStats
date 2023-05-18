@@ -1,11 +1,13 @@
 from datetime import datetime
-from typing import List, Optional, TYPE_CHECKING
-from sqlmodel import SQLModel, Field, Relationship
+from typing import TYPE_CHECKING, List, Optional
+
+from sqlmodel import Field, Relationship, SQLModel
 
 from .search_event import SearchEvent, SearchEventEstate
 
 if TYPE_CHECKING:
     from . import Price
+
 
 class Estate(SQLModel, table=True):
     id: int = Field(primary_key=True)
@@ -16,5 +18,7 @@ class Estate(SQLModel, table=True):
     location: Optional[str] = Field(default=None)
     date_created: Optional[datetime] = Field(default=None)
     url: str
-    search_events: List[SearchEvent] = Relationship(back_populates="estates", link_model=SearchEventEstate)
+    search_events: List[SearchEvent] = Relationship(
+        back_populates="estates", link_model=SearchEventEstate
+    )
     prices: List["Price"] = Relationship(back_populates="estate")

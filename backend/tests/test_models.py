@@ -1,9 +1,12 @@
 import pytest
-from sqlmodel import Session, select
-from sqlalchemy.exc import IntegrityError
 from pydantic.error_wrappers import ValidationError
+from sqlalchemy.exc import IntegrityError
+from sqlmodel import Session, select
+
 from api.models import Category, Estate, Price, Search, SearchEvent, User
+
 from .conftest import examples
+
 
 def test_category(_db_session: Session):
     category = Category(**examples["category"])
@@ -12,6 +15,7 @@ def test_category(_db_session: Session):
     from_db = _db_session.exec(select(Category)).first()
     for key, value in examples["category"].items():
         assert getattr(from_db, key) == value
+
 
 def test_search(_db_session: Session):
     category = Category(**examples["category"])
@@ -22,6 +26,7 @@ def test_search(_db_session: Session):
     for key, value in examples["search"].items():
         assert getattr(from_db, key) == value
     assert from_db.category.name == category.name
+
 
 def test_user(_db_session: Session):
     search = Search(**examples["search"])
@@ -48,6 +53,7 @@ def test_user(_db_session: Session):
             assert "value is not a valid email address" in str(exc_info.value)
         else:
             assert False, f"Unexpected exception type {exc_type}"
+
 
 def test_search_event(_db_session: Session):
     estate = Estate(**examples["estate"])

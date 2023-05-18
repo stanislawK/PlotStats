@@ -1,8 +1,9 @@
-from typing import List, Optional, TYPE_CHECKING
-from sqlmodel import SQLModel, Field, Relationship
+from typing import TYPE_CHECKING, List, Optional
+
+from sqlmodel import Field, Relationship, SQLModel
 
 from . import Category
-from .user import User, SearchUser
+from .user import SearchUser, User
 
 if TYPE_CHECKING:
     from . import SearchEvent

@@ -1,10 +1,12 @@
-from typing import List, Optional, TYPE_CHECKING
-from sqlmodel import SQLModel, Field, Relationship
+from typing import TYPE_CHECKING, Optional
+
+from sqlmodel import Field, Relationship, SQLModel
 
 from .estate import Estate
 
 if TYPE_CHECKING:
     from . import SearchEvent
+
 
 class Price(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
