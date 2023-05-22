@@ -15,5 +15,5 @@ jobs:
       - run: pip install -r backend/requirements.txt
       - run: isort ./backend -c
       - run: black ./backend --check
-      - run: flake8 ./backend
+      - run: flake8 ./backend --max-line-length=88 --ignore=T484,T499,D100,D101,D102,D103,D104,D105,D107,W503 --exclude=__pycache__,*migrations*
       - run: mypy ./backend --strict
