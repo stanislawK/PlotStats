@@ -1,7 +1,5 @@
 name: Lint code
 
-on: [pull_request]
-
 defaults:
   run:
     working-directory: backend
@@ -9,7 +7,8 @@ defaults:
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
     - name: Install dependencies
       uses: ./.github/actions/setup-backend
     - run: isort . -c
