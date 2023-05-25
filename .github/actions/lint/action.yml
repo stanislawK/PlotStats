@@ -3,6 +3,7 @@ name: Lint code
 defaults:
   run:
     working-directory: backend
+    shell: bash
 
 runs:
   using: "composite"
