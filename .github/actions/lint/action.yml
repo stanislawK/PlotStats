@@ -15,5 +15,4 @@ runs:
     - run: isort . -c
     - run: black . --check
     - run: flake8 . --max-line-length=88 --ignore=T484,T499,D100,D101,D102,D103,D104,D105,D107,W503 --exclude=__pycache__,*migrations*,settings.py
-    - name: Running mypy
-      run: mypy . --strict
+    - run: mypy . --strict
