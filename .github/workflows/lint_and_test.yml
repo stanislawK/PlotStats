@@ -2,6 +2,10 @@ name: PR lint and test
 
 on: [pull_request]
 
+defaults:
+  run:
+    working-directory: backend
+
 jobs:
   lint:
     runs-on: ubuntu-latest
