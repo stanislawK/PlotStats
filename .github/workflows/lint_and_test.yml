@@ -2,11 +2,13 @@ name: PR lint and test
 
 on: [pull_request]
 
+defaults:
+  run:
+    working-directory: backend
+
 jobs:
   lintAndTest:
     runs-on: ubuntu-latest
-    env:
-      working-directory: ./backend
     steps:
       - uses: actions/checkout@v3
       - name: Setup Python
