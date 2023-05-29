@@ -3,7 +3,6 @@ name: Lint code
 defaults:
   run:
     working-directory: backend
-    shell: bash
 
 runs:
   using: "composite"
@@ -13,6 +12,10 @@ runs:
     - name: Install dependencies
       uses: ./.github/actions/setup-backend
     - run: isort . -c
+      shell: bash
     - run: black . --check
+      shell: bash
     - run: flake8 . --max-line-length=88 --ignore=T484,T499,D100,D101,D102,D103,D104,D105,D107,W503 --exclude=__pycache__,*migrations*,settings.py
+      shell: bash
     - run: mypy . --strict
+      shell: bash
