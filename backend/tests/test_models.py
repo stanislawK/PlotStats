@@ -3,7 +3,7 @@ from pydantic.error_wrappers import ValidationError
 from sqlalchemy.exc import IntegrityError
 from sqlmodel import Session, select
 
-from api.models import Category, Estate, Price, Search, SearchEvent, User
+from backend.api.models import Category, Estate, Price, Search, SearchEvent, User
 
 from .conftest import examples
 

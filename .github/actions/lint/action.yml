@@ -1,0 +1,25 @@
+name: Lint code
+
+defaults:
+  run:
+    working-directory: backend
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Install dependencies
+      uses: ./.github/actions/setup-backend
+    - run: isort . -c
+      shell: bash
+      working-directory: backend
+    - run: black . --check
+      shell: bash
+      working-directory: backend
+    - run: flake8 . --max-line-length=88 --ignore=T484,T499,D100,D101,D102,D103,D104,D105,D107,W503 --exclude=__pycache__,*migrations*,settings.py
+      shell: bash
+      working-directory: backend
+    - run: mypy . --strict
+      shell: bash
+      working-directory: backend
