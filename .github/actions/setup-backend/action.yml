@@ -15,3 +15,4 @@ runs:
     
     - name: Install requirements
       run: pip install -r ./backend/requirements.txt
+      shell: bash
