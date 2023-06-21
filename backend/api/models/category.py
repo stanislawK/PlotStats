@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, List, Optional
+from typing import TYPE_CHECKING
 
 from sqlmodel import Field, Relationship, SQLModel
 
@@ -7,6 +7,6 @@ if TYPE_CHECKING:
 
 
 class Category(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True)
     name: str = Field(index=True)
-    searches: List["Search"] = Relationship(back_populates="category")
+    searches: list["Search"] = Relationship(back_populates="category")

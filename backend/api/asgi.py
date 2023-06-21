@@ -1,4 +1,4 @@
-from app import create_app
-from settings import settings
+from api.app import create_app
+from api.settings import settings
 
 api = create_app(settings)

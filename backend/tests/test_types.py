@@ -1,5 +1,5 @@
-from backend.api.models.category import Category
-from backend.api.types.category import CategoryType
+from api.models.category import Category
+from api.types.category import CategoryType
 
 
 def test_category_type() -> None:

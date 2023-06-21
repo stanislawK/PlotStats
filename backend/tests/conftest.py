@@ -1,8 +1,18 @@
+import asyncio
+from contextlib import asynccontextmanager
 from typing import Generator
 
 import pytest
-from sqlmodel import Session, SQLModel, create_engine
+import pytest_asyncio
+from fastapi.testclient import TestClient
+from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy.orm import sessionmaker
+from sqlmodel import SQLModel
+from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlmodel.pool import StaticPool
+
+from backend.api.app import create_app
+from backend.api.database import get_async_session
 
 examples: dict[str, dict[str, str | int]] = {
     "category": {"name": "Plot"},
@@ -33,12 +43,59 @@ examples: dict[str, dict[str, str | int]] = {
 }
 
 
-@pytest.fixture
-def _db_session() -> Generator[Session, None, None]:
+# @pytest.fixture
+# def _db_session() -> Generator[Session, None, None]:
+#     """Create temporary database for tests"""
+#     engine = create_engine(
+#         "sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool
+#     )
+#     SQLModel.metadata.create_all(engine)
+#     with Session(engine) as session:
+#         yield session
+
+
+@pytest.fixture(autouse=True)
+def app():
+    _app = create_app()
+    yield _app
+
+
+@pytest_asyncio.fixture
+async def _db_session() -> Generator[AsyncSession, None, None]:
     """Create temporary database for tests"""
-    engine = create_engine(
-        "sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool
+    engine = create_async_engine(
+        "sqlite+aiosqlite://",
+        connect_args={"check_same_thread": False},
+        poolclass=StaticPool,
     )
-    SQLModel.metadata.create_all(engine)
-    with Session(engine) as session:
-        yield session
+    session = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
+    async with session() as s:
+        async with engine.begin() as conn:
+            await conn.run_sync(SQLModel.metadata.create_all)
+
+        yield s
+
+    async with engine.begin() as conn:
+        await conn.run_sync(SQLModel.metadata.drop_all)
+
+    await engine.dispose()
+
+
+@asynccontextmanager
+async def override_db(_db_session):
+    async with _db_session() as s:
+        yield s
+
+
+@pytest.fixture(autouse=True)
+def client(app) -> Generator[TestClient, None, None]:
+    app.dependency_overrides[get_async_session] = override_db
+    with TestClient(app) as client:
+        yield client
+
+
+@pytest.fixture(scope="session")
+def event_loop(request) -> Generator:  # noqa: indirect usage
+    loop = asyncio.get_event_loop_policy().new_event_loop()
+    yield loop
+    loop.close()
