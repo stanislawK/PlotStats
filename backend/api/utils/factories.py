@@ -18,7 +18,7 @@ class CategoryFactory(ModelFactory[Category]):
     __model__ = Category
     id = Ignore()
     name: str = Use(
-        ModelFactory.__random__.choice, choices=["Plot", "Apartment"]
+        ModelFactory.__random__.choice, ["Plot", "Apartment"]
     )  # type: ignore
 
 
@@ -77,7 +77,7 @@ class SearchEventFactory(ModelFactory[SearchEvent]):
 
 
 async def main() -> None:
-    async for session in get_async_session():
+    async with get_async_session() as session:
         category = CategoryFactory.build()
         searches = SearchFactory.batch(5, category=category)
         user = UserFactory.build(searches=searches)
