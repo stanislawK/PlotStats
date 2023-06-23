@@ -18,8 +18,8 @@ class CategoryFactory(ModelFactory[Category]):
     __model__ = Category
     id = Ignore()
     name: str = Use(
-        ModelFactory.__random__.choice, choices=["Plot", "Apartment"]
-    )  # type: ignore
+        ModelFactory.__random__.choice, ["Plot", "Apartment"]  # type: ignore
+    )
 
 
 class SearchFactory(ModelFactory[Search]):

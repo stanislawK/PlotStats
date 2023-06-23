@@ -1,28 +1,31 @@
 import pytest
 from pydantic.error_wrappers import ValidationError
 from sqlalchemy.exc import IntegrityError
-from sqlmodel import Session, select
+from sqlmodel import select
+from sqlmodel.ext.asyncio.session import AsyncSession
 
-from backend.api.models import Category, Estate, Price, Search, SearchEvent, User
+from api.models import Category, Estate, Price, Search, SearchEvent, User
 
 from .conftest import examples
 
 
-def test_category(_db_session: Session) -> None:
+@pytest.mark.asyncio
+async def test_category(_db_session: AsyncSession) -> None:
     category = Category(**examples["category"])
     _db_session.add(category)
-    _db_session.commit()
-    from_db = _db_session.exec(select(Category)).first()
+    await _db_session.commit()
+    from_db = (await _db_session.execute(select(Category))).scalar()
     for key, value in examples["category"].items():
         assert getattr(from_db, key) == value
 
 
-def test_search(_db_session: Session) -> None:
+@pytest.mark.asyncio
+async def test_search(_db_session: AsyncSession) -> None:
     category = Category(**examples["category"])
     search = Search(**examples["search"], category=category)
     _db_session.add(search)
-    _db_session.commit()
-    from_db: Search | None = _db_session.exec(select(Search)).first()
+    await _db_session.commit()
+    from_db: Search | None = (await _db_session.execute(select(Search))).scalar()
     assert from_db is not None
     for key, value in examples["search"].items():
         assert getattr(from_db, key) == value
@@ -30,12 +33,13 @@ def test_search(_db_session: Session) -> None:
     assert from_db.category.name == category.name
 
 
-def test_user(_db_session: Session) -> None:
+@pytest.mark.asyncio
+async def test_user(_db_session: AsyncSession) -> None:
     search = Search(**examples["search"])
     user = User(**examples["user"], searches=[search])
     _db_session.add(user)
-    _db_session.commit()
-    from_db: User | None = _db_session.exec(select(User)).first()
+    await _db_session.commit()
+    from_db: User | None = (await _db_session.execute(select(User))).scalar()
     assert from_db is not None
     for key, value in examples["user"].items():
         assert getattr(from_db, key) == value
@@ -48,7 +52,7 @@ def test_user(_db_session: Session) -> None:
             User.validate({"email": email})
             user = User(email=email)
             _db_session.add(user)
-            _db_session.commit()
+            await _db_session.commit()
         exc_type = type(exc_info.value)
         if exc_type == IntegrityError:
             assert "UNIQUE constraint failed" in str(exc_info.value)
@@ -58,14 +62,17 @@ def test_user(_db_session: Session) -> None:
             assert False, f"Unexpected exception type {exc_type}"
 
 
-def test_search_event(_db_session: Session) -> None:
+@pytest.mark.asyncio
+async def test_search_event(_db_session: AsyncSession) -> None:
     estate = Estate(**examples["estate"])
     search = Search(**examples["search"])
     price = Price(**examples["price"], estate=estate)
     search_event = SearchEvent(estates=[estate], search=search, prices=[price])
     _db_session.add(search_event)
-    _db_session.commit()
-    from_db: SearchEvent | None = _db_session.exec(select(SearchEvent)).first()
+    await _db_session.commit()
+    from_db: SearchEvent | None = (
+        await _db_session.execute(select(SearchEvent))
+    ).scalar()
     assert from_db is not None
     assert from_db.search == search
     assert from_db.prices[0] == price

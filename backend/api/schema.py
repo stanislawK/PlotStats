@@ -1,11 +1,11 @@
 import strawberry
 
+import api.schemas.category
+
 
 @strawberry.type
-class Query:
-    @strawberry.field
-    def hello(self) -> str:
-        return "Hello World!"
+class Query(api.schemas.category.Query):
+    pass
 
 
 schema = strawberry.Schema(Query)

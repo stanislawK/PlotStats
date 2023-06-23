@@ -1,8 +1,17 @@
-from typing import Generator
+from typing import AsyncIterator, Generator
 
+import httpx
 import pytest
-from sqlmodel import Session, SQLModel, create_engine
+import pytest_asyncio
+from fastapi import FastAPI
+from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy.orm import sessionmaker
+from sqlmodel import SQLModel
+from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlmodel.pool import StaticPool
+
+from api.database import get_async_session
+from api.main import create_app
 
 examples: dict[str, dict[str, str | int]] = {
     "category": {"name": "Plot"},
@@ -33,12 +42,41 @@ examples: dict[str, dict[str, str | int]] = {
 }
 
 
-@pytest.fixture
-def _db_session() -> Generator[Session, None, None]:
+@pytest.fixture(autouse=True)
+def app() -> Generator[FastAPI, None, None]:
+    _app = create_app()
+    yield _app
+
+
+@pytest_asyncio.fixture
+async def _db_session() -> AsyncIterator[AsyncSession]:
     """Create temporary database for tests"""
-    engine = create_engine(
-        "sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool
+    engine = create_async_engine(
+        "sqlite+aiosqlite://",
+        connect_args={"check_same_thread": False},
+        poolclass=StaticPool,
     )
-    SQLModel.metadata.create_all(engine)
-    with Session(engine) as session:
-        yield session
+    session = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
+    async with session() as s:
+        async with engine.begin() as conn:
+            await conn.run_sync(SQLModel.metadata.create_all)
+
+        yield s
+
+    async with engine.begin() as conn:
+        await conn.run_sync(SQLModel.metadata.drop_all)
+
+    await engine.dispose()
+
+
+@pytest.fixture
+async def client(
+    app: FastAPI, _db_session: AsyncSession
+) -> AsyncIterator[httpx.AsyncClient]:
+    async def override_db() -> AsyncIterator[AsyncSession]:
+        async with _db_session as s:
+            yield s
+
+    app.dependency_overrides[get_async_session] = override_db
+    async with httpx.AsyncClient(app=app, base_url="http://testserver") as client:
+        yield client
