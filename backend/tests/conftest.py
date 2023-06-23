@@ -1,18 +1,18 @@
 import asyncio
-from contextlib import asynccontextmanager
 from typing import Generator
 
 import pytest
 import pytest_asyncio
-from fastapi.testclient import TestClient
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.orm import sessionmaker
 from sqlmodel import SQLModel
 from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlmodel.pool import StaticPool
+import httpx
+from typing import AsyncIterator
 
-from backend.api.app import create_app
-from backend.api.database import get_async_session
+from api.main import create_app
+from api.database import get_async_session
 
 examples: dict[str, dict[str, str | int]] = {
     "category": {"name": "Plot"},
@@ -70,16 +70,14 @@ async def _db_session() -> Generator[AsyncSession, None, None]:
     await engine.dispose()
 
 
-@asynccontextmanager
-async def override_db(_db_session):
-    async with _db_session() as s:
-        yield s
+@pytest.fixture
+async def client(app, _db_session) -> AsyncIterator[httpx.AsyncClient]:
+    async def override_db():
+        async with _db_session as s:
+            yield s
 
-
-@pytest.fixture(autouse=True)
-def client(app) -> Generator[TestClient, None, None]:
     app.dependency_overrides[get_async_session] = override_db
-    with TestClient(app) as client:
+    async with httpx.AsyncClient(app=app, base_url="http://testserver") as client:
         yield client
 
 

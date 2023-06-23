@@ -13,7 +13,7 @@ from .conftest import examples
 async def test_category(_db_session: AsyncSession) -> None:
     category = Category(**examples["category"])
     _db_session.add(category)
-    _db_session.commit()
+    await _db_session.commit()
     from_db = (await _db_session.exec(select(Category))).first()
     for key, value in examples["category"].items():
         assert getattr(from_db, key) == value
@@ -24,7 +24,7 @@ async def test_search(_db_session: AsyncSession) -> None:
     category = Category(**examples["category"])
     search = Search(**examples["search"], category=category)
     _db_session.add(search)
-    _db_session.commit()
+    await _db_session.commit()
     from_db: Search | None = (await _db_session.exec(select(Search))).first()
     assert from_db is not None
     for key, value in examples["search"].items():
@@ -38,7 +38,7 @@ async def test_user(_db_session: AsyncSession) -> None:
     search = Search(**examples["search"])
     user = User(**examples["user"], searches=[search])
     _db_session.add(user)
-    _db_session.commit()
+    await _db_session.commit()
     from_db: User | None = (await _db_session.exec(select(User))).first()
     assert from_db is not None
     for key, value in examples["user"].items():
@@ -69,7 +69,7 @@ async def test_search_event(_db_session: AsyncSession) -> None:
     price = Price(**examples["price"], estate=estate)
     search_event = SearchEvent(estates=[estate], search=search, prices=[price])
     _db_session.add(search_event)
-    _db_session.commit()
+    await _db_session.commit()
     from_db: SearchEvent | None = (await _db_session.exec(select(SearchEvent))).first()
     assert from_db is not None
     assert from_db.search == search

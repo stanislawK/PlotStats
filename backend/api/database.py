@@ -10,7 +10,6 @@ from .settings import settings
 async_engine = create_async_engine(settings.db_uri, echo=True, future=True)
 
 
-@asynccontextmanager
 async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
     try:
         async_session = sessionmaker(
@@ -23,11 +22,3 @@ async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
         raise
     finally:
         await session.close()
-
-
-# async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
-#     async_session = sessionmaker(
-#         bind=async_engine, class_=AsyncSession, expire_on_commit=False
-#     )
-#     async with async_session() as session:
-#         yield session
