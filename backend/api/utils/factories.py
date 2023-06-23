@@ -18,8 +18,8 @@ class CategoryFactory(ModelFactory[Category]):
     __model__ = Category
     id = Ignore()
     name: str = Use(
-        ModelFactory.__random__.choice, ["Plot", "Apartment"]
-    )  # type: ignore
+        ModelFactory.__random__.choice, ["Plot", "Apartment"]  # type: ignore
+    )
 
 
 class SearchFactory(ModelFactory[Search]):
@@ -77,21 +77,21 @@ class SearchEventFactory(ModelFactory[SearchEvent]):
 
 
 async def main() -> None:
-    session = await anext(get_async_session())
-    category = CategoryFactory.build()
-    searches = SearchFactory.batch(5, category=category)
-    user = UserFactory.build(searches=searches)
-    estates = EstateFactory.batch(15)
-    prices = []
-    for estate in estates:
-        prices.append(PriceFactory.build(estate=estate))
-    search_event = SearchEventFactory.build(
-        estates=estates, search=searches[0], prices=prices
-    )
+    async for session in get_async_session():
+        category = CategoryFactory.build()
+        searches = SearchFactory.batch(5, category=category)
+        user = UserFactory.build(searches=searches)
+        estates = EstateFactory.batch(15)
+        prices = []
+        for estate in estates:
+            prices.append(PriceFactory.build(estate=estate))
+        search_event = SearchEventFactory.build(
+            estates=estates, search=searches[0], prices=prices
+        )
 
-    session.add(user)
-    session.add(search_event)
-    await session.commit()
+        session.add(user)
+        session.add(search_event)
+        await session.commit()
 
 
 if __name__ == "__main__":

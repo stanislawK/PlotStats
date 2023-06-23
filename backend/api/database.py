@@ -1,4 +1,3 @@
-from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 
 from sqlalchemy.ext.asyncio import create_async_engine
@@ -17,7 +16,7 @@ async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
         )
         async with async_session() as session:
             yield session
-    except:
+    except Exception:
         await session.rollback()
         raise
     finally:

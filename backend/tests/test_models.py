@@ -14,7 +14,7 @@ async def test_category(_db_session: AsyncSession) -> None:
     category = Category(**examples["category"])
     _db_session.add(category)
     await _db_session.commit()
-    from_db = (await _db_session.exec(select(Category))).first()
+    from_db = (await _db_session.execute(select(Category))).scalar()
     for key, value in examples["category"].items():
         assert getattr(from_db, key) == value
 
@@ -25,7 +25,7 @@ async def test_search(_db_session: AsyncSession) -> None:
     search = Search(**examples["search"], category=category)
     _db_session.add(search)
     await _db_session.commit()
-    from_db: Search | None = (await _db_session.exec(select(Search))).first()
+    from_db: Search | None = (await _db_session.execute(select(Search))).scalar()
     assert from_db is not None
     for key, value in examples["search"].items():
         assert getattr(from_db, key) == value
@@ -39,7 +39,7 @@ async def test_user(_db_session: AsyncSession) -> None:
     user = User(**examples["user"], searches=[search])
     _db_session.add(user)
     await _db_session.commit()
-    from_db: User | None = (await _db_session.exec(select(User))).first()
+    from_db: User | None = (await _db_session.execute(select(User))).scalar()
     assert from_db is not None
     for key, value in examples["user"].items():
         assert getattr(from_db, key) == value
@@ -70,7 +70,9 @@ async def test_search_event(_db_session: AsyncSession) -> None:
     search_event = SearchEvent(estates=[estate], search=search, prices=[price])
     _db_session.add(search_event)
     await _db_session.commit()
-    from_db: SearchEvent | None = (await _db_session.exec(select(SearchEvent))).first()
+    from_db: SearchEvent | None = (
+        await _db_session.execute(select(SearchEvent))
+    ).scalar()
     assert from_db is not None
     assert from_db.search == search
     assert from_db.prices[0] == price

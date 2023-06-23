@@ -1,18 +1,17 @@
-import asyncio
-from typing import Generator
+from typing import AsyncIterator, Generator
 
+import httpx
 import pytest
 import pytest_asyncio
+from fastapi import FastAPI
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.orm import sessionmaker
 from sqlmodel import SQLModel
 from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlmodel.pool import StaticPool
-import httpx
-from typing import AsyncIterator
 
-from api.main import create_app
 from api.database import get_async_session
+from api.main import create_app
 
 examples: dict[str, dict[str, str | int]] = {
     "category": {"name": "Plot"},
@@ -44,13 +43,13 @@ examples: dict[str, dict[str, str | int]] = {
 
 
 @pytest.fixture(autouse=True)
-def app():
+def app() -> Generator[FastAPI, None, None]:
     _app = create_app()
     yield _app
 
 
 @pytest_asyncio.fixture
-async def _db_session() -> Generator[AsyncSession, None, None]:
+async def _db_session() -> AsyncIterator[AsyncSession]:
     """Create temporary database for tests"""
     engine = create_async_engine(
         "sqlite+aiosqlite://",
@@ -71,18 +70,13 @@ async def _db_session() -> Generator[AsyncSession, None, None]:
 
 
 @pytest.fixture
-async def client(app, _db_session) -> AsyncIterator[httpx.AsyncClient]:
-    async def override_db():
+async def client(
+    app: FastAPI, _db_session: AsyncSession
+) -> AsyncIterator[httpx.AsyncClient]:
+    async def override_db() -> AsyncIterator[AsyncSession]:
         async with _db_session as s:
             yield s
 
     app.dependency_overrides[get_async_session] = override_db
     async with httpx.AsyncClient(app=app, base_url="http://testserver") as client:
         yield client
-
-
-@pytest.fixture(scope="session")
-def event_loop(request) -> Generator:  # noqa: indirect usage
-    loop = asyncio.get_event_loop_policy().new_event_loop()
-    yield loop
-    loop.close()

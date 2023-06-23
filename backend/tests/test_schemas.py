@@ -1,13 +1,16 @@
+import httpx
 import pytest
+from sqlmodel.ext.asyncio.session import AsyncSession
 
 from api.models import Category
-from api.schema import schema
 
 from .conftest import examples
 
 
 @pytest.mark.asyncio
-async def test_categories_query(client, _db_session) -> None:
+async def test_categories_query(
+    client: httpx.AsyncClient, _db_session: AsyncSession
+) -> None:
     category = Category(**examples["category"])
     _db_session.add(category)
     await _db_session.commit()
@@ -26,7 +29,9 @@ async def test_categories_query(client, _db_session) -> None:
 
 
 @pytest.mark.asyncio
-async def test_categories_query_fetch_id_should_fail(client, _db_session) -> None:
+async def test_categories_query_fetch_id_should_fail(
+    client: httpx.AsyncClient, _db_session: AsyncSession
+) -> None:
     category = Category(**examples["category"])
     _db_session.add(category)
     await _db_session.commit()
