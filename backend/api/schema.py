@@ -8,4 +8,9 @@ class Query(api.schemas.category.Query):
     pass
 
 
-schema = strawberry.Schema(Query)
+@strawberry.type
+class Mutation(api.schemas.category.Mutation):
+    pass
+
+
+schema = strawberry.Schema(Query, Mutation)
