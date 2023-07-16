@@ -8,5 +8,5 @@ def test_category_type() -> None:
     assert name_field.python_name == "name"
 
     instance = Category(name="Plot")
-    data = CategoryType.from_pydantic(instance)  # type: ignore
-    assert data.name == "Plot"
+    data = CategoryType.from_pydantic(instance)
+    assert data.name == "Plot"  # type: ignore

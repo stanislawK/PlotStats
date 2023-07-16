@@ -103,3 +103,94 @@ async def test_create_category_mutation_duplicate_should_produce_error(
     assert result["data"]["createCategory"]["__typename"] == "CategoryExistsError"
     err = CategoryExistsError()
     assert result["data"]["createCategory"]["message"] == err.message
+
+
+@pytest.mark.asyncio
+async def test_create_category_with_too_long_name_should_produce_error(
+    client: httpx.AsyncClient, _db_session: AsyncSession
+) -> None:
+    name = "a" * 33
+    mutation = f"""
+        mutation newCategory {{
+            createCategory(input: {{name: "{name}"}}) {{
+                __typename
+                ... on CategoryType {{
+                    name
+                }}
+                ... on CategoryExistsError {{
+                    message
+                }}
+                ... on InputValidationError {{
+                    message
+                }}
+            }}
+        }}
+    """
+    response = await client.post("/graphql", json={"query": mutation})
+    result = response.json()
+    assert result["data"]["createCategory"]["__typename"] == "InputValidationError"
+    assert (
+        "ensure this value has at most 32 characters"
+        in result["data"]["createCategory"]["message"]
+    )
+
+
+@pytest.mark.asyncio
+async def test_create_category_with_too_short_name_should_produce_error(
+    client: httpx.AsyncClient, _db_session: AsyncSession
+) -> None:
+    name = ""
+    mutation = f"""
+        mutation newCategory {{
+            createCategory(input: {{name: "{name}"}}) {{
+                __typename
+                ... on CategoryType {{
+                    name
+                }}
+                ... on CategoryExistsError {{
+                    message
+                }}
+                ... on InputValidationError {{
+                    message
+                }}
+            }}
+        }}
+    """
+    response = await client.post("/graphql", json={"query": mutation})
+    result = response.json()
+    assert result["data"]["createCategory"]["__typename"] == "InputValidationError"
+    assert (
+        "ensure this value has at least 1 characters "
+        in result["data"]["createCategory"]["message"]
+    )
+
+
+@pytest.mark.asyncio
+async def test_create_category_capitalize_name(
+    client: httpx.AsyncClient, _db_session: AsyncSession
+) -> None:
+    name = "test"
+    mutation = f"""
+        mutation newCategory {{
+            createCategory(input: {{name: "{name}"}}) {{
+                __typename
+                ... on CategoryType {{
+                    name
+                }}
+                ... on CategoryExistsError {{
+                    message
+                }}
+                ... on InputValidationError {{
+                    message
+                }}
+            }}
+        }}
+    """
+    response = await client.post("/graphql", json={"query": mutation})
+    result = response.json()
+    query = select(Category)
+    category_db = (await _db_session.execute(query)).scalar()
+    assert result["data"]["createCategory"]["__typename"] == "CategoryType"
+    assert result["data"]["createCategory"]["name"] == name.title()
+    assert category_db
+    assert category_db.name == name.title()

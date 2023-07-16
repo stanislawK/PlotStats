@@ -1,6 +1,7 @@
 from typing import Any
 
 import strawberry
+from pydantic import ValidationError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import select
 from strawberry.types import Info
@@ -13,6 +14,7 @@ from api.types.category import (
     CreateUserInput,
     convert_category_from_db,
 )
+from api.types.general import InputValidationError
 
 
 async def resolve_categories(root: Any, info: Info[Any, Any]) -> list[CategoryType]:
@@ -32,13 +34,18 @@ class Mutation:
     @strawberry.mutation
     async def create_category(
         self, info: Info[Any, Any], input: CreateUserInput
-    ) -> CreateCategoryResponse:  # type: ignore
+    ) -> CreateCategoryResponse:
+        # This will run pydantic's validation
+        try:
+            data = input.to_pydantic()
+        except ValidationError as error:
+            return InputValidationError(message=str(error))
         session: AsyncSession = info.context["session"]
         if (
-            await session.execute(select(Category).where(Category.name == input.name))
+            await session.execute(select(Category).where(Category.name == data.name))
         ).scalar():
             return CategoryExistsError()
-        category = Category(name=input.name)
+        category = Category(name=data.name)
         session.add(category)
         await session.commit()
         await session.refresh(category)
