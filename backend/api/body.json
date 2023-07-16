@@ -1,0 +1,4333 @@
+{
+    "pageProps": {
+      "lang": "pl",
+      "_sentryTraceData": "e8cac26642fa4f83b2684ee510016155-b0d391b406cf3373-0",
+      "_sentryBaggage": "sentry-environment=otodompl-prd,sentry-release=frontend-platform%402023-07-13_12.01-otodompl,sentry-transaction=%2Fpl%2Fwyniki%2F%5B%5B...searchingCriteria%5D%5D,sentry-public_key=a87771f160f04e019f364675c25c0588,sentry-trace_id=e8cac26642fa4f83b2684ee510016155,sentry-sample_rate=0",
+      "experiments": {
+        "REM-1531": null,
+        "REPM-914": null,
+        "SEE-1795": null,
+        "SEORE-343": "b",
+        "SFS-306": null,
+        "SFS-311": null,
+        "SFS-312": null,
+        "SFS-448": null,
+        "SFS-602": "b",
+        "SFS-603": "b",
+        "SMR-1927": "a",
+        "SMR-1951": null,
+        "SEE-1753": "b",
+        "SEE-1754": null,
+        "SEE-1742": null,
+        "SEE-1832": "a",
+        "EUADS-4306": "b",
+        "SEORE-207": "b",
+        "SMR-1912": "a"
+      },
+      "pageTitle": "Działki na sprzedaż: Gdańsk, Pomorskie | Otodom.pl",
+      "pageHeading": "Działki na sprzedaż: Gdańsk",
+      "pageDescription": "Zobacz 34 ogłoszeń o działki na sprzedaż w Gdańsk, pomorskie. Sprawdź na Otodom.pl!",
+      "tracking": {
+        "listing": {
+          "cat_l1_id": 401,
+          "cat_l1_name": "terrain",
+          "business": "sell",
+          "page_nb": 1,
+          "page_count": 1,
+          "result_count": 34,
+          "results_per_page": 36,
+          "listing_format": "list",
+          "ad_impressions": [
+            64317929,
+            64398840,
+            64327292,
+            64395997,
+            64033469,
+            64051051,
+            64376707,
+            63770585,
+            64353791,
+            64353789,
+            64340221,
+            64274301,
+            64251321,
+            63825889,
+            64216345,
+            64167697,
+            64108860,
+            64063162,
+            63467371,
+            63368600,
+            63368590,
+            62566149,
+            63369698,
+            63368900,
+            63028413,
+            63348030,
+            63028417,
+            63028416,
+            63028418,
+            63028415,
+            63028414,
+            62739420,
+            62237845,
+            62194695
+          ],
+          "selected_locations_id": [
+            "city:pomorskie/gdansk/gdansk/gdansk"
+          ],
+          "market": "primary or secondary",
+          "order_by": "default_desc",
+          "re_seller_type": "all"
+        },
+        "search": {
+          "selected_locations_id": [],
+          "from_price": 100000,
+          "to_price": 150000,
+          "from_surface": null,
+          "to_surface": null,
+          "floor": null,
+          "building_type": null,
+          "building_material": null,
+          "from_construction_year": null,
+          "to_construction_year": null,
+          "exclusive": null,
+          "ad_inserted_since": null,
+          "with_photo": null,
+          "with_movie": null,
+          "with_3d_view": null,
+          "with_ac": null,
+          "with_balcony": null,
+          "with_cellar": null,
+          "with_garage": null,
+          "with_garden": null,
+          "with_lift": null,
+          "with_maisonette": null,
+          "with_parking": null,
+          "with_separate_kitchen": null,
+          "with_storage_room": null,
+          "with_terrace": null,
+          "free_from": null,
+          "nb_people": null,
+          "non_smoker": null,
+          "from_price_m2": null,
+          "to_price_m2": null,
+          "roof_type": null,
+          "only_recreation": null,
+          "bungalow": null,
+          "remote_services": null,
+          "nb_rooms": null,
+          "from_nb_floors": null,
+          "to_nb_floors": null,
+          "only_private": null,
+          "only_open_day": null,
+          "ad_id_selected": null,
+          "from_land_area": null,
+          "to_land_area": null,
+          "media": null,
+          "heating": null,
+          "plot_type": null,
+          "vicinity_types": null,
+          "use_types": null,
+          "from_height": null,
+          "to_height": null,
+          "keyword": null,
+          "rent_to_students": null,
+          "structure": null,
+          "re_seller_type": "all",
+          "condition": null,
+          "divisioning_type": null,
+          "wc_count": null,
+          "main": null,
+          "infrastructure": null,
+          "commodity": null,
+          "surroundings": null,
+          "security": null,
+          "cat_l1_name": "terrain",
+          "cat_l1_id": 401,
+          "business": "sell",
+          "market": "primary or secondary"
+        }
+      },
+      "targeting": {
+        "Country": "Polska",
+        "env": "production",
+        "ProperType": "dzialka",
+        "OfferType": "sprzedaz",
+        "RegularUser": "n",
+        "City": [],
+        "Region": [],
+        "Subregion": [],
+        "PriceFrom": "100000",
+        "PriceTo": "150000",
+        "Dist": "10",
+        "Market": "ALL"
+      },
+      "schemaMarkupData": null,
+      "breadcrumbItems": null,
+      "data": {
+        "searchAds": {
+          "__typename": "FoundAds",
+          "locationsObjects": [
+            {
+              "id": "pomorskie/gdansk/gdansk/gdansk",
+              "detailedLevel": "city",
+              "name": "Gdańsk",
+              "fullName": "Gdańsk, pomorskie",
+              "parentIds": [
+                "pomorskie",
+                "pomorskie/gdansk",
+                "pomorskie/gdansk/gdansk"
+              ],
+              "__typename": "LocationObject"
+            }
+          ],
+          "recommendationLink": null,
+          "items": [
+            {
+              "id": 64317929,
+              "title": "Sprzedam działkę ROD Sopot",
+              "slug": "sprzedam-dzialke-rod-sopot-ID4lS1X",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": {
+                "mapDetails": {
+                  "radius": 0,
+                  "__typename": "MapDetails"
+                },
+                "address": {
+                  "street": {
+                    "name": "ul. Mikołaja Reja",
+                    "number": "",
+                    "__typename": "Street"
+                  },
+                  "city": {
+                    "name": "Sopot",
+                    "__typename": "City"
+                  },
+                  "province": {
+                    "name": "pomorskie",
+                    "__typename": "Province"
+                  },
+                  "__typename": "Address"
+                },
+                "reverseGeocoding": {
+                  "locations": [
+                    {
+                      "fullName": "pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Sopot, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Świemirowo, Sopot, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    }
+                  ],
+                  "__typename": "ReverseGeocoding"
+                },
+                "__typename": "LocationDetails"
+              },
+              "locationLabel": {
+                "locale": "uk",
+                "value": "ul. Mikołaja Reja, Sopot, pomorskie",
+                "__typename": "LocalizedString"
+              },
+              "images": [
+                {
+                  "medium": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6InVvZm4yM2YxM2F4OC1BUEwiLCJ3IjpbeyJmbiI6ImVudmZxcWUxYXk0azEtQVBMIiwicyI6IjE0IiwicCI6IjEwLC0xMCIsImEiOiIwIn1dfQ.NytRenTNS65-SfGmpMfJhNXLR6Cbg0rs1ZcdAcsNHHA/image;s=655x491;q=80",
+                  "large": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6InVvZm4yM2YxM2F4OC1BUEwiLCJ3IjpbeyJmbiI6ImVudmZxcWUxYXk0azEtQVBMIiwicyI6IjE0IiwicCI6IjEwLC0xMCIsImEiOiIwIn1dfQ.NytRenTNS65-SfGmpMfJhNXLR6Cbg0rs1ZcdAcsNHHA/image;s=1280x1024;q=80",
+                  "__typename": "AdImage"
+                }
+              ],
+              "isExclusiveOffer": false,
+              "isPrivateOwner": true,
+              "isPromoted": false,
+              "agency": null,
+              "openDays": "",
+              "totalPrice": {
+                "value": 105000,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "rentPrice": null,
+              "priceFromPerSquareMeter": null,
+              "pricePerSquareMeter": {
+                "value": 276,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "areaInSquareMeters": 380,
+              "terrainAreaInSquareMeters": null,
+              "roomsNumber": null,
+              "hidePrice": false,
+              "investmentState": null,
+              "investmentUnitsAreaInSquareMeters": null,
+              "peoplePerRoom": null,
+              "dateCreated": "2023-07-14 11:36:52",
+              "dateCreatedFirst": "2023-06-13 18:42:15",
+              "investmentUnitsNumber": null,
+              "investmentUnitsRoomsNumber": null,
+              "investmentEstimatedDelivery": null,
+              "pushedUpAt": "2023-07-14T11:36:52+02:00",
+              "seo": {
+                "details": {
+                  "description": "Odkryj tę działkę na sprzedaż w miejscowości Sopot, pomorskie, za cenę 105 000 zł. Ta działka na sprzedaż ma 380 m² powierzchni a Właściciel jako najważniejsze zalety działki wymienia: szambo, prąd, woda. Otodom 64317929",
+                  "__typename": "SeoDetails"
+                },
+                "__typename": "Seo"
+              },
+              "specialOffer": null,
+              "__typename": "AdvertListItem",
+              "totalPossibleImages": 19
+            },
+            {
+              "id": 64398840,
+              "title": "Działka Rod Z Murowanym Domem | Duża Działka",
+              "slug": "dzialka-rod-z-murowanym-domem-duza-dzialka-ID4md4Y",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": {
+                "mapDetails": {
+                  "radius": 0,
+                  "__typename": "MapDetails"
+                },
+                "address": {
+                  "street": {
+                    "name": "ul. Cedrowa",
+                    "number": "",
+                    "__typename": "Street"
+                  },
+                  "city": {
+                    "name": "Gdańsk",
+                    "__typename": "City"
+                  },
+                  "province": {
+                    "name": "pomorskie",
+                    "__typename": "Province"
+                  },
+                  "__typename": "Address"
+                },
+                "reverseGeocoding": {
+                  "locations": [
+                    {
+                      "fullName": "pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Gdańsk, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Ujeścisko-Łostowice, Gdańsk, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    }
+                  ],
+                  "__typename": "ReverseGeocoding"
+                },
+                "__typename": "LocationDetails"
+              },
+              "locationLabel": {
+                "locale": "uk",
+                "value": "Gdańsk, Ujeścisko-Łostowice, Ujeścisko, Cedrowa",
+                "__typename": "LocalizedString"
+              },
+              "images": [
+                {
+                  "medium": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6IjBzenMyMThoY2swaC1BUEwiLCJ3IjpbeyJmbiI6ImVudmZxcWUxYXk0azEtQVBMIiwicyI6IjE0IiwicCI6IjEwLC0xMCIsImEiOiIwIn1dfQ.Rzn75Z2usJla8vPskrJ-k74ccuSIJnAIj64zqrYvwi4/image;s=655x491;q=80",
+                  "large": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6IjBzenMyMThoY2swaC1BUEwiLCJ3IjpbeyJmbiI6ImVudmZxcWUxYXk0azEtQVBMIiwicyI6IjE0IiwicCI6IjEwLC0xMCIsImEiOiIwIn1dfQ.Rzn75Z2usJla8vPskrJ-k74ccuSIJnAIj64zqrYvwi4/image;s=1280x1024;q=80",
+                  "__typename": "AdImage"
+                }
+              ],
+              "isExclusiveOffer": false,
+              "isPrivateOwner": false,
+              "isPromoted": false,
+              "agency": {
+                "id": 2161452,
+                "name": "GALERIA NIERUCHOMOŚCI",
+                "slug": "galeria-nieruchomosci-ID2161452",
+                "imageUrl": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6InB3NXc2czgwdm5iMjMtQVBMIn0.qS4rw11mC3YtO2bpU6fVOXrnzS2ddsXKr4FmwkJrNrQ/image;s=800x600;q=90",
+                "type": "AGENCY",
+                "brandingVisible": true,
+                "highlightedAds": false,
+                "__typename": "AgencyListingDetails"
+              },
+              "openDays": "",
+              "totalPrice": {
+                "value": 120000,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "rentPrice": null,
+              "priceFromPerSquareMeter": null,
+              "pricePerSquareMeter": {
+                "value": 240,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "areaInSquareMeters": 500,
+              "terrainAreaInSquareMeters": null,
+              "roomsNumber": null,
+              "hidePrice": false,
+              "investmentState": null,
+              "investmentUnitsAreaInSquareMeters": null,
+              "peoplePerRoom": null,
+              "dateCreated": "2023-07-07 23:04:57",
+              "dateCreatedFirst": "2023-07-07 17:35:16",
+              "investmentUnitsNumber": null,
+              "investmentUnitsRoomsNumber": null,
+              "investmentEstimatedDelivery": null,
+              "pushedUpAt": "2023-07-07T23:04:57+02:00",
+              "seo": {
+                "details": {
+                  "description": "Odkryj tę działkę na sprzedaż w miejscowości Gdańsk, Ujeścisko-Łostowice, Ujeścisko, za cenę 120 000 zł. Ta działka na sprzedaż ma 500 m² powierzchni a Biuro nieruchomości GALERIA NIERUCHOMOŚCI jako najważniejsze zalety działki wymienia: szambo, prąd, woda. Otodom 64398840",
+                  "__typename": "SeoDetails"
+                },
+                "__typename": "Seo"
+              },
+              "specialOffer": null,
+              "__typename": "AdvertListItem",
+              "totalPossibleImages": 17
+            },
+            {
+              "id": 64327292,
+              "title": "Działka Rod Z Murowanym Domem | Sopot Reja",
+              "slug": "dzialka-rod-z-murowanym-domem-sopot-reja-ID4lUsY",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": {
+                "mapDetails": {
+                  "radius": 0,
+                  "__typename": "MapDetails"
+                },
+                "address": {
+                  "street": {
+                    "name": "ul. Mikołaja Reja",
+                    "number": "",
+                    "__typename": "Street"
+                  },
+                  "city": {
+                    "name": "Sopot",
+                    "__typename": "City"
+                  },
+                  "province": {
+                    "name": "pomorskie",
+                    "__typename": "Province"
+                  },
+                  "__typename": "Address"
+                },
+                "reverseGeocoding": {
+                  "locations": [
+                    {
+                      "fullName": "pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Sopot, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Świemirowo, Sopot, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    }
+                  ],
+                  "__typename": "ReverseGeocoding"
+                },
+                "__typename": "LocationDetails"
+              },
+              "locationLabel": {
+                "locale": "pl",
+                "value": "Mikołaja Reja, Sopot, pomorskie",
+                "__typename": "LocalizedString"
+              },
+              "images": [
+                {
+                  "medium": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6InUwNGJxN2RpazQ5OC1BUEwiLCJ3IjpbeyJmbiI6ImVudmZxcWUxYXk0azEtQVBMIiwicyI6IjE0IiwicCI6IjEwLC0xMCIsImEiOiIwIn1dfQ.SF7OD4VY2fch6hih9R1whc_1mfomovMBVchssH4vcQ0/image;s=655x491;q=80",
+                  "large": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6InUwNGJxN2RpazQ5OC1BUEwiLCJ3IjpbeyJmbiI6ImVudmZxcWUxYXk0azEtQVBMIiwicyI6IjE0IiwicCI6IjEwLC0xMCIsImEiOiIwIn1dfQ.SF7OD4VY2fch6hih9R1whc_1mfomovMBVchssH4vcQ0/image;s=1280x1024;q=80",
+                  "__typename": "AdImage"
+                }
+              ],
+              "isExclusiveOffer": false,
+              "isPrivateOwner": false,
+              "isPromoted": false,
+              "agency": {
+                "id": 2161452,
+                "name": "GALERIA NIERUCHOMOŚCI",
+                "slug": "galeria-nieruchomosci-ID2161452",
+                "imageUrl": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6InB3NXc2czgwdm5iMjMtQVBMIn0.qS4rw11mC3YtO2bpU6fVOXrnzS2ddsXKr4FmwkJrNrQ/image;s=800x600;q=90",
+                "type": "AGENCY",
+                "brandingVisible": true,
+                "highlightedAds": false,
+                "__typename": "AgencyListingDetails"
+              },
+              "openDays": "",
+              "totalPrice": {
+                "value": 115000,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "rentPrice": null,
+              "priceFromPerSquareMeter": null,
+              "pricePerSquareMeter": {
+                "value": 383,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "areaInSquareMeters": 300,
+              "terrainAreaInSquareMeters": null,
+              "roomsNumber": null,
+              "hidePrice": false,
+              "investmentState": null,
+              "investmentUnitsAreaInSquareMeters": null,
+              "peoplePerRoom": null,
+              "dateCreated": "2023-07-07 23:04:44",
+              "dateCreatedFirst": "2023-06-16 10:32:49",
+              "investmentUnitsNumber": null,
+              "investmentUnitsRoomsNumber": null,
+              "investmentEstimatedDelivery": null,
+              "pushedUpAt": "2023-07-07T23:04:45+02:00",
+              "seo": {
+                "details": {
+                  "description": "Odkryj tę działkę na sprzedaż w miejscowości Sopot, pomorskie, za cenę 115 000 zł. Ta działka na sprzedaż ma 300 m² powierzchni a Biuro nieruchomości GALERIA NIERUCHOMOŚCI jako najważniejsze zalety działki wymienia: prąd, las, utwardzony. Otodom 64327292",
+                  "__typename": "SeoDetails"
+                },
+                "__typename": "Seo"
+              },
+              "specialOffer": null,
+              "__typename": "AdvertListItem",
+              "totalPossibleImages": 11
+            },
+            {
+              "id": 64395997,
+              "title": "Sprzedam Działkę Rodo Wiczlino",
+              "slug": "sprzedam-dzialke-rodo-wiczlino-ID4mcl7",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": {
+                "mapDetails": {
+                  "radius": 0,
+                  "__typename": "MapDetails"
+                },
+                "address": {
+                  "street": {
+                    "name": "ul. Wiczlińska",
+                    "number": "",
+                    "__typename": "Street"
+                  },
+                  "city": {
+                    "name": "Gdynia",
+                    "__typename": "City"
+                  },
+                  "province": {
+                    "name": "pomorskie",
+                    "__typename": "Province"
+                  },
+                  "__typename": "Address"
+                },
+                "reverseGeocoding": {
+                  "locations": [
+                    {
+                      "fullName": "pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Gdynia, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Wiczlino, Gdynia, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    }
+                  ],
+                  "__typename": "ReverseGeocoding"
+                },
+                "__typename": "LocationDetails"
+              },
+              "locationLabel": {
+                "locale": "uk",
+                "value": "Gdynia, Chwarzno-Wiczlino, Wiczlino, Wiczlińska",
+                "__typename": "LocalizedString"
+              },
+              "images": [
+                {
+                  "medium": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6IjB3MHYzaGUwYjdscS1BUEwiLCJ3IjpbeyJmbiI6ImVudmZxcWUxYXk0azEtQVBMIiwicyI6IjE0IiwicCI6IjEwLC0xMCIsImEiOiIwIn1dfQ.v6aGU7VuVUPrA6G_yQS59Oyp-kdZt1UhZSkryZ_ENRg/image;s=655x491;q=80",
+                  "large": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6IjB3MHYzaGUwYjdscS1BUEwiLCJ3IjpbeyJmbiI6ImVudmZxcWUxYXk0azEtQVBMIiwicyI6IjE0IiwicCI6IjEwLC0xMCIsImEiOiIwIn1dfQ.v6aGU7VuVUPrA6G_yQS59Oyp-kdZt1UhZSkryZ_ENRg/image;s=1280x1024;q=80",
+                  "__typename": "AdImage"
+                }
+              ],
+              "isExclusiveOffer": false,
+              "isPrivateOwner": false,
+              "isPromoted": false,
+              "agency": {
+                "id": 514495,
+                "name": "PARTNERZY Nieruchomości sp. z o.o.",
+                "slug": "partnerzy-nieruchomosci-sp-z-o-o-ID514495",
+                "imageUrl": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6Inh3emZtODM1YzIzcTEtQVBMIn0.V7lqYqfCPMsP4fCH4gztSlSyiDOMWEUK11G9Nzt_fgo/image;s=800x600;q=90",
+                "type": "AGENCY",
+                "brandingVisible": true,
+                "highlightedAds": false,
+                "__typename": "AgencyListingDetails"
+              },
+              "openDays": "",
+              "totalPrice": {
+                "value": 105000,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "rentPrice": null,
+              "priceFromPerSquareMeter": null,
+              "pricePerSquareMeter": {
+                "value": 344,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "areaInSquareMeters": 305,
+              "terrainAreaInSquareMeters": null,
+              "roomsNumber": null,
+              "hidePrice": false,
+              "investmentState": null,
+              "investmentUnitsAreaInSquareMeters": null,
+              "peoplePerRoom": null,
+              "dateCreated": "2023-07-07 00:05:32",
+              "dateCreatedFirst": "2023-07-07 00:05:24",
+              "investmentUnitsNumber": null,
+              "investmentUnitsRoomsNumber": null,
+              "investmentEstimatedDelivery": null,
+              "pushedUpAt": null,
+              "seo": {
+                "details": {
+                  "description": "Odkryj tę działkę na sprzedaż w miejscowości Gdynia, Chwarzno-Wiczlino, Wiczlino, za cenę 105 000 zł. Ta działka na sprzedaż ma 305 m² powierzchni a Biuro nieruchomości PARTNERZY Nieruchomości sp. z o.o. jako najważniejsze zalety działki wymienia: prąd, woda, las. Otodom 64395997",
+                  "__typename": "SeoDetails"
+                },
+                "__typename": "Seo"
+              },
+              "specialOffer": null,
+              "__typename": "AdvertListItem",
+              "totalPossibleImages": 8
+            },
+            {
+              "id": 64033469,
+              "title": "Syndyk sprzeda udział 1/4 w nieruchomości",
+              "slug": "syndyk-sprzeda-udzial-1-4-w-nieruchomosci-ID4kG1T",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": {
+                "mapDetails": {
+                  "radius": 100,
+                  "__typename": "MapDetails"
+                },
+                "address": {
+                  "street": null,
+                  "city": {
+                    "name": "Pruszcz Gdański",
+                    "__typename": "City"
+                  },
+                  "province": {
+                    "name": "pomorskie",
+                    "__typename": "Province"
+                  },
+                  "__typename": "Address"
+                },
+                "reverseGeocoding": {
+                  "locations": [
+                    {
+                      "fullName": "pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "gdański, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Pruszcz Gdański, gdański, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    }
+                  ],
+                  "__typename": "ReverseGeocoding"
+                },
+                "__typename": "LocationDetails"
+              },
+              "locationLabel": {
+                "locale": "uk",
+                "value": "Pruszcz Gdański, pomorskie",
+                "__typename": "LocalizedString"
+              },
+              "images": [
+                {
+                  "medium": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6InRjcmNjbWVoa3hzdjItQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.bA4t14QEE9C2BB_am7WRUIt-zG7uKPSTGMI5jad5qsM/image;s=655x491;q=80",
+                  "large": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6InRjcmNjbWVoa3hzdjItQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.bA4t14QEE9C2BB_am7WRUIt-zG7uKPSTGMI5jad5qsM/image;s=1280x1024;q=80",
+                  "__typename": "AdImage"
+                }
+              ],
+              "isExclusiveOffer": false,
+              "isPrivateOwner": false,
+              "isPromoted": false,
+              "agency": null,
+              "openDays": "",
+              "totalPrice": {
+                "value": 113000,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "rentPrice": null,
+              "priceFromPerSquareMeter": null,
+              "pricePerSquareMeter": {
+                "value": 195,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "areaInSquareMeters": 579,
+              "terrainAreaInSquareMeters": null,
+              "roomsNumber": null,
+              "hidePrice": false,
+              "investmentState": null,
+              "investmentUnitsAreaInSquareMeters": null,
+              "peoplePerRoom": null,
+              "dateCreated": "2023-07-03 17:15:41",
+              "dateCreatedFirst": "2023-03-14 09:18:31",
+              "investmentUnitsNumber": null,
+              "investmentUnitsRoomsNumber": null,
+              "investmentEstimatedDelivery": null,
+              "pushedUpAt": "2023-05-23T17:11:12+02:00",
+              "seo": {
+                "details": {
+                  "description": "Odkryj tę działkę na sprzedaż w miejscowości Pruszcz Gdański, gdański, pomorskie, za cenę 113 000 zł. Ta działka na sprzedaż ma 579 m² powierzchni. Otodom 64033469",
+                  "__typename": "SeoDetails"
+                },
+                "__typename": "Seo"
+              },
+              "specialOffer": null,
+              "__typename": "AdvertListItem",
+              "totalPossibleImages": 12
+            },
+            {
+              "id": 64051051,
+              "title": "Piękna płaska działka budowlana 8km od morza",
+              "slug": "piekna-plaska-dzialka-budowlana-8km-od-morza-ID4kKBt",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": {
+                "mapDetails": {
+                  "radius": 0,
+                  "__typename": "MapDetails"
+                },
+                "address": {
+                  "street": {
+                    "name": "ul. Kasztanowa",
+                    "number": "",
+                    "__typename": "Street"
+                  },
+                  "city": {
+                    "name": "Drewnica",
+                    "__typename": "City"
+                  },
+                  "province": {
+                    "name": "pomorskie",
+                    "__typename": "Province"
+                  },
+                  "__typename": "Address"
+                },
+                "reverseGeocoding": {
+                  "locations": [
+                    {
+                      "fullName": "pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "nowodworski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Stegna, nowodworski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Drewnica, Stegna, nowodworski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    }
+                  ],
+                  "__typename": "ReverseGeocoding"
+                },
+                "__typename": "LocationDetails"
+              },
+              "locationLabel": {
+                "locale": "uk",
+                "value": "ul. Kasztanowa, Drewnica, pomorskie",
+                "__typename": "LocalizedString"
+              },
+              "images": [
+                {
+                  "medium": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6Imtwbm9xdzM1MG52MTEtQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.3cWdn3yL2rjR11SEo3lRVY2UHVkX1bkdeJVsm2DyvcA/image;s=655x491;q=80",
+                  "large": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6Imtwbm9xdzM1MG52MTEtQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.3cWdn3yL2rjR11SEo3lRVY2UHVkX1bkdeJVsm2DyvcA/image;s=1280x1024;q=80",
+                  "__typename": "AdImage"
+                }
+              ],
+              "isExclusiveOffer": false,
+              "isPrivateOwner": true,
+              "isPromoted": false,
+              "agency": null,
+              "openDays": "",
+              "totalPrice": {
+                "value": 140000,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "rentPrice": null,
+              "priceFromPerSquareMeter": null,
+              "pricePerSquareMeter": {
+                "value": 131,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "areaInSquareMeters": 1070,
+              "terrainAreaInSquareMeters": null,
+              "roomsNumber": null,
+              "hidePrice": false,
+              "investmentState": null,
+              "investmentUnitsAreaInSquareMeters": null,
+              "peoplePerRoom": null,
+              "dateCreated": "2023-07-02 12:20:54",
+              "dateCreatedFirst": "2023-03-19 12:13:35",
+              "investmentUnitsNumber": null,
+              "investmentUnitsRoomsNumber": null,
+              "investmentEstimatedDelivery": null,
+              "pushedUpAt": "2023-07-02T12:20:54+02:00",
+              "seo": {
+                "details": {
+                  "description": "Odkryj tę działkę na sprzedaż w miejscowości Drewnica, nowodworski, pomorskie, za cenę 140 000 zł. Ta działka na sprzedaż ma 1 070 m² powierzchni a Właściciel jako najważniejsze zalety działki wymienia: prąd, kanalizacja, telefon. Otodom 64051051",
+                  "__typename": "SeoDetails"
+                },
+                "__typename": "Seo"
+              },
+              "specialOffer": null,
+              "__typename": "AdvertListItem",
+              "totalPossibleImages": 5
+            },
+            {
+              "id": 64376707,
+              "title": "Łapino/Widlino nowe osiedle, blisko Gdańsk, cisza",
+              "slug": "lapino-widlino-nowe-osiedle-blisko-gdansk-cisza-ID4m7jZ",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": {
+                "mapDetails": {
+                  "radius": 0,
+                  "__typename": "MapDetails"
+                },
+                "address": {
+                  "street": null,
+                  "city": {
+                    "name": "Łapino Kartuskie",
+                    "__typename": "City"
+                  },
+                  "province": {
+                    "name": "pomorskie",
+                    "__typename": "Province"
+                  },
+                  "__typename": "Address"
+                },
+                "reverseGeocoding": {
+                  "locations": [
+                    {
+                      "fullName": "pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "kartuski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Żukowo, kartuski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Łapino Kartuskie, Żukowo, kartuski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    }
+                  ],
+                  "__typename": "ReverseGeocoding"
+                },
+                "__typename": "LocationDetails"
+              },
+              "locationLabel": {
+                "locale": "uk",
+                "value": "Łapino Kartuskie, pomorskie",
+                "__typename": "LocalizedString"
+              },
+              "images": [
+                {
+                  "medium": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6ImgwemdrZGV5OWhzNjMtQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.J7TaJTbE2UjPr2qVXSX7Q9n1caO3dinmtuWwc4H1z74/image;s=655x491;q=80",
+                  "large": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6ImgwemdrZGV5OWhzNjMtQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.J7TaJTbE2UjPr2qVXSX7Q9n1caO3dinmtuWwc4H1z74/image;s=1280x1024;q=80",
+                  "__typename": "AdImage"
+                }
+              ],
+              "isExclusiveOffer": false,
+              "isPrivateOwner": false,
+              "isPromoted": false,
+              "agency": {
+                "id": 8373402,
+                "name": "Prestige Apartments",
+                "slug": "prestige-apartments-ID8373402",
+                "imageUrl": null,
+                "type": "AGENCY",
+                "brandingVisible": true,
+                "highlightedAds": false,
+                "__typename": "AgencyListingDetails"
+              },
+              "openDays": "",
+              "totalPrice": {
+                "value": 147000,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "rentPrice": null,
+              "priceFromPerSquareMeter": null,
+              "pricePerSquareMeter": {
+                "value": 149,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "areaInSquareMeters": 986,
+              "terrainAreaInSquareMeters": null,
+              "roomsNumber": null,
+              "hidePrice": false,
+              "investmentState": null,
+              "investmentUnitsAreaInSquareMeters": null,
+              "peoplePerRoom": null,
+              "dateCreated": "2023-07-01 13:10:27",
+              "dateCreatedFirst": "2023-07-01 13:10:17",
+              "investmentUnitsNumber": null,
+              "investmentUnitsRoomsNumber": null,
+              "investmentEstimatedDelivery": null,
+              "pushedUpAt": null,
+              "seo": {
+                "details": {
+                  "description": "Odkryj tę działkę na sprzedaż w miejscowości Łapino Kartuskie, kartuski, pomorskie, za cenę 147 000 zł. Ta działka na sprzedaż ma 986 m² powierzchni a Biuro nieruchomości Prestige Apartments jako najważniejsze zalety działki wymienia: las, jezioro, otwarty teren. Otodom 64376707",
+                  "__typename": "SeoDetails"
+                },
+                "__typename": "Seo"
+              },
+              "specialOffer": null,
+              "__typename": "AdvertListItem",
+              "totalPossibleImages": 10
+            },
+            {
+              "id": 63770585,
+              "title": "\"Działki na Żuławach\"",
+              "slug": "dzialki-na-zulawach-ID4jzDP",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": {
+                "mapDetails": {
+                  "radius": 100,
+                  "__typename": "MapDetails"
+                },
+                "address": {
+                  "street": null,
+                  "city": {
+                    "name": "Bronowo",
+                    "__typename": "City"
+                  },
+                  "province": {
+                    "name": "pomorskie",
+                    "__typename": "Province"
+                  },
+                  "__typename": "Address"
+                },
+                "reverseGeocoding": {
+                  "locations": [
+                    {
+                      "fullName": "pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "nowodworski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Stegna, nowodworski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Bronowo, Stegna, nowodworski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    }
+                  ],
+                  "__typename": "ReverseGeocoding"
+                },
+                "__typename": "LocationDetails"
+              },
+              "locationLabel": {
+                "locale": "uk",
+                "value": "Bronowo, pomorskie",
+                "__typename": "LocalizedString"
+              },
+              "images": [
+                {
+                  "medium": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6ImtwczQ4eWc1dmV6ei1BUEwiLCJ3IjpbeyJmbiI6ImVudmZxcWUxYXk0azEtQVBMIiwicyI6IjE0IiwicCI6IjEwLC0xMCIsImEiOiIwIn1dfQ.67OSdeqjuc_zJguAIngGCeXaipZcPKhtc32L0GxH11Q/image;s=655x491;q=80",
+                  "large": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6ImtwczQ4eWc1dmV6ei1BUEwiLCJ3IjpbeyJmbiI6ImVudmZxcWUxYXk0azEtQVBMIiwicyI6IjE0IiwicCI6IjEwLC0xMCIsImEiOiIwIn1dfQ.67OSdeqjuc_zJguAIngGCeXaipZcPKhtc32L0GxH11Q/image;s=1280x1024;q=80",
+                  "__typename": "AdImage"
+                }
+              ],
+              "isExclusiveOffer": false,
+              "isPrivateOwner": false,
+              "isPromoted": false,
+              "agency": {
+                "id": 3646451,
+                "name": "Pomorskie Centrum Nieruchomości",
+                "slug": "pomorskie-centrum-nieruchomosci-ID3646451",
+                "imageUrl": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6InNsa2N2NnhpNWVqZC1BUEwifQ.Vjc8XS8XV45ZuGuOE-CIugx56pwUDj2AjhqK-a6pWeE/image;s=800x600;q=90",
+                "type": "AGENCY",
+                "brandingVisible": false,
+                "highlightedAds": false,
+                "__typename": "AgencyListingDetails"
+              },
+              "openDays": "",
+              "totalPrice": {
+                "value": 100000,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "rentPrice": null,
+              "priceFromPerSquareMeter": null,
+              "pricePerSquareMeter": {
+                "value": 81,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "areaInSquareMeters": 1242,
+              "terrainAreaInSquareMeters": null,
+              "roomsNumber": null,
+              "hidePrice": false,
+              "investmentState": null,
+              "investmentUnitsAreaInSquareMeters": null,
+              "peoplePerRoom": null,
+              "dateCreated": "2023-06-27 18:38:12",
+              "dateCreatedFirst": "2022-12-12 15:05:24",
+              "investmentUnitsNumber": null,
+              "investmentUnitsRoomsNumber": null,
+              "investmentEstimatedDelivery": null,
+              "pushedUpAt": "2023-06-27T18:38:12+02:00",
+              "seo": {
+                "details": {
+                  "description": "Odkryj tę działkę na sprzedaż w miejscowości Bronowo, nowodworski, pomorskie, za cenę 100 000 zł. Ta działka na sprzedaż ma 1 242 m² powierzchni a Biuro nieruchomości Pomorskie Centrum Nieruchomości jako najważniejsze zalety działki wymienia: woda. Otodom 63770585",
+                  "__typename": "SeoDetails"
+                },
+                "__typename": "Seo"
+              },
+              "specialOffer": null,
+              "__typename": "AdvertListItem",
+              "totalPossibleImages": 8
+            },
+            {
+              "id": 64353791,
+              "title": "Do Trójmiasta i nad morze dojazd w 30 minut !!!",
+              "slug": "do-trojmiasta-i-nad-morze-dojazd-w-30-minut-ID4m1mn",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": {
+                "mapDetails": {
+                  "radius": 0,
+                  "__typename": "MapDetails"
+                },
+                "address": {
+                  "street": {
+                    "name": "ul. Kwiatowa",
+                    "number": "",
+                    "__typename": "Street"
+                  },
+                  "city": {
+                    "name": "Ostaszewo",
+                    "__typename": "City"
+                  },
+                  "province": {
+                    "name": "pomorskie",
+                    "__typename": "Province"
+                  },
+                  "__typename": "Address"
+                },
+                "reverseGeocoding": {
+                  "locations": [
+                    {
+                      "fullName": "pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "nowodworski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Ostaszewo, nowodworski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Ostaszewo, Ostaszewo, nowodworski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    }
+                  ],
+                  "__typename": "ReverseGeocoding"
+                },
+                "__typename": "LocationDetails"
+              },
+              "locationLabel": {
+                "locale": "pl",
+                "value": "Kwiatowa, Ostaszewo, nowodworski, pomorskie",
+                "__typename": "LocalizedString"
+              },
+              "images": [
+                {
+                  "medium": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6ImZ3MWwyOXU0bW1lNC1BUEwiLCJ3IjpbeyJmbiI6ImVudmZxcWUxYXk0azEtQVBMIiwicyI6IjE0IiwicCI6IjEwLC0xMCIsImEiOiIwIn1dfQ.GKxGymR95ixovJ1-X4YzNml4a3JYEIr6QRe4EzPm3BA/image;s=655x491;q=80",
+                  "large": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6ImZ3MWwyOXU0bW1lNC1BUEwiLCJ3IjpbeyJmbiI6ImVudmZxcWUxYXk0azEtQVBMIiwicyI6IjE0IiwicCI6IjEwLC0xMCIsImEiOiIwIn1dfQ.GKxGymR95ixovJ1-X4YzNml4a3JYEIr6QRe4EzPm3BA/image;s=1280x1024;q=80",
+                  "__typename": "AdImage"
+                }
+              ],
+              "isExclusiveOffer": false,
+              "isPrivateOwner": false,
+              "isPromoted": false,
+              "agency": {
+                "id": 629621,
+                "name": "TYSZKIEWICZ NIERUCHOMOŚCI",
+                "slug": "tyszkiewicz-nieruchomosci-ID629621",
+                "imageUrl": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6ImkwOHE4MmViZGViYjEtQVBMIn0.Mw_PwJuiv1P7cXngvIWq_R3CYrl6fIlo0V2KAzTMB24/image;s=800x600;q=90",
+                "type": "AGENCY",
+                "brandingVisible": true,
+                "highlightedAds": false,
+                "__typename": "AgencyListingDetails"
+              },
+              "openDays": "",
+              "totalPrice": {
+                "value": 126692,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "rentPrice": null,
+              "priceFromPerSquareMeter": null,
+              "pricePerSquareMeter": {
+                "value": 116,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "areaInSquareMeters": 1095,
+              "terrainAreaInSquareMeters": null,
+              "roomsNumber": null,
+              "hidePrice": false,
+              "investmentState": null,
+              "investmentUnitsAreaInSquareMeters": null,
+              "peoplePerRoom": null,
+              "dateCreated": "2023-06-23 16:10:56",
+              "dateCreatedFirst": "2023-06-23 16:10:42",
+              "investmentUnitsNumber": null,
+              "investmentUnitsRoomsNumber": null,
+              "investmentEstimatedDelivery": null,
+              "pushedUpAt": null,
+              "seo": {
+                "details": {
+                  "description": "Odkryj tę działkę na sprzedaż w miejscowości Ostaszewo, nowodworski, pomorskie, za cenę 126 692 zł. Ta działka na sprzedaż ma 1 095 m² powierzchni a Biuro nieruchomości TYSZKIEWICZ NIERUCHOMOŚCI jako najważniejsze zalety działki wymienia: szambo, prąd, woda. Otodom 64353791",
+                  "__typename": "SeoDetails"
+                },
+                "__typename": "Seo"
+              },
+              "specialOffer": null,
+              "__typename": "AdvertListItem",
+              "totalPossibleImages": 19
+            },
+            {
+              "id": 64353789,
+              "title": "Do Trójmiasta i nad morze dojazd w 30 minut !!!",
+              "slug": "do-trojmiasta-i-nad-morze-dojazd-w-30-minut-ID4m1ml",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": {
+                "mapDetails": {
+                  "radius": 0,
+                  "__typename": "MapDetails"
+                },
+                "address": {
+                  "street": {
+                    "name": "ul. Kwiatowa",
+                    "number": "",
+                    "__typename": "Street"
+                  },
+                  "city": {
+                    "name": "Ostaszewo",
+                    "__typename": "City"
+                  },
+                  "province": {
+                    "name": "pomorskie",
+                    "__typename": "Province"
+                  },
+                  "__typename": "Address"
+                },
+                "reverseGeocoding": {
+                  "locations": [
+                    {
+                      "fullName": "pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "nowodworski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Ostaszewo, nowodworski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Ostaszewo, Ostaszewo, nowodworski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    }
+                  ],
+                  "__typename": "ReverseGeocoding"
+                },
+                "__typename": "LocationDetails"
+              },
+              "locationLabel": {
+                "locale": "uk",
+                "value": "Kwiatowa, Ostaszewo, pomorskie",
+                "__typename": "LocalizedString"
+              },
+              "images": [
+                {
+                  "medium": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6Im1oa2I4em9pYmtkYTMtQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.iQKxmDpeKeKFGeNPjSCpvDYsO_lIpbiTuIXEn-MJslQ/image;s=655x491;q=80",
+                  "large": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6Im1oa2I4em9pYmtkYTMtQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.iQKxmDpeKeKFGeNPjSCpvDYsO_lIpbiTuIXEn-MJslQ/image;s=1280x1024;q=80",
+                  "__typename": "AdImage"
+                }
+              ],
+              "isExclusiveOffer": false,
+              "isPrivateOwner": false,
+              "isPromoted": false,
+              "agency": {
+                "id": 629621,
+                "name": "TYSZKIEWICZ NIERUCHOMOŚCI",
+                "slug": "tyszkiewicz-nieruchomosci-ID629621",
+                "imageUrl": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6ImkwOHE4MmViZGViYjEtQVBMIn0.Mw_PwJuiv1P7cXngvIWq_R3CYrl6fIlo0V2KAzTMB24/image;s=800x600;q=90",
+                "type": "AGENCY",
+                "brandingVisible": true,
+                "highlightedAds": false,
+                "__typename": "AgencyListingDetails"
+              },
+              "openDays": "",
+              "totalPrice": {
+                "value": 129000,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "rentPrice": null,
+              "priceFromPerSquareMeter": null,
+              "pricePerSquareMeter": {
+                "value": 116,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "areaInSquareMeters": 1115,
+              "terrainAreaInSquareMeters": null,
+              "roomsNumber": null,
+              "hidePrice": false,
+              "investmentState": null,
+              "investmentUnitsAreaInSquareMeters": null,
+              "peoplePerRoom": null,
+              "dateCreated": "2023-06-23 16:10:48",
+              "dateCreatedFirst": "2023-06-23 16:10:35",
+              "investmentUnitsNumber": null,
+              "investmentUnitsRoomsNumber": null,
+              "investmentEstimatedDelivery": null,
+              "pushedUpAt": null,
+              "seo": {
+                "details": {
+                  "description": "Odkryj tę działkę na sprzedaż w miejscowości Ostaszewo, nowodworski, pomorskie, za cenę 129 000 zł. Ta działka na sprzedaż ma 1 115 m² powierzchni a Biuro nieruchomości TYSZKIEWICZ NIERUCHOMOŚCI jako najważniejsze zalety działki wymienia: szambo, prąd, woda. Otodom 64353789",
+                  "__typename": "SeoDetails"
+                },
+                "__typename": "Seo"
+              },
+              "specialOffer": null,
+              "__typename": "AdvertListItem",
+              "totalPossibleImages": 13
+            },
+            {
+              "id": 64340221,
+              "title": "Działka budowlana Przemysław gm Stegna 952m2 z MPZ",
+              "slug": "dzialka-budowlana-przemyslaw-gm-stegna-952m2-z-mpz-ID4lXPw",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": {
+                "mapDetails": {
+                  "radius": 0,
+                  "__typename": "MapDetails"
+                },
+                "address": {
+                  "street": null,
+                  "city": {
+                    "name": "Przemysław",
+                    "__typename": "City"
+                  },
+                  "province": {
+                    "name": "pomorskie",
+                    "__typename": "Province"
+                  },
+                  "__typename": "Address"
+                },
+                "reverseGeocoding": {
+                  "locations": [
+                    {
+                      "fullName": "pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "nowodworski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Stegna, nowodworski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Przemysław, Stegna, nowodworski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    }
+                  ],
+                  "__typename": "ReverseGeocoding"
+                },
+                "__typename": "LocationDetails"
+              },
+              "locationLabel": {
+                "locale": "uk",
+                "value": "Przemysław, pomorskie",
+                "__typename": "LocalizedString"
+              },
+              "images": [
+                {
+                  "medium": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6ImEwdHBrZm1oNGliaTMtQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.Vii7trVgBM1RjGjzyx-0FSgVUm0uXgEKcrKHunAgYDk/image;s=655x491;q=80",
+                  "large": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6ImEwdHBrZm1oNGliaTMtQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.Vii7trVgBM1RjGjzyx-0FSgVUm0uXgEKcrKHunAgYDk/image;s=1280x1024;q=80",
+                  "__typename": "AdImage"
+                }
+              ],
+              "isExclusiveOffer": false,
+              "isPrivateOwner": true,
+              "isPromoted": false,
+              "agency": null,
+              "openDays": "",
+              "totalPrice": {
+                "value": 150000,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "rentPrice": null,
+              "priceFromPerSquareMeter": null,
+              "pricePerSquareMeter": {
+                "value": 158,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "areaInSquareMeters": 952,
+              "terrainAreaInSquareMeters": null,
+              "roomsNumber": null,
+              "hidePrice": false,
+              "investmentState": null,
+              "investmentUnitsAreaInSquareMeters": null,
+              "peoplePerRoom": null,
+              "dateCreated": "2023-06-20 16:55:05",
+              "dateCreatedFirst": "2023-06-20 16:53:24",
+              "investmentUnitsNumber": null,
+              "investmentUnitsRoomsNumber": null,
+              "investmentEstimatedDelivery": null,
+              "pushedUpAt": null,
+              "seo": {
+                "details": {
+                  "description": "Odkryj tę działkę na sprzedaż w miejscowości Przemysław, nowodworski, pomorskie, za cenę 150 000 zł. Ta działka na sprzedaż ma 952 m² powierzchni a Właściciel jako najważniejsze zalety działki wymienia: prąd, kanalizacja, woda. Otodom 64340221",
+                  "__typename": "SeoDetails"
+                },
+                "__typename": "Seo"
+              },
+              "specialOffer": null,
+              "__typename": "AdvertListItem",
+              "totalPossibleImages": 3
+            },
+            {
+              "id": 64274301,
+              "title": "działka 492m2/ woda, prąd/ Studium mieszkaniowe",
+              "slug": "dzialka-492m2-woda-prad-studium-mieszkaniowe-ID4lGGh",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": {
+                "mapDetails": {
+                  "radius": 0,
+                  "__typename": "MapDetails"
+                },
+                "address": {
+                  "street": {
+                    "name": "ul. Krokusowa",
+                    "number": "",
+                    "__typename": "Street"
+                  },
+                  "city": {
+                    "name": "Gdańsk",
+                    "__typename": "City"
+                  },
+                  "province": {
+                    "name": "pomorskie",
+                    "__typename": "Province"
+                  },
+                  "__typename": "Address"
+                },
+                "reverseGeocoding": {
+                  "locations": [
+                    {
+                      "fullName": "pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Gdańsk, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Orunia-Św. Wojciech-Lipce, Gdańsk, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    }
+                  ],
+                  "__typename": "ReverseGeocoding"
+                },
+                "__typename": "LocationDetails"
+              },
+              "locationLabel": {
+                "locale": "uk",
+                "value": "Gdańsk, Orunia-Św. Wojciech-Lipce, Święty Wojciech, Krokusowa",
+                "__typename": "LocalizedString"
+              },
+              "images": [
+                {
+                  "medium": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6Imc3Y2UxaXBxNjE4azItQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.BcwlYPaNwmzTMGM-ZWLBfEnpMBstanH0QalrSUppmqM/image;s=655x491;q=80",
+                  "large": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6Imc3Y2UxaXBxNjE4azItQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.BcwlYPaNwmzTMGM-ZWLBfEnpMBstanH0QalrSUppmqM/image;s=1280x1024;q=80",
+                  "__typename": "AdImage"
+                }
+              ],
+              "isExclusiveOffer": false,
+              "isPrivateOwner": false,
+              "isPromoted": false,
+              "agency": {
+                "id": 514495,
+                "name": "PARTNERZY Nieruchomości sp. z o.o.",
+                "slug": "partnerzy-nieruchomosci-sp-z-o-o-ID514495",
+                "imageUrl": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6Inh3emZtODM1YzIzcTEtQVBMIn0.V7lqYqfCPMsP4fCH4gztSlSyiDOMWEUK11G9Nzt_fgo/image;s=800x600;q=90",
+                "type": "AGENCY",
+                "brandingVisible": true,
+                "highlightedAds": false,
+                "__typename": "AgencyListingDetails"
+              },
+              "openDays": "",
+              "totalPrice": {
+                "value": 100000,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "rentPrice": null,
+              "priceFromPerSquareMeter": null,
+              "pricePerSquareMeter": {
+                "value": 203,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "areaInSquareMeters": 492,
+              "terrainAreaInSquareMeters": null,
+              "roomsNumber": null,
+              "hidePrice": false,
+              "investmentState": null,
+              "investmentUnitsAreaInSquareMeters": null,
+              "peoplePerRoom": null,
+              "dateCreated": "2023-05-30 14:01:24",
+              "dateCreatedFirst": "2023-05-30 14:00:52",
+              "investmentUnitsNumber": null,
+              "investmentUnitsRoomsNumber": null,
+              "investmentEstimatedDelivery": null,
+              "pushedUpAt": null,
+              "seo": {
+                "details": {
+                  "description": "Odkryj tę działkę na sprzedaż w miejscowości Gdańsk, Orunia-Św. Wojciech-Lipce, Święty Wojciech, za cenę 100 000 zł. Ta działka na sprzedaż ma 492 m² powierzchni a Biuro nieruchomości PARTNERZY Nieruchomości sp. z o.o. jako najważniejsze zalety działki wymienia: prąd, woda, nieutwardzony. Otodom 64274301",
+                  "__typename": "SeoDetails"
+                },
+                "__typename": "Seo"
+              },
+              "specialOffer": null,
+              "__typename": "AdvertListItem",
+              "totalPossibleImages": 4
+            },
+            {
+              "id": 64251321,
+              "title": "Działka budowlana nad Wisłą - 20 minut do Gdańska",
+              "slug": "dzialka-budowlana-nad-wisla-20-minut-do-gdanska-ID4lAHD",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": {
+                "mapDetails": {
+                  "radius": 100,
+                  "__typename": "MapDetails"
+                },
+                "address": {
+                  "street": null,
+                  "city": {
+                    "name": "Ostaszewo",
+                    "__typename": "City"
+                  },
+                  "province": {
+                    "name": "pomorskie",
+                    "__typename": "Province"
+                  },
+                  "__typename": "Address"
+                },
+                "reverseGeocoding": {
+                  "locations": [
+                    {
+                      "fullName": "pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "nowodworski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Ostaszewo, nowodworski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Ostaszewo, Ostaszewo, nowodworski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    }
+                  ],
+                  "__typename": "ReverseGeocoding"
+                },
+                "__typename": "LocationDetails"
+              },
+              "locationLabel": {
+                "locale": "uk",
+                "value": "Ostaszewo, pomorskie",
+                "__typename": "LocalizedString"
+              },
+              "images": [
+                {
+                  "medium": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6ImpzN3FiMWdtZWxlbTEtQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.ugEYkyBQlrmuWgfuwyeatWdvlHqzKTwD65kW381ROZ4/image;s=655x491;q=80",
+                  "large": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6ImpzN3FiMWdtZWxlbTEtQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.ugEYkyBQlrmuWgfuwyeatWdvlHqzKTwD65kW381ROZ4/image;s=1280x1024;q=80",
+                  "__typename": "AdImage"
+                }
+              ],
+              "isExclusiveOffer": false,
+              "isPrivateOwner": false,
+              "isPromoted": false,
+              "agency": {
+                "id": 1360621,
+                "name": "MW Sp. z o.o.",
+                "slug": "mw-sp-z-o-o-ID1360621",
+                "imageUrl": null,
+                "type": "AGENCY",
+                "brandingVisible": true,
+                "highlightedAds": false,
+                "__typename": "AgencyListingDetails"
+              },
+              "openDays": "",
+              "totalPrice": {
+                "value": 120000,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "rentPrice": null,
+              "priceFromPerSquareMeter": null,
+              "pricePerSquareMeter": {
+                "value": 110,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "areaInSquareMeters": 1095,
+              "terrainAreaInSquareMeters": null,
+              "roomsNumber": null,
+              "hidePrice": false,
+              "investmentState": null,
+              "investmentUnitsAreaInSquareMeters": null,
+              "peoplePerRoom": null,
+              "dateCreated": "2023-05-23 12:12:12",
+              "dateCreatedFirst": "2023-05-23 12:12:04",
+              "investmentUnitsNumber": null,
+              "investmentUnitsRoomsNumber": null,
+              "investmentEstimatedDelivery": null,
+              "pushedUpAt": null,
+              "seo": {
+                "details": {
+                  "description": "Odkryj tę działkę na sprzedaż w miejscowości Ostaszewo, nowodworski, pomorskie, za cenę 120 000 zł. Ta działka na sprzedaż ma 1 095 m² powierzchni a Biuro nieruchomości MW Sp. z o.o. jako najważniejsze zalety działki wymienia: prąd, woda. Otodom 64251321",
+                  "__typename": "SeoDetails"
+                },
+                "__typename": "Seo"
+              },
+              "specialOffer": null,
+              "__typename": "AdvertListItem",
+              "totalPossibleImages": 4
+            },
+            {
+              "id": 63825889,
+              "title": "Działka Rod nad morzem",
+              "slug": "dzialka-rod-nad-morzem-ID4jO1P",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": {
+                "mapDetails": {
+                  "radius": 0,
+                  "__typename": "MapDetails"
+                },
+                "address": {
+                  "street": {
+                    "name": "ul. Jelitkowska",
+                    "number": "",
+                    "__typename": "Street"
+                  },
+                  "city": {
+                    "name": "Gdańsk",
+                    "__typename": "City"
+                  },
+                  "province": {
+                    "name": "pomorskie",
+                    "__typename": "Province"
+                  },
+                  "__typename": "Address"
+                },
+                "reverseGeocoding": {
+                  "locations": [
+                    {
+                      "fullName": "pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Gdańsk, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Jelitkowo, Gdańsk, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    }
+                  ],
+                  "__typename": "ReverseGeocoding"
+                },
+                "__typename": "LocationDetails"
+              },
+              "locationLabel": {
+                "locale": "uk",
+                "value": "Gdańsk, Jelitkowo, Jelitkowska",
+                "__typename": "LocalizedString"
+              },
+              "images": [
+                {
+                  "medium": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6InQydzg5dWtldjVxejEtQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0._KWEbyssg82751ZwtrSUVXjEHTo9ybZET416jMzWR8g/image;s=655x491;q=80",
+                  "large": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6InQydzg5dWtldjVxejEtQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0._KWEbyssg82751ZwtrSUVXjEHTo9ybZET416jMzWR8g/image;s=1280x1024;q=80",
+                  "__typename": "AdImage"
+                }
+              ],
+              "isExclusiveOffer": false,
+              "isPrivateOwner": false,
+              "isPromoted": false,
+              "agency": {
+                "id": 5138880,
+                "name": "Kamanhome Sp. z o.o.",
+                "slug": "kamanhome-sp-z-o-o-ID5138880",
+                "imageUrl": null,
+                "type": "AGENCY",
+                "brandingVisible": false,
+                "highlightedAds": false,
+                "__typename": "AgencyListingDetails"
+              },
+              "openDays": "",
+              "totalPrice": {
+                "value": 125000,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "rentPrice": null,
+              "priceFromPerSquareMeter": null,
+              "pricePerSquareMeter": {
+                "value": 274,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "areaInSquareMeters": 457,
+              "terrainAreaInSquareMeters": null,
+              "roomsNumber": null,
+              "hidePrice": false,
+              "investmentState": null,
+              "investmentUnitsAreaInSquareMeters": null,
+              "peoplePerRoom": null,
+              "dateCreated": "2023-05-20 10:53:55",
+              "dateCreatedFirst": "2023-01-06 20:35:19",
+              "investmentUnitsNumber": null,
+              "investmentUnitsRoomsNumber": null,
+              "investmentEstimatedDelivery": null,
+              "pushedUpAt": "2023-05-20T10:53:55+02:00",
+              "seo": {
+                "details": {
+                  "description": "Odkryj tę działkę na sprzedaż w miejscowości Gdańsk, Jelitkowo, za cenę 125 000 zł. Ta działka na sprzedaż ma 457 m² powierzchni a Biuro nieruchomości Kamanhome Sp. z o.o. jako najważniejsze zalety działki wymienia: prąd, woda. Otodom 63825889",
+                  "__typename": "SeoDetails"
+                },
+                "__typename": "Seo"
+              },
+              "specialOffer": null,
+              "__typename": "AdvertListItem",
+              "totalPossibleImages": 11
+            },
+            {
+              "id": 64216345,
+              "title": "Działki budowlane gmina Ostaszewo",
+              "slug": "dzialki-budowlane-gmina-ostaszewo-ID4lrBw",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": {
+                "mapDetails": {
+                  "radius": 0,
+                  "__typename": "MapDetails"
+                },
+                "address": {
+                  "street": null,
+                  "city": {
+                    "name": "Piaskowiec",
+                    "__typename": "City"
+                  },
+                  "province": {
+                    "name": "pomorskie",
+                    "__typename": "Province"
+                  },
+                  "__typename": "Address"
+                },
+                "reverseGeocoding": {
+                  "locations": [
+                    {
+                      "fullName": "pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "nowodworski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Ostaszewo, nowodworski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Ostaszewo, Ostaszewo, nowodworski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    }
+                  ],
+                  "__typename": "ReverseGeocoding"
+                },
+                "__typename": "LocationDetails"
+              },
+              "locationLabel": {
+                "locale": "uk",
+                "value": "Piaskowiec, pomorskie",
+                "__typename": "LocalizedString"
+              },
+              "images": [
+                {
+                  "medium": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6IjYwN3JiOGdmM3M1dDMtQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.EpY69NGJ_iNtH1nrSYdKJWGjrO-gxrdCsN7mA1Wqnwk/image;s=655x491;q=80",
+                  "large": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6IjYwN3JiOGdmM3M1dDMtQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.EpY69NGJ_iNtH1nrSYdKJWGjrO-gxrdCsN7mA1Wqnwk/image;s=1280x1024;q=80",
+                  "__typename": "AdImage"
+                }
+              ],
+              "isExclusiveOffer": false,
+              "isPrivateOwner": false,
+              "isPromoted": false,
+              "agency": {
+                "id": 655438,
+                "name": "Home Asset Sp. z o.o.",
+                "slug": "home-asset-sp-z-o-o-ID655438",
+                "imageUrl": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6ImVtcXFndGQ3NGIzby1BUEwifQ.2T8JOMXTCKk3X4S8t0nw690j-ag-KQQAi4Ud01dUTgY/image;s=800x600;q=90",
+                "type": "AGENCY",
+                "brandingVisible": true,
+                "highlightedAds": false,
+                "__typename": "AgencyListingDetails"
+              },
+              "openDays": "",
+              "totalPrice": {
+                "value": 130410,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "rentPrice": null,
+              "priceFromPerSquareMeter": null,
+              "pricePerSquareMeter": {
+                "value": 115,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "areaInSquareMeters": 1134,
+              "terrainAreaInSquareMeters": null,
+              "roomsNumber": null,
+              "hidePrice": false,
+              "investmentState": null,
+              "investmentUnitsAreaInSquareMeters": null,
+              "peoplePerRoom": null,
+              "dateCreated": "2023-05-12 12:21:43",
+              "dateCreatedFirst": "2023-05-12 12:21:11",
+              "investmentUnitsNumber": null,
+              "investmentUnitsRoomsNumber": null,
+              "investmentEstimatedDelivery": null,
+              "pushedUpAt": null,
+              "seo": {
+                "details": {
+                  "description": "Odkryj tę działkę na sprzedaż w miejscowości Piaskowiec, nowodworski, pomorskie, za cenę 130 410 zł. Ta działka na sprzedaż ma 1 134 m² powierzchni a Biuro nieruchomości Home Asset Sp. z o.o. jako najważniejsze zalety działki wymienia: prąd, telefon, woda. Otodom 64216345",
+                  "__typename": "SeoDetails"
+                },
+                "__typename": "Seo"
+              },
+              "specialOffer": null,
+              "__typename": "AdvertListItem",
+              "totalPossibleImages": 19
+            },
+            {
+              "id": 64167697,
+              "title": "Działki Widlino",
+              "slug": "dzialki-widlino-ID4leVR",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": {
+                "mapDetails": {
+                  "radius": 100,
+                  "__typename": "MapDetails"
+                },
+                "address": {
+                  "street": null,
+                  "city": {
+                    "name": "Widlino",
+                    "__typename": "City"
+                  },
+                  "province": {
+                    "name": "pomorskie",
+                    "__typename": "Province"
+                  },
+                  "__typename": "Address"
+                },
+                "reverseGeocoding": {
+                  "locations": [
+                    {
+                      "fullName": "pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "kartuski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Żukowo, kartuski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Łapino Kartuskie, Żukowo, kartuski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    }
+                  ],
+                  "__typename": "ReverseGeocoding"
+                },
+                "__typename": "LocationDetails"
+              },
+              "locationLabel": {
+                "locale": "uk",
+                "value": "Widlino, pomorskie",
+                "__typename": "LocalizedString"
+              },
+              "images": [
+                {
+                  "medium": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6InNkb2UwNWsxaXI2ZzEtQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.tBq2BctHZtvAW-65pfaAUP1oCuT5L0op-6OXRVCItik/image;s=655x491;q=80",
+                  "large": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6InNkb2UwNWsxaXI2ZzEtQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.tBq2BctHZtvAW-65pfaAUP1oCuT5L0op-6OXRVCItik/image;s=1280x1024;q=80",
+                  "__typename": "AdImage"
+                }
+              ],
+              "isExclusiveOffer": false,
+              "isPrivateOwner": false,
+              "isPromoted": false,
+              "agency": {
+                "id": 406625,
+                "name": "AKME Property",
+                "slug": "akme-property-ID406625",
+                "imageUrl": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6InJ6bjc2dGU5dmxuNTEtQVBMIn0.4O3_E2hVwgF62mUp1a8iFpNr2n1Fvb2gbTCc_ZTOdMU/image;s=800x600;q=90",
+                "type": "AGENCY",
+                "brandingVisible": true,
+                "highlightedAds": false,
+                "__typename": "AgencyListingDetails"
+              },
+              "openDays": "",
+              "totalPrice": {
+                "value": 150000,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "rentPrice": null,
+              "priceFromPerSquareMeter": null,
+              "pricePerSquareMeter": {
+                "value": 150,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "areaInSquareMeters": 1000,
+              "terrainAreaInSquareMeters": null,
+              "roomsNumber": null,
+              "hidePrice": false,
+              "investmentState": null,
+              "investmentUnitsAreaInSquareMeters": null,
+              "peoplePerRoom": null,
+              "dateCreated": "2023-04-25 13:05:59",
+              "dateCreatedFirst": "2023-04-25 13:05:51",
+              "investmentUnitsNumber": null,
+              "investmentUnitsRoomsNumber": null,
+              "investmentEstimatedDelivery": null,
+              "pushedUpAt": null,
+              "seo": {
+                "details": {
+                  "description": "Odkryj tę działkę na sprzedaż w miejscowości Widlino, kartuski, pomorskie, za cenę 150 000 zł. Ta działka na sprzedaż ma 1 000 m² powierzchni a Biuro nieruchomości AKME Property jako najważniejsze zalety działki wymienia: prąd, woda. Otodom 64167697",
+                  "__typename": "SeoDetails"
+                },
+                "__typename": "Seo"
+              },
+              "specialOffer": null,
+              "__typename": "AdvertListItem",
+              "totalPossibleImages": 7
+            },
+            {
+              "id": 64108860,
+              "title": "działka 1004m2 , brak planu zagospodarowania",
+              "slug": "dzialka-1004m2-brak-planu-zagospodarowania-ID4kZDS",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": {
+                "mapDetails": {
+                  "radius": 0,
+                  "__typename": "MapDetails"
+                },
+                "address": {
+                  "street": {
+                    "name": "ul. Gryfa Pomorskiego",
+                    "number": "",
+                    "__typename": "Street"
+                  },
+                  "city": {
+                    "name": "Miszewko",
+                    "__typename": "City"
+                  },
+                  "province": {
+                    "name": "pomorskie",
+                    "__typename": "Province"
+                  },
+                  "__typename": "Address"
+                },
+                "reverseGeocoding": {
+                  "locations": [
+                    {
+                      "fullName": "pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "kartuski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Żukowo, kartuski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Miszewko, Żukowo, kartuski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    }
+                  ],
+                  "__typename": "ReverseGeocoding"
+                },
+                "__typename": "LocationDetails"
+              },
+              "locationLabel": {
+                "locale": "uk",
+                "value": "Gryfa Pomorskiego, Miszewko, pomorskie",
+                "__typename": "LocalizedString"
+              },
+              "images": [
+                {
+                  "medium": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6IjU5MWZpemNlODN2bi1BUEwiLCJ3IjpbeyJmbiI6ImVudmZxcWUxYXk0azEtQVBMIiwicyI6IjE0IiwicCI6IjEwLC0xMCIsImEiOiIwIn1dfQ.S3XdoYoXZQVT2e0nbzScvrt_lYuTpL101gJDgsCS7Ps/image;s=655x491;q=80",
+                  "large": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6IjU5MWZpemNlODN2bi1BUEwiLCJ3IjpbeyJmbiI6ImVudmZxcWUxYXk0azEtQVBMIiwicyI6IjE0IiwicCI6IjEwLC0xMCIsImEiOiIwIn1dfQ.S3XdoYoXZQVT2e0nbzScvrt_lYuTpL101gJDgsCS7Ps/image;s=1280x1024;q=80",
+                  "__typename": "AdImage"
+                }
+              ],
+              "isExclusiveOffer": false,
+              "isPrivateOwner": false,
+              "isPromoted": false,
+              "agency": {
+                "id": 514495,
+                "name": "PARTNERZY Nieruchomości sp. z o.o.",
+                "slug": "partnerzy-nieruchomosci-sp-z-o-o-ID514495",
+                "imageUrl": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6Inh3emZtODM1YzIzcTEtQVBMIn0.V7lqYqfCPMsP4fCH4gztSlSyiDOMWEUK11G9Nzt_fgo/image;s=800x600;q=90",
+                "type": "AGENCY",
+                "brandingVisible": true,
+                "highlightedAds": false,
+                "__typename": "AgencyListingDetails"
+              },
+              "openDays": "",
+              "totalPrice": {
+                "value": 130000,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "rentPrice": null,
+              "priceFromPerSquareMeter": null,
+              "pricePerSquareMeter": {
+                "value": 129,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "areaInSquareMeters": 1004,
+              "terrainAreaInSquareMeters": null,
+              "roomsNumber": null,
+              "hidePrice": false,
+              "investmentState": null,
+              "investmentUnitsAreaInSquareMeters": null,
+              "peoplePerRoom": null,
+              "dateCreated": "2023-04-05 13:01:17",
+              "dateCreatedFirst": "2023-04-05 13:00:40",
+              "investmentUnitsNumber": null,
+              "investmentUnitsRoomsNumber": null,
+              "investmentEstimatedDelivery": null,
+              "pushedUpAt": null,
+              "seo": {
+                "details": {
+                  "description": "Odkryj tę działkę na sprzedaż w miejscowości Miszewko, kartuski, pomorskie, za cenę 130 000 zł. Ta działka na sprzedaż ma 1 004 m² powierzchni a Biuro nieruchomości PARTNERZY Nieruchomości sp. z o.o. jako najważniejsze zalety działki wymienia: nieutwardzony. Otodom 64108860",
+                  "__typename": "SeoDetails"
+                },
+                "__typename": "Seo"
+              },
+              "specialOffer": null,
+              "__typename": "AdvertListItem",
+              "totalPossibleImages": 2
+            },
+            {
+              "id": 64063162,
+              "title": "Okazja! -Działka budowlana w atrakcyjnej lokalizac",
+              "slug": "okazja-dzialka-budowlana-w-atrakcyjnej-lokalizac-ID4kNKO",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": {
+                "mapDetails": {
+                  "radius": 100,
+                  "__typename": "MapDetails"
+                },
+                "address": {
+                  "street": null,
+                  "city": {
+                    "name": "Przyjaźń",
+                    "__typename": "City"
+                  },
+                  "province": {
+                    "name": "pomorskie",
+                    "__typename": "Province"
+                  },
+                  "__typename": "Address"
+                },
+                "reverseGeocoding": {
+                  "locations": [
+                    {
+                      "fullName": "pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "kartuski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Żukowo, kartuski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Przyjaźń, Żukowo, kartuski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    }
+                  ],
+                  "__typename": "ReverseGeocoding"
+                },
+                "__typename": "LocationDetails"
+              },
+              "locationLabel": {
+                "locale": "uk",
+                "value": "Przyjaźń, pomorskie",
+                "__typename": "LocalizedString"
+              },
+              "images": [
+                {
+                  "medium": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6IjgwZDFubTRwOXptcjEtQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.VxAwDZJuwG0qLyPzCbYKC5-eSUNenBJMJtm7ldsVWu0/image;s=655x491;q=80",
+                  "large": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6IjgwZDFubTRwOXptcjEtQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.VxAwDZJuwG0qLyPzCbYKC5-eSUNenBJMJtm7ldsVWu0/image;s=1280x1024;q=80",
+                  "__typename": "AdImage"
+                }
+              ],
+              "isExclusiveOffer": false,
+              "isPrivateOwner": false,
+              "isPromoted": false,
+              "agency": {
+                "id": 759813,
+                "name": "City Nieruchomości",
+                "slug": "city-nieruchomosci-ID759813",
+                "imageUrl": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6Imh1YjNneTM3aGlyNzMtQVBMIn0.RHSR7Tsl8HKoVBgjQL0IHG-U_EmJJKhzqM6l4dcfMp0/image;s=800x600;q=90",
+                "type": "AGENCY",
+                "brandingVisible": true,
+                "highlightedAds": false,
+                "__typename": "AgencyListingDetails"
+              },
+              "openDays": "",
+              "totalPrice": {
+                "value": 119000,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "rentPrice": null,
+              "priceFromPerSquareMeter": null,
+              "pricePerSquareMeter": {
+                "value": 312,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "areaInSquareMeters": 382,
+              "terrainAreaInSquareMeters": null,
+              "roomsNumber": null,
+              "hidePrice": false,
+              "investmentState": null,
+              "investmentUnitsAreaInSquareMeters": null,
+              "peoplePerRoom": null,
+              "dateCreated": "2023-03-22 14:53:16",
+              "dateCreatedFirst": "2023-03-22 14:53:13",
+              "investmentUnitsNumber": null,
+              "investmentUnitsRoomsNumber": null,
+              "investmentEstimatedDelivery": null,
+              "pushedUpAt": null,
+              "seo": {
+                "details": {
+                  "description": "Odkryj tę działkę na sprzedaż w miejscowości Przyjaźń, kartuski, pomorskie, za cenę 119 000 zł. Ta działka na sprzedaż ma 382 m² powierzchni. Otodom 64063162",
+                  "__typename": "SeoDetails"
+                },
+                "__typename": "Seo"
+              },
+              "specialOffer": null,
+              "__typename": "AdvertListItem",
+              "totalPossibleImages": 1
+            },
+            {
+              "id": 63467371,
+              "title": "Domek z własnym ogródkiem blisko centrum Gdańska",
+              "slug": "domek-z-wlasnym-ogrodkiem-blisko-centrum-gdanska-ID4iiLh",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": {
+                "mapDetails": {
+                  "radius": 0,
+                  "__typename": "MapDetails"
+                },
+                "address": {
+                  "street": {
+                    "name": "ul. Tadeusza Jasińskiego",
+                    "number": "",
+                    "__typename": "Street"
+                  },
+                  "city": {
+                    "name": "Gdańsk",
+                    "__typename": "City"
+                  },
+                  "province": {
+                    "name": "pomorskie",
+                    "__typename": "Province"
+                  },
+                  "__typename": "Address"
+                },
+                "reverseGeocoding": {
+                  "locations": [
+                    {
+                      "fullName": "pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Gdańsk, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Jasień, Gdańsk, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    }
+                  ],
+                  "__typename": "ReverseGeocoding"
+                },
+                "__typename": "LocationDetails"
+              },
+              "locationLabel": {
+                "locale": "uk",
+                "value": "Gdańsk, Jasień, Tadeusza Jasińskiego",
+                "__typename": "LocalizedString"
+              },
+              "images": [
+                {
+                  "medium": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6ImU1dmkzMnBzem52dDEtQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.6we_-Zr7LljKJv77aF7FSI5XGD8Bc-C0e9-6WQGQH58/image;s=655x491;q=80",
+                  "large": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6ImU1dmkzMnBzem52dDEtQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.6we_-Zr7LljKJv77aF7FSI5XGD8Bc-C0e9-6WQGQH58/image;s=1280x1024;q=80",
+                  "__typename": "AdImage"
+                }
+              ],
+              "isExclusiveOffer": false,
+              "isPrivateOwner": false,
+              "isPromoted": false,
+              "agency": {
+                "id": 629621,
+                "name": "TYSZKIEWICZ NIERUCHOMOŚCI",
+                "slug": "tyszkiewicz-nieruchomosci-ID629621",
+                "imageUrl": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6ImkwOHE4MmViZGViYjEtQVBMIn0.Mw_PwJuiv1P7cXngvIWq_R3CYrl6fIlo0V2KAzTMB24/image;s=800x600;q=90",
+                "type": "AGENCY",
+                "brandingVisible": true,
+                "highlightedAds": false,
+                "__typename": "AgencyListingDetails"
+              },
+              "openDays": "",
+              "totalPrice": {
+                "value": 110000,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "rentPrice": null,
+              "priceFromPerSquareMeter": null,
+              "pricePerSquareMeter": {
+                "value": 324,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "areaInSquareMeters": 340,
+              "terrainAreaInSquareMeters": null,
+              "roomsNumber": null,
+              "hidePrice": false,
+              "investmentState": null,
+              "investmentUnitsAreaInSquareMeters": null,
+              "peoplePerRoom": null,
+              "dateCreated": "2022-09-05 13:11:58",
+              "dateCreatedFirst": "2022-09-05 13:11:45",
+              "investmentUnitsNumber": null,
+              "investmentUnitsRoomsNumber": null,
+              "investmentEstimatedDelivery": null,
+              "pushedUpAt": null,
+              "seo": {
+                "details": {
+                  "description": "Odkryj tę działkę na sprzedaż w miejscowości Gdańsk, Jasień, za cenę 110 000 zł. Ta działka na sprzedaż ma 340 m² powierzchni a Biuro nieruchomości TYSZKIEWICZ NIERUCHOMOŚCI jako najważniejsze zalety działki wymienia: prąd, woda, las. Otodom 63467371",
+                  "__typename": "SeoDetails"
+                },
+                "__typename": "Seo"
+              },
+              "specialOffer": null,
+              "__typename": "AdvertListItem",
+              "totalPossibleImages": 11
+            },
+            {
+              "id": 63368600,
+              "title": "Działka rolna - Żuławki 20 minut od Gdańska",
+              "slug": "dzialka-rolna-zulawki-20-minut-od-gdanska-ID4hT4c",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": {
+                "mapDetails": {
+                  "radius": 0,
+                  "__typename": "MapDetails"
+                },
+                "address": {
+                  "street": null,
+                  "city": {
+                    "name": "Żuławki",
+                    "__typename": "City"
+                  },
+                  "province": {
+                    "name": "pomorskie",
+                    "__typename": "Province"
+                  },
+                  "__typename": "Address"
+                },
+                "reverseGeocoding": {
+                  "locations": [
+                    {
+                      "fullName": "pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "nowodworski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Stegna, nowodworski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Żuławki, Stegna, nowodworski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    }
+                  ],
+                  "__typename": "ReverseGeocoding"
+                },
+                "__typename": "LocationDetails"
+              },
+              "locationLabel": {
+                "locale": "uk",
+                "value": "Żuławki, pomorskie",
+                "__typename": "LocalizedString"
+              },
+              "images": [
+                {
+                  "medium": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6InJkMzVwaDVycmt2NDEtQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.tC6vLh4MZJB-WJPCoJRLk4lxPspuHiGK7A9G2ueYPRc/image;s=655x491;q=80",
+                  "large": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6InJkMzVwaDVycmt2NDEtQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.tC6vLh4MZJB-WJPCoJRLk4lxPspuHiGK7A9G2ueYPRc/image;s=1280x1024;q=80",
+                  "__typename": "AdImage"
+                }
+              ],
+              "isExclusiveOffer": false,
+              "isPrivateOwner": false,
+              "isPromoted": false,
+              "agency": {
+                "id": 514495,
+                "name": "PARTNERZY Nieruchomości sp. z o.o.",
+                "slug": "partnerzy-nieruchomosci-sp-z-o-o-ID514495",
+                "imageUrl": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6Inh3emZtODM1YzIzcTEtQVBMIn0.V7lqYqfCPMsP4fCH4gztSlSyiDOMWEUK11G9Nzt_fgo/image;s=800x600;q=90",
+                "type": "AGENCY",
+                "brandingVisible": true,
+                "highlightedAds": false,
+                "__typename": "AgencyListingDetails"
+              },
+              "openDays": "",
+              "totalPrice": {
+                "value": 110000,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "rentPrice": null,
+              "priceFromPerSquareMeter": null,
+              "pricePerSquareMeter": {
+                "value": 37,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "areaInSquareMeters": 3000,
+              "terrainAreaInSquareMeters": null,
+              "roomsNumber": null,
+              "hidePrice": false,
+              "investmentState": null,
+              "investmentUnitsAreaInSquareMeters": null,
+              "peoplePerRoom": null,
+              "dateCreated": "2022-09-02 13:47:42",
+              "dateCreatedFirst": "2022-08-03 17:17:19",
+              "investmentUnitsNumber": null,
+              "investmentUnitsRoomsNumber": null,
+              "investmentEstimatedDelivery": null,
+              "pushedUpAt": "2022-09-02T13:47:42+02:00",
+              "seo": {
+                "details": {
+                  "description": "Odkryj tę działkę na sprzedaż w miejscowości Żuławki, nowodworski, pomorskie, za cenę 110 000 zł. Ta działka na sprzedaż ma 3 000 m² powierzchni a Biuro nieruchomości PARTNERZY Nieruchomości sp. z o.o. jako najważniejsze zalety działki wymienia: woda, nieutwardzony. Otodom 63368600",
+                  "__typename": "SeoDetails"
+                },
+                "__typename": "Seo"
+              },
+              "specialOffer": null,
+              "__typename": "AdvertListItem",
+              "totalPossibleImages": 7
+            },
+            {
+              "id": 63368590,
+              "title": "Działka rolna - Żuławki 20 minut od Gdańska",
+              "slug": "dzialka-rolna-zulawki-20-minut-od-gdanska-ID4hT42",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": {
+                "mapDetails": {
+                  "radius": 0,
+                  "__typename": "MapDetails"
+                },
+                "address": {
+                  "street": null,
+                  "city": {
+                    "name": "Żuławki",
+                    "__typename": "City"
+                  },
+                  "province": {
+                    "name": "pomorskie",
+                    "__typename": "Province"
+                  },
+                  "__typename": "Address"
+                },
+                "reverseGeocoding": {
+                  "locations": [
+                    {
+                      "fullName": "pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "nowodworski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Stegna, nowodworski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Żuławki, Stegna, nowodworski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    }
+                  ],
+                  "__typename": "ReverseGeocoding"
+                },
+                "__typename": "LocationDetails"
+              },
+              "locationLabel": {
+                "locale": "uk",
+                "value": "Żuławki, pomorskie",
+                "__typename": "LocalizedString"
+              },
+              "images": [
+                {
+                  "medium": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6IngxaWYwd3ZsM2F0cTMtQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.Bcc6PTTlzfyEaHPcLcsK218mKDMfyoN389KbO3IssT4/image;s=655x491;q=80",
+                  "large": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6IngxaWYwd3ZsM2F0cTMtQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.Bcc6PTTlzfyEaHPcLcsK218mKDMfyoN389KbO3IssT4/image;s=1280x1024;q=80",
+                  "__typename": "AdImage"
+                }
+              ],
+              "isExclusiveOffer": false,
+              "isPrivateOwner": false,
+              "isPromoted": false,
+              "agency": {
+                "id": 514495,
+                "name": "PARTNERZY Nieruchomości sp. z o.o.",
+                "slug": "partnerzy-nieruchomosci-sp-z-o-o-ID514495",
+                "imageUrl": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6Inh3emZtODM1YzIzcTEtQVBMIn0.V7lqYqfCPMsP4fCH4gztSlSyiDOMWEUK11G9Nzt_fgo/image;s=800x600;q=90",
+                "type": "AGENCY",
+                "brandingVisible": true,
+                "highlightedAds": false,
+                "__typename": "AgencyListingDetails"
+              },
+              "openDays": "",
+              "totalPrice": {
+                "value": 120000,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "rentPrice": null,
+              "priceFromPerSquareMeter": null,
+              "pricePerSquareMeter": {
+                "value": 40,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "areaInSquareMeters": 3000,
+              "terrainAreaInSquareMeters": null,
+              "roomsNumber": null,
+              "hidePrice": false,
+              "investmentState": null,
+              "investmentUnitsAreaInSquareMeters": null,
+              "peoplePerRoom": null,
+              "dateCreated": "2022-09-02 13:41:06",
+              "dateCreatedFirst": "2022-08-03 17:16:23",
+              "investmentUnitsNumber": null,
+              "investmentUnitsRoomsNumber": null,
+              "investmentEstimatedDelivery": null,
+              "pushedUpAt": "2022-09-02T13:41:07+02:00",
+              "seo": {
+                "details": {
+                  "description": "Odkryj tę działkę na sprzedaż w miejscowości Żuławki, nowodworski, pomorskie, za cenę 120 000 zł. Ta działka na sprzedaż ma 3 000 m² powierzchni a Biuro nieruchomości PARTNERZY Nieruchomości sp. z o.o. jako najważniejsze zalety działki wymienia: woda, nieutwardzony. Otodom 63368590",
+                  "__typename": "SeoDetails"
+                },
+                "__typename": "Seo"
+              },
+              "specialOffer": null,
+              "__typename": "AdvertListItem",
+              "totalPossibleImages": 10
+            },
+            {
+              "id": 62566149,
+              "title": "Otomino - pod zabudowę jednorodzinną",
+              "slug": "otomino-pod-zabudowe-jednorodzinna-ID4evjr",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": {
+                "mapDetails": {
+                  "radius": 0,
+                  "__typename": "MapDetails"
+                },
+                "address": {
+                  "street": null,
+                  "city": {
+                    "name": "Otomino",
+                    "__typename": "City"
+                  },
+                  "province": {
+                    "name": "pomorskie",
+                    "__typename": "Province"
+                  },
+                  "__typename": "Address"
+                },
+                "reverseGeocoding": {
+                  "locations": [
+                    {
+                      "fullName": "pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "kartuski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Żukowo, kartuski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Przyjaźń, Żukowo, kartuski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    }
+                  ],
+                  "__typename": "ReverseGeocoding"
+                },
+                "__typename": "LocationDetails"
+              },
+              "locationLabel": {
+                "locale": "pl",
+                "value": "Otomino, kartuski, pomorskie",
+                "__typename": "LocalizedString"
+              },
+              "images": [
+                {
+                  "medium": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6ImpleWJ5MjRnODNqNDItQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.kBkDDcyo1Kssb38jIdBukVbZEbY7bJl4D8-OzjPgoN8/image;s=655x491;q=80",
+                  "large": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6ImpleWJ5MjRnODNqNDItQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.kBkDDcyo1Kssb38jIdBukVbZEbY7bJl4D8-OzjPgoN8/image;s=1280x1024;q=80",
+                  "__typename": "AdImage"
+                }
+              ],
+              "isExclusiveOffer": false,
+              "isPrivateOwner": false,
+              "isPromoted": false,
+              "agency": {
+                "id": 629621,
+                "name": "TYSZKIEWICZ NIERUCHOMOŚCI",
+                "slug": "tyszkiewicz-nieruchomosci-ID629621",
+                "imageUrl": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6ImkwOHE4MmViZGViYjEtQVBMIn0.Mw_PwJuiv1P7cXngvIWq_R3CYrl6fIlo0V2KAzTMB24/image;s=800x600;q=90",
+                "type": "AGENCY",
+                "brandingVisible": true,
+                "highlightedAds": false,
+                "__typename": "AgencyListingDetails"
+              },
+              "openDays": "",
+              "totalPrice": {
+                "value": 140000,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "rentPrice": null,
+              "priceFromPerSquareMeter": null,
+              "pricePerSquareMeter": {
+                "value": 139,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "areaInSquareMeters": 1006,
+              "terrainAreaInSquareMeters": null,
+              "roomsNumber": null,
+              "hidePrice": false,
+              "investmentState": null,
+              "investmentUnitsAreaInSquareMeters": null,
+              "peoplePerRoom": null,
+              "dateCreated": "2022-08-26 12:33:13",
+              "dateCreatedFirst": "2021-12-08 17:10:27",
+              "investmentUnitsNumber": null,
+              "investmentUnitsRoomsNumber": null,
+              "investmentEstimatedDelivery": null,
+              "pushedUpAt": "2022-08-26T12:33:13+02:00",
+              "seo": {
+                "details": {
+                  "description": "Odkryj tę działkę na sprzedaż w miejscowości Otomino, kartuski, pomorskie, za cenę 140 000 zł. Ta działka na sprzedaż ma 1 006 m² powierzchni a Biuro nieruchomości TYSZKIEWICZ NIERUCHOMOŚCI jako najważniejsze zalety działki wymienia: prąd, nieutwardzony. Otodom 62566149",
+                  "__typename": "SeoDetails"
+                },
+                "__typename": "Seo"
+              },
+              "specialOffer": null,
+              "__typename": "AdvertListItem",
+              "totalPossibleImages": 14
+            },
+            {
+              "id": 63369698,
+              "title": "Malowniczo działka letniskowa z możliwością budowy",
+              "slug": "malowniczo-dzialka-letniskowa-z-mozliwoscia-budowy-ID4hTlU",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": {
+                "mapDetails": {
+                  "radius": 0,
+                  "__typename": "MapDetails"
+                },
+                "address": {
+                  "street": {
+                    "name": "ul. Jodłowska",
+                    "number": "",
+                    "__typename": "Street"
+                  },
+                  "city": {
+                    "name": "Marszewska Góra",
+                    "__typename": "City"
+                  },
+                  "province": {
+                    "name": "pomorskie",
+                    "__typename": "Province"
+                  },
+                  "__typename": "Address"
+                },
+                "reverseGeocoding": {
+                  "locations": [
+                    {
+                      "fullName": "pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "gdański, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Przywidz, gdański, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Marszewska Góra, Przywidz, gdański, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    }
+                  ],
+                  "__typename": "ReverseGeocoding"
+                },
+                "__typename": "LocationDetails"
+              },
+              "locationLabel": {
+                "locale": "uk",
+                "value": "Jodłowska, Marszewska Góra, pomorskie",
+                "__typename": "LocalizedString"
+              },
+              "images": [
+                {
+                  "medium": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6IjdkbWR2NGpvaGxncjMtQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.a6xPn-z_DyzzcngZwuB0y7CpgiRk_vJ8hMODZnpIRCA/image;s=655x491;q=80",
+                  "large": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6IjdkbWR2NGpvaGxncjMtQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.a6xPn-z_DyzzcngZwuB0y7CpgiRk_vJ8hMODZnpIRCA/image;s=1280x1024;q=80",
+                  "__typename": "AdImage"
+                }
+              ],
+              "isExclusiveOffer": false,
+              "isPrivateOwner": false,
+              "isPromoted": false,
+              "agency": {
+                "id": 514495,
+                "name": "PARTNERZY Nieruchomości sp. z o.o.",
+                "slug": "partnerzy-nieruchomosci-sp-z-o-o-ID514495",
+                "imageUrl": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6Inh3emZtODM1YzIzcTEtQVBMIn0.V7lqYqfCPMsP4fCH4gztSlSyiDOMWEUK11G9Nzt_fgo/image;s=800x600;q=90",
+                "type": "AGENCY",
+                "brandingVisible": true,
+                "highlightedAds": false,
+                "__typename": "AgencyListingDetails"
+              },
+              "openDays": "",
+              "totalPrice": {
+                "value": 150000,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "rentPrice": null,
+              "priceFromPerSquareMeter": null,
+              "pricePerSquareMeter": {
+                "value": 121,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "areaInSquareMeters": 1236,
+              "terrainAreaInSquareMeters": null,
+              "roomsNumber": null,
+              "hidePrice": false,
+              "investmentState": null,
+              "investmentUnitsAreaInSquareMeters": null,
+              "peoplePerRoom": null,
+              "dateCreated": "2022-08-03 20:15:20",
+              "dateCreatedFirst": "2022-08-03 20:14:57",
+              "investmentUnitsNumber": null,
+              "investmentUnitsRoomsNumber": null,
+              "investmentEstimatedDelivery": null,
+              "pushedUpAt": null,
+              "seo": {
+                "details": {
+                  "description": "Odkryj tę działkę na sprzedaż w miejscowości Marszewska Góra, gdański, pomorskie, za cenę 150 000 zł. Ta działka na sprzedaż ma 1 236 m² powierzchni. Otodom 63369698",
+                  "__typename": "SeoDetails"
+                },
+                "__typename": "Seo"
+              },
+              "specialOffer": null,
+              "__typename": "AdvertListItem",
+              "totalPossibleImages": 4
+            },
+            {
+              "id": 63368900,
+              "title": "5 minut spaceru do plaży w Jelitkowie",
+              "slug": "5-minut-spaceru-do-plazy-w-jelitkowie-ID4hT92",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": {
+                "mapDetails": {
+                  "radius": 0,
+                  "__typename": "MapDetails"
+                },
+                "address": {
+                  "street": {
+                    "name": "ul. Jelitkowska",
+                    "number": "",
+                    "__typename": "Street"
+                  },
+                  "city": {
+                    "name": "Gdańsk",
+                    "__typename": "City"
+                  },
+                  "province": {
+                    "name": "pomorskie",
+                    "__typename": "Province"
+                  },
+                  "__typename": "Address"
+                },
+                "reverseGeocoding": {
+                  "locations": [
+                    {
+                      "fullName": "pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Sopot, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Karlikowo, Sopot, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    }
+                  ],
+                  "__typename": "ReverseGeocoding"
+                },
+                "__typename": "LocationDetails"
+              },
+              "locationLabel": {
+                "locale": "uk",
+                "value": "Gdańsk, Jelitkowo, Jelitkowska",
+                "__typename": "LocalizedString"
+              },
+              "images": [
+                {
+                  "medium": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6InVvNWtkaXE3bHQ4MDMtQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.2Tu8qDmz7-Euqk0MWzezaJKzL5DUTxOuozc2r3L4kRU/image;s=655x491;q=80",
+                  "large": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6InVvNWtkaXE3bHQ4MDMtQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.2Tu8qDmz7-Euqk0MWzezaJKzL5DUTxOuozc2r3L4kRU/image;s=1280x1024;q=80",
+                  "__typename": "AdImage"
+                }
+              ],
+              "isExclusiveOffer": false,
+              "isPrivateOwner": false,
+              "isPromoted": false,
+              "agency": {
+                "id": 514495,
+                "name": "PARTNERZY Nieruchomości sp. z o.o.",
+                "slug": "partnerzy-nieruchomosci-sp-z-o-o-ID514495",
+                "imageUrl": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6Inh3emZtODM1YzIzcTEtQVBMIn0.V7lqYqfCPMsP4fCH4gztSlSyiDOMWEUK11G9Nzt_fgo/image;s=800x600;q=90",
+                "type": "AGENCY",
+                "brandingVisible": true,
+                "highlightedAds": false,
+                "__typename": "AgencyListingDetails"
+              },
+              "openDays": "",
+              "totalPrice": {
+                "value": 115000,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "rentPrice": null,
+              "priceFromPerSquareMeter": null,
+              "pricePerSquareMeter": {
+                "value": 411,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "areaInSquareMeters": 280,
+              "terrainAreaInSquareMeters": null,
+              "roomsNumber": null,
+              "hidePrice": false,
+              "investmentState": null,
+              "investmentUnitsAreaInSquareMeters": null,
+              "peoplePerRoom": null,
+              "dateCreated": "2022-08-03 18:49:59",
+              "dateCreatedFirst": "2022-08-03 18:49:46",
+              "investmentUnitsNumber": null,
+              "investmentUnitsRoomsNumber": null,
+              "investmentEstimatedDelivery": null,
+              "pushedUpAt": null,
+              "seo": {
+                "details": {
+                  "description": "Odkryj tę działkę na sprzedaż w miejscowości Gdańsk, Jelitkowo, za cenę 115 000 zł. Ta działka na sprzedaż ma 280 m² powierzchni a Biuro nieruchomości PARTNERZY Nieruchomości sp. z o.o. jako najważniejsze zalety działki wymienia: prąd, woda, asfaltowy. Otodom 63368900",
+                  "__typename": "SeoDetails"
+                },
+                "__typename": "Seo"
+              },
+              "specialOffer": null,
+              "__typename": "AdvertListItem",
+              "totalPossibleImages": 8
+            },
+            {
+              "id": 63028413,
+              "title": "Działka, 916 m², Żukczyn",
+              "slug": "dzialka-916-m-zukczyn-ID4gszj",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": {
+                "mapDetails": {
+                  "radius": 100,
+                  "__typename": "MapDetails"
+                },
+                "address": {
+                  "street": null,
+                  "city": {
+                    "name": "Żukczyn",
+                    "__typename": "City"
+                  },
+                  "province": {
+                    "name": "pomorskie",
+                    "__typename": "Province"
+                  },
+                  "__typename": "Address"
+                },
+                "reverseGeocoding": {
+                  "locations": [
+                    {
+                      "fullName": "pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "gdański, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Pruszcz Gdański - gmina wiejska, gdański, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Żukczyn, Pruszcz Gdański, gdański, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    }
+                  ],
+                  "__typename": "ReverseGeocoding"
+                },
+                "__typename": "LocationDetails"
+              },
+              "locationLabel": {
+                "locale": "uk",
+                "value": "Żukczyn, pomorskie",
+                "__typename": "LocalizedString"
+              },
+              "images": [
+                {
+                  "medium": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6ImQ2cDh6aXdoMzVuMDItQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.BzqqtNb35O7xrf6PtpIMSuB7LYinYgp7RGSM9I6wvZU/image;s=655x491;q=80",
+                  "large": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6ImQ2cDh6aXdoMzVuMDItQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.BzqqtNb35O7xrf6PtpIMSuB7LYinYgp7RGSM9I6wvZU/image;s=1280x1024;q=80",
+                  "__typename": "AdImage"
+                }
+              ],
+              "isExclusiveOffer": false,
+              "isPrivateOwner": false,
+              "isPromoted": false,
+              "agency": {
+                "id": 6183180,
+                "name": "WGN",
+                "slug": "wgn-ID6183180",
+                "imageUrl": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6ImFudnRhcHgzMGtjYjItQVBMIn0.V192Lhx7fkC-we2VNDkrfLTXpb903oak4MQMC-UoEdY/image;s=800x600;q=90",
+                "type": "AGENCY",
+                "brandingVisible": true,
+                "highlightedAds": false,
+                "__typename": "AgencyListingDetails"
+              },
+              "openDays": "",
+              "totalPrice": {
+                "value": 140148,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "rentPrice": null,
+              "priceFromPerSquareMeter": null,
+              "pricePerSquareMeter": {
+                "value": 153,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "areaInSquareMeters": 916,
+              "terrainAreaInSquareMeters": null,
+              "roomsNumber": null,
+              "hidePrice": false,
+              "investmentState": null,
+              "investmentUnitsAreaInSquareMeters": null,
+              "peoplePerRoom": null,
+              "dateCreated": "2022-07-28 18:59:27",
+              "dateCreatedFirst": "2022-04-28 10:12:09",
+              "investmentUnitsNumber": null,
+              "investmentUnitsRoomsNumber": null,
+              "investmentEstimatedDelivery": null,
+              "pushedUpAt": "2022-07-28T18:59:27+02:00",
+              "seo": {
+                "details": {
+                  "description": "Odkryj tę działkę na sprzedaż w miejscowości Żukczyn, gdański, pomorskie, za cenę 140 148 zł. Ta działka na sprzedaż ma 916 m² powierzchni a Biuro nieruchomości WGN jako najważniejsze zalety działki wymienia: prąd, gaz, kanalizacja. Otodom 63028413",
+                  "__typename": "SeoDetails"
+                },
+                "__typename": "Seo"
+              },
+              "specialOffer": null,
+              "__typename": "AdvertListItem",
+              "totalPossibleImages": 2
+            },
+            {
+              "id": 63348030,
+              "title": "Żukowo-działka w pierwszej linii jez. Głębokiego",
+              "slug": "zukowo-dzialka-w-pierwszej-linii-jez-glebokiego-ID4hNIq",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": {
+                "mapDetails": {
+                  "radius": 100,
+                  "__typename": "MapDetails"
+                },
+                "address": {
+                  "street": null,
+                  "city": {
+                    "name": "Żukowo",
+                    "__typename": "City"
+                  },
+                  "province": {
+                    "name": "pomorskie",
+                    "__typename": "Province"
+                  },
+                  "__typename": "Address"
+                },
+                "reverseGeocoding": {
+                  "locations": [
+                    {
+                      "fullName": "pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "kartuski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Żukowo, kartuski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Żukowo - miasto, Żukowo, kartuski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    }
+                  ],
+                  "__typename": "ReverseGeocoding"
+                },
+                "__typename": "LocationDetails"
+              },
+              "locationLabel": {
+                "locale": "uk",
+                "value": "Żukowo, pomorskie",
+                "__typename": "LocalizedString"
+              },
+              "images": [
+                {
+                  "medium": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6InV0ZXdraGpxYnJ2bC1BUEwiLCJ3IjpbeyJmbiI6ImVudmZxcWUxYXk0azEtQVBMIiwicyI6IjE0IiwicCI6IjEwLC0xMCIsImEiOiIwIn1dfQ.MoslYcnDw_NJWlPXEHavWyKvqleFGk5YU5g1VAIpJL0/image;s=655x491;q=80",
+                  "large": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6InV0ZXdraGpxYnJ2bC1BUEwiLCJ3IjpbeyJmbiI6ImVudmZxcWUxYXk0azEtQVBMIiwicyI6IjE0IiwicCI6IjEwLC0xMCIsImEiOiIwIn1dfQ.MoslYcnDw_NJWlPXEHavWyKvqleFGk5YU5g1VAIpJL0/image;s=1280x1024;q=80",
+                  "__typename": "AdImage"
+                }
+              ],
+              "isExclusiveOffer": false,
+              "isPrivateOwner": false,
+              "isPromoted": false,
+              "agency": {
+                "id": 90330,
+                "name": "HORYZONT NIERUCHOMOŚCI",
+                "slug": "horyzont-nieruchomosci-ID90330",
+                "imageUrl": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6Im9qN2N5eHFkaHY4Ni1BUEwifQ.g5viH0rY5lvKpdnVwp65UlYyCtQayDT4wbYa_KoPDNg/image;s=800x600;q=90",
+                "type": "AGENCY",
+                "brandingVisible": false,
+                "highlightedAds": false,
+                "__typename": "AgencyListingDetails"
+              },
+              "openDays": "",
+              "totalPrice": {
+                "value": 140000,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "rentPrice": null,
+              "priceFromPerSquareMeter": null,
+              "pricePerSquareMeter": {
+                "value": 159,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "areaInSquareMeters": 882,
+              "terrainAreaInSquareMeters": null,
+              "roomsNumber": null,
+              "hidePrice": false,
+              "investmentState": null,
+              "investmentUnitsAreaInSquareMeters": null,
+              "peoplePerRoom": null,
+              "dateCreated": "2022-07-28 15:50:12",
+              "dateCreatedFirst": "2022-07-28 15:50:06",
+              "investmentUnitsNumber": null,
+              "investmentUnitsRoomsNumber": null,
+              "investmentEstimatedDelivery": null,
+              "pushedUpAt": null,
+              "seo": {
+                "details": {
+                  "description": "Odkryj tę działkę na sprzedaż w miejscowości Żukowo, kartuski, pomorskie, za cenę 140 000 zł. Ta działka na sprzedaż ma 882 m² powierzchni a Biuro nieruchomości HORYZONT NIERUCHOMOŚCI jako najważniejsze zalety działki wymienia: prąd, utwardzony. Otodom 63348030",
+                  "__typename": "SeoDetails"
+                },
+                "__typename": "Seo"
+              },
+              "specialOffer": null,
+              "__typename": "AdvertListItem",
+              "totalPossibleImages": 9
+            },
+            {
+              "id": 63028417,
+              "title": "Działka, 512 m², Żukczyn",
+              "slug": "dzialka-512-m-zukczyn-ID4gszn",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": {
+                "mapDetails": {
+                  "radius": 100,
+                  "__typename": "MapDetails"
+                },
+                "address": {
+                  "street": null,
+                  "city": {
+                    "name": "Żukczyn",
+                    "__typename": "City"
+                  },
+                  "province": {
+                    "name": "pomorskie",
+                    "__typename": "Province"
+                  },
+                  "__typename": "Address"
+                },
+                "reverseGeocoding": {
+                  "locations": [
+                    {
+                      "fullName": "pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "gdański, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Pruszcz Gdański - gmina wiejska, gdański, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Żukczyn, Pruszcz Gdański, gdański, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    }
+                  ],
+                  "__typename": "ReverseGeocoding"
+                },
+                "__typename": "LocationDetails"
+              },
+              "locationLabel": {
+                "locale": "pl",
+                "value": "Żukczyn, gdański, pomorskie",
+                "__typename": "LocalizedString"
+              },
+              "images": [
+                {
+                  "medium": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6ImNiZ29vcTZ6ZnBkeTItQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0._g9O4fW1hbXIRjO-WjMamzlSgBDGOkNNEOEvLwAV2Ws/image;s=655x491;q=80",
+                  "large": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6ImNiZ29vcTZ6ZnBkeTItQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0._g9O4fW1hbXIRjO-WjMamzlSgBDGOkNNEOEvLwAV2Ws/image;s=1280x1024;q=80",
+                  "__typename": "AdImage"
+                }
+              ],
+              "isExclusiveOffer": false,
+              "isPrivateOwner": false,
+              "isPromoted": false,
+              "agency": {
+                "id": 6183180,
+                "name": "WGN",
+                "slug": "wgn-ID6183180",
+                "imageUrl": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6ImFudnRhcHgzMGtjYjItQVBMIn0.V192Lhx7fkC-we2VNDkrfLTXpb903oak4MQMC-UoEdY/image;s=800x600;q=90",
+                "type": "AGENCY",
+                "brandingVisible": true,
+                "highlightedAds": false,
+                "__typename": "AgencyListingDetails"
+              },
+              "openDays": "",
+              "totalPrice": {
+                "value": 108800,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "rentPrice": null,
+              "priceFromPerSquareMeter": null,
+              "pricePerSquareMeter": {
+                "value": 213,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "areaInSquareMeters": 512,
+              "terrainAreaInSquareMeters": null,
+              "roomsNumber": null,
+              "hidePrice": false,
+              "investmentState": null,
+              "investmentUnitsAreaInSquareMeters": null,
+              "peoplePerRoom": null,
+              "dateCreated": "2022-04-28 10:12:30",
+              "dateCreatedFirst": "2022-04-28 10:12:14",
+              "investmentUnitsNumber": null,
+              "investmentUnitsRoomsNumber": null,
+              "investmentEstimatedDelivery": null,
+              "pushedUpAt": null,
+              "seo": {
+                "details": {
+                  "description": "Odkryj tę działkę na sprzedaż w miejscowości Żukczyn, gdański, pomorskie, za cenę 108 800 zł. Ta działka na sprzedaż ma 512 m² powierzchni a Biuro nieruchomości WGN jako najważniejsze zalety działki wymienia: prąd, gaz, kanalizacja. Otodom 63028417",
+                  "__typename": "SeoDetails"
+                },
+                "__typename": "Seo"
+              },
+              "specialOffer": null,
+              "__typename": "AdvertListItem",
+              "totalPossibleImages": 3
+            },
+            {
+              "id": 63028416,
+              "title": "Działka, 959 m², Żukczyn",
+              "slug": "dzialka-959-m-zukczyn-ID4gszm",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": {
+                "mapDetails": {
+                  "radius": 100,
+                  "__typename": "MapDetails"
+                },
+                "address": {
+                  "street": null,
+                  "city": {
+                    "name": "Żukczyn",
+                    "__typename": "City"
+                  },
+                  "province": {
+                    "name": "pomorskie",
+                    "__typename": "Province"
+                  },
+                  "__typename": "Address"
+                },
+                "reverseGeocoding": {
+                  "locations": [
+                    {
+                      "fullName": "pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "gdański, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Pruszcz Gdański - gmina wiejska, gdański, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Żukczyn, Pruszcz Gdański, gdański, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    }
+                  ],
+                  "__typename": "ReverseGeocoding"
+                },
+                "__typename": "LocationDetails"
+              },
+              "locationLabel": {
+                "locale": "uk",
+                "value": "Żukczyn, pomorskie",
+                "__typename": "LocalizedString"
+              },
+              "images": [
+                {
+                  "medium": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6InZ4YTFtcDZrNjBldDItQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0._D_0ZdPmI8LHih3_nQBtir5MCmoxPrOB8BBAbSS0OVw/image;s=655x491;q=80",
+                  "large": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6InZ4YTFtcDZrNjBldDItQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0._D_0ZdPmI8LHih3_nQBtir5MCmoxPrOB8BBAbSS0OVw/image;s=1280x1024;q=80",
+                  "__typename": "AdImage"
+                }
+              ],
+              "isExclusiveOffer": false,
+              "isPrivateOwner": false,
+              "isPromoted": false,
+              "agency": {
+                "id": 6183180,
+                "name": "WGN",
+                "slug": "wgn-ID6183180",
+                "imageUrl": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6ImFudnRhcHgzMGtjYjItQVBMIn0.V192Lhx7fkC-we2VNDkrfLTXpb903oak4MQMC-UoEdY/image;s=800x600;q=90",
+                "type": "AGENCY",
+                "brandingVisible": true,
+                "highlightedAds": false,
+                "__typename": "AgencyListingDetails"
+              },
+              "openDays": "",
+              "totalPrice": {
+                "value": 146200,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "rentPrice": null,
+              "priceFromPerSquareMeter": null,
+              "pricePerSquareMeter": {
+                "value": 152,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "areaInSquareMeters": 959,
+              "terrainAreaInSquareMeters": null,
+              "roomsNumber": null,
+              "hidePrice": false,
+              "investmentState": null,
+              "investmentUnitsAreaInSquareMeters": null,
+              "peoplePerRoom": null,
+              "dateCreated": "2022-04-28 10:12:30",
+              "dateCreatedFirst": "2022-04-28 10:12:13",
+              "investmentUnitsNumber": null,
+              "investmentUnitsRoomsNumber": null,
+              "investmentEstimatedDelivery": null,
+              "pushedUpAt": null,
+              "seo": {
+                "details": {
+                  "description": "Odkryj tę działkę na sprzedaż w miejscowości Żukczyn, gdański, pomorskie, za cenę 146 200 zł. Ta działka na sprzedaż ma 959 m² powierzchni a Biuro nieruchomości WGN jako najważniejsze zalety działki wymienia: prąd, gaz, kanalizacja. Otodom 63028416",
+                  "__typename": "SeoDetails"
+                },
+                "__typename": "Seo"
+              },
+              "specialOffer": null,
+              "__typename": "AdvertListItem",
+              "totalPossibleImages": 3
+            },
+            {
+              "id": 63028418,
+              "title": "Działka, 578 m², Żukczyn",
+              "slug": "dzialka-578-m-zukczyn-ID4gszo",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": {
+                "mapDetails": {
+                  "radius": 100,
+                  "__typename": "MapDetails"
+                },
+                "address": {
+                  "street": null,
+                  "city": {
+                    "name": "Żukczyn",
+                    "__typename": "City"
+                  },
+                  "province": {
+                    "name": "pomorskie",
+                    "__typename": "Province"
+                  },
+                  "__typename": "Address"
+                },
+                "reverseGeocoding": {
+                  "locations": [
+                    {
+                      "fullName": "pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "gdański, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Pruszcz Gdański - gmina wiejska, gdański, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Żukczyn, Pruszcz Gdański, gdański, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    }
+                  ],
+                  "__typename": "ReverseGeocoding"
+                },
+                "__typename": "LocationDetails"
+              },
+              "locationLabel": {
+                "locale": "uk",
+                "value": "Żukczyn, pomorskie",
+                "__typename": "LocalizedString"
+              },
+              "images": [
+                {
+                  "medium": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6ImNuZTJtejVldGRzZjItQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.rhGjhGGzlH8VFabHfc2hTFaZryp3a_DViaCiWO5lPh4/image;s=655x491;q=80",
+                  "large": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6ImNuZTJtejVldGRzZjItQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.rhGjhGGzlH8VFabHfc2hTFaZryp3a_DViaCiWO5lPh4/image;s=1280x1024;q=80",
+                  "__typename": "AdImage"
+                }
+              ],
+              "isExclusiveOffer": false,
+              "isPrivateOwner": false,
+              "isPromoted": false,
+              "agency": {
+                "id": 6183180,
+                "name": "WGN",
+                "slug": "wgn-ID6183180",
+                "imageUrl": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6ImFudnRhcHgzMGtjYjItQVBMIn0.V192Lhx7fkC-we2VNDkrfLTXpb903oak4MQMC-UoEdY/image;s=800x600;q=90",
+                "type": "AGENCY",
+                "brandingVisible": true,
+                "highlightedAds": false,
+                "__typename": "AgencyListingDetails"
+              },
+              "openDays": "",
+              "totalPrice": {
+                "value": 122825,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "rentPrice": null,
+              "priceFromPerSquareMeter": null,
+              "pricePerSquareMeter": {
+                "value": 213,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "areaInSquareMeters": 578,
+              "terrainAreaInSquareMeters": null,
+              "roomsNumber": null,
+              "hidePrice": false,
+              "investmentState": null,
+              "investmentUnitsAreaInSquareMeters": null,
+              "peoplePerRoom": null,
+              "dateCreated": "2022-04-28 10:12:30",
+              "dateCreatedFirst": "2022-04-28 10:12:15",
+              "investmentUnitsNumber": null,
+              "investmentUnitsRoomsNumber": null,
+              "investmentEstimatedDelivery": null,
+              "pushedUpAt": null,
+              "seo": {
+                "details": {
+                  "description": "Odkryj tę działkę na sprzedaż w miejscowości Żukczyn, gdański, pomorskie, za cenę 122 825 zł. Ta działka na sprzedaż ma 578 m² powierzchni a Biuro nieruchomości WGN jako najważniejsze zalety działki wymienia: prąd, gaz, kanalizacja. Otodom 63028418",
+                  "__typename": "SeoDetails"
+                },
+                "__typename": "Seo"
+              },
+              "specialOffer": null,
+              "__typename": "AdvertListItem",
+              "totalPossibleImages": 3
+            },
+            {
+              "id": 63028415,
+              "title": "Działka, 559 m², Żukczyn",
+              "slug": "dzialka-559-m-zukczyn-ID4gszl",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": {
+                "mapDetails": {
+                  "radius": 100,
+                  "__typename": "MapDetails"
+                },
+                "address": {
+                  "street": null,
+                  "city": {
+                    "name": "Żukczyn",
+                    "__typename": "City"
+                  },
+                  "province": {
+                    "name": "pomorskie",
+                    "__typename": "Province"
+                  },
+                  "__typename": "Address"
+                },
+                "reverseGeocoding": {
+                  "locations": [
+                    {
+                      "fullName": "pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "gdański, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Pruszcz Gdański - gmina wiejska, gdański, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Żukczyn, Pruszcz Gdański, gdański, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    }
+                  ],
+                  "__typename": "ReverseGeocoding"
+                },
+                "__typename": "LocationDetails"
+              },
+              "locationLabel": {
+                "locale": "uk",
+                "value": "Żukczyn, pomorskie",
+                "__typename": "LocalizedString"
+              },
+              "images": [
+                {
+                  "medium": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6InJ1aTJiNGU4aXRsYjItQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.6s7TsvC4FRwMSwo23mWqi0aEIWHXt7XbHwVHdnXDS6E/image;s=655x491;q=80",
+                  "large": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6InJ1aTJiNGU4aXRsYjItQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.6s7TsvC4FRwMSwo23mWqi0aEIWHXt7XbHwVHdnXDS6E/image;s=1280x1024;q=80",
+                  "__typename": "AdImage"
+                }
+              ],
+              "isExclusiveOffer": false,
+              "isPrivateOwner": false,
+              "isPromoted": false,
+              "agency": {
+                "id": 6183180,
+                "name": "WGN",
+                "slug": "wgn-ID6183180",
+                "imageUrl": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6ImFudnRhcHgzMGtjYjItQVBMIn0.V192Lhx7fkC-we2VNDkrfLTXpb903oak4MQMC-UoEdY/image;s=800x600;q=90",
+                "type": "AGENCY",
+                "brandingVisible": true,
+                "highlightedAds": false,
+                "__typename": "AgencyListingDetails"
+              },
+              "openDays": "",
+              "totalPrice": {
+                "value": 118150,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "rentPrice": null,
+              "priceFromPerSquareMeter": null,
+              "pricePerSquareMeter": {
+                "value": 211,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "areaInSquareMeters": 559,
+              "terrainAreaInSquareMeters": null,
+              "roomsNumber": null,
+              "hidePrice": false,
+              "investmentState": null,
+              "investmentUnitsAreaInSquareMeters": null,
+              "peoplePerRoom": null,
+              "dateCreated": "2022-04-28 10:12:29",
+              "dateCreatedFirst": "2022-04-28 10:12:12",
+              "investmentUnitsNumber": null,
+              "investmentUnitsRoomsNumber": null,
+              "investmentEstimatedDelivery": null,
+              "pushedUpAt": null,
+              "seo": {
+                "details": {
+                  "description": "Odkryj tę działkę na sprzedaż w miejscowości Żukczyn, gdański, pomorskie, za cenę 118 150 zł. Ta działka na sprzedaż ma 559 m² powierzchni a Biuro nieruchomości WGN jako najważniejsze zalety działki wymienia: prąd, gaz, kanalizacja. Otodom 63028415",
+                  "__typename": "SeoDetails"
+                },
+                "__typename": "Seo"
+              },
+              "specialOffer": null,
+              "__typename": "AdvertListItem",
+              "totalPossibleImages": 3
+            },
+            {
+              "id": 63028414,
+              "title": "Działka, 527 m², Żukczyn",
+              "slug": "dzialka-527-m-zukczyn-ID4gszk",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": {
+                "mapDetails": {
+                  "radius": 100,
+                  "__typename": "MapDetails"
+                },
+                "address": {
+                  "street": null,
+                  "city": {
+                    "name": "Żukczyn",
+                    "__typename": "City"
+                  },
+                  "province": {
+                    "name": "pomorskie",
+                    "__typename": "Province"
+                  },
+                  "__typename": "Address"
+                },
+                "reverseGeocoding": {
+                  "locations": [
+                    {
+                      "fullName": "pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "gdański, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Pruszcz Gdański - gmina wiejska, gdański, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Żukczyn, Pruszcz Gdański, gdański, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    }
+                  ],
+                  "__typename": "ReverseGeocoding"
+                },
+                "__typename": "LocationDetails"
+              },
+              "locationLabel": {
+                "locale": "pl",
+                "value": "Żukczyn, gdański, pomorskie",
+                "__typename": "LocalizedString"
+              },
+              "images": [
+                {
+                  "medium": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6Im1hNjVoYnFrMnlkei1BUEwiLCJ3IjpbeyJmbiI6ImVudmZxcWUxYXk0azEtQVBMIiwicyI6IjE0IiwicCI6IjEwLC0xMCIsImEiOiIwIn1dfQ.KxOXxVq-1vYPxASWk9_BnYrArAFQ0PNhN2DnQy4MGjQ/image;s=655x491;q=80",
+                  "large": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6Im1hNjVoYnFrMnlkei1BUEwiLCJ3IjpbeyJmbiI6ImVudmZxcWUxYXk0azEtQVBMIiwicyI6IjE0IiwicCI6IjEwLC0xMCIsImEiOiIwIn1dfQ.KxOXxVq-1vYPxASWk9_BnYrArAFQ0PNhN2DnQy4MGjQ/image;s=1280x1024;q=80",
+                  "__typename": "AdImage"
+                }
+              ],
+              "isExclusiveOffer": false,
+              "isPrivateOwner": false,
+              "isPromoted": false,
+              "agency": {
+                "id": 6183180,
+                "name": "WGN",
+                "slug": "wgn-ID6183180",
+                "imageUrl": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6ImFudnRhcHgzMGtjYjItQVBMIn0.V192Lhx7fkC-we2VNDkrfLTXpb903oak4MQMC-UoEdY/image;s=800x600;q=90",
+                "type": "AGENCY",
+                "brandingVisible": true,
+                "highlightedAds": false,
+                "__typename": "AgencyListingDetails"
+              },
+              "openDays": "",
+              "totalPrice": {
+                "value": 111988,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "rentPrice": null,
+              "priceFromPerSquareMeter": null,
+              "pricePerSquareMeter": {
+                "value": 213,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "areaInSquareMeters": 527,
+              "terrainAreaInSquareMeters": null,
+              "roomsNumber": null,
+              "hidePrice": false,
+              "investmentState": null,
+              "investmentUnitsAreaInSquareMeters": null,
+              "peoplePerRoom": null,
+              "dateCreated": "2022-04-28 10:12:29",
+              "dateCreatedFirst": "2022-04-28 10:12:11",
+              "investmentUnitsNumber": null,
+              "investmentUnitsRoomsNumber": null,
+              "investmentEstimatedDelivery": null,
+              "pushedUpAt": null,
+              "seo": {
+                "details": {
+                  "description": "Odkryj tę działkę na sprzedaż w miejscowości Żukczyn, gdański, pomorskie, za cenę 111 988 zł. Ta działka na sprzedaż ma 527 m² powierzchni a Biuro nieruchomości WGN jako najważniejsze zalety działki wymienia: prąd, gaz, kanalizacja. Otodom 63028414",
+                  "__typename": "SeoDetails"
+                },
+                "__typename": "Seo"
+              },
+              "specialOffer": null,
+              "__typename": "AdvertListItem",
+              "totalPossibleImages": 3
+            },
+            {
+              "id": 62739420,
+              "title": "Działka Budowlana 409 M2, Centrum Banina",
+              "slug": "dzialka-budowlana-409-m2-centrum-banina-ID4ffo8",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": {
+                "mapDetails": {
+                  "radius": 100,
+                  "__typename": "MapDetails"
+                },
+                "address": {
+                  "street": null,
+                  "city": {
+                    "name": "Banino",
+                    "__typename": "City"
+                  },
+                  "province": {
+                    "name": "pomorskie",
+                    "__typename": "Province"
+                  },
+                  "__typename": "Address"
+                },
+                "reverseGeocoding": {
+                  "locations": [
+                    {
+                      "fullName": "pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "kartuski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Żukowo, kartuski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Banino, Żukowo, kartuski, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    }
+                  ],
+                  "__typename": "ReverseGeocoding"
+                },
+                "__typename": "LocationDetails"
+              },
+              "locationLabel": {
+                "locale": "uk",
+                "value": "Banino, pomorskie",
+                "__typename": "LocalizedString"
+              },
+              "images": [
+                {
+                  "medium": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6ImpmeG12bHV1NXA3bzMtQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.ezILeslM4w7mlRCLXFFrqSDjFCLePv9f1MANcC5-0a0/image;s=655x491;q=80",
+                  "large": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6ImpmeG12bHV1NXA3bzMtQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.ezILeslM4w7mlRCLXFFrqSDjFCLePv9f1MANcC5-0a0/image;s=1280x1024;q=80",
+                  "__typename": "AdImage"
+                }
+              ],
+              "isExclusiveOffer": false,
+              "isPrivateOwner": false,
+              "isPromoted": false,
+              "agency": {
+                "id": 74536,
+                "name": "ANDRZEJCZYK NIERUCHOMOŚCI",
+                "slug": "andrzejczyk-nieruchomosci-ID74536",
+                "imageUrl": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6ImNpYjBxNDFpOHU3NzEtQVBMIn0.SjUocvzqURa4wUlYXdVeybF0IgUb5-kwzUZpttt_BJA/image;s=800x600;q=90",
+                "type": "AGENCY",
+                "brandingVisible": false,
+                "highlightedAds": false,
+                "__typename": "AgencyListingDetails"
+              },
+              "openDays": "",
+              "totalPrice": {
+                "value": 146300,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "rentPrice": null,
+              "priceFromPerSquareMeter": null,
+              "pricePerSquareMeter": {
+                "value": 350,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "areaInSquareMeters": 418,
+              "terrainAreaInSquareMeters": null,
+              "roomsNumber": null,
+              "hidePrice": false,
+              "investmentState": null,
+              "investmentUnitsAreaInSquareMeters": null,
+              "peoplePerRoom": null,
+              "dateCreated": "2022-02-06 01:54:06",
+              "dateCreatedFirst": "2022-02-06 01:53:49",
+              "investmentUnitsNumber": null,
+              "investmentUnitsRoomsNumber": null,
+              "investmentEstimatedDelivery": null,
+              "pushedUpAt": null,
+              "seo": {
+                "details": {
+                  "description": "Odkryj tę działkę na sprzedaż w miejscowości Banino, kartuski, pomorskie, za cenę 146 300 zł. Ta działka na sprzedaż ma 418 m² powierzchni. Otodom 62739420",
+                  "__typename": "SeoDetails"
+                },
+                "__typename": "Seo"
+              },
+              "specialOffer": null,
+              "__typename": "AdvertListItem",
+              "totalPossibleImages": 15
+            },
+            {
+              "id": 62237845,
+              "title": "Klimatyczna działka z domkiem do negocjacji!",
+              "slug": "klimatyczna-dzialka-z-domkiem-do-negocjacji-ID4d8Ud",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": {
+                "mapDetails": {
+                  "radius": 0,
+                  "__typename": "MapDetails"
+                },
+                "address": {
+                  "street": {
+                    "name": "ul. Meteorytowa",
+                    "number": "",
+                    "__typename": "Street"
+                  },
+                  "city": {
+                    "name": "Gdańsk",
+                    "__typename": "City"
+                  },
+                  "province": {
+                    "name": "pomorskie",
+                    "__typename": "Province"
+                  },
+                  "__typename": "Address"
+                },
+                "reverseGeocoding": {
+                  "locations": [
+                    {
+                      "fullName": "pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Gdańsk, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Matarnia, Gdańsk, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    }
+                  ],
+                  "__typename": "ReverseGeocoding"
+                },
+                "__typename": "LocationDetails"
+              },
+              "locationLabel": {
+                "locale": "uk",
+                "value": "Gdańsk, Osowa, Meteorytowa",
+                "__typename": "LocalizedString"
+              },
+              "images": [
+                {
+                  "medium": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6Ing3cHdrOHdyY2luajMtQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.d343jncf6YdjbFvvL3oDJPxt-irRFyls3mb6XNipyMc/image;s=655x491;q=80",
+                  "large": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6Ing3cHdrOHdyY2luajMtQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.d343jncf6YdjbFvvL3oDJPxt-irRFyls3mb6XNipyMc/image;s=1280x1024;q=80",
+                  "__typename": "AdImage"
+                }
+              ],
+              "isExclusiveOffer": false,
+              "isPrivateOwner": false,
+              "isPromoted": false,
+              "agency": {
+                "id": 629621,
+                "name": "TYSZKIEWICZ NIERUCHOMOŚCI",
+                "slug": "tyszkiewicz-nieruchomosci-ID629621",
+                "imageUrl": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6ImkwOHE4MmViZGViYjEtQVBMIn0.Mw_PwJuiv1P7cXngvIWq_R3CYrl6fIlo0V2KAzTMB24/image;s=800x600;q=90",
+                "type": "AGENCY",
+                "brandingVisible": true,
+                "highlightedAds": false,
+                "__typename": "AgencyListingDetails"
+              },
+              "openDays": "",
+              "totalPrice": {
+                "value": 135000,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "rentPrice": null,
+              "priceFromPerSquareMeter": null,
+              "pricePerSquareMeter": {
+                "value": 375,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "areaInSquareMeters": 360,
+              "terrainAreaInSquareMeters": null,
+              "roomsNumber": null,
+              "hidePrice": false,
+              "investmentState": null,
+              "investmentUnitsAreaInSquareMeters": null,
+              "peoplePerRoom": null,
+              "dateCreated": "2021-09-02 16:13:28",
+              "dateCreatedFirst": "2021-09-02 16:10:49",
+              "investmentUnitsNumber": null,
+              "investmentUnitsRoomsNumber": null,
+              "investmentEstimatedDelivery": null,
+              "pushedUpAt": null,
+              "seo": {
+                "details": {
+                  "description": "Odkryj tę działkę na sprzedaż w miejscowości Gdańsk, Osowa, za cenę 135 000 zł. Ta działka na sprzedaż ma 360 m² powierzchni a Biuro nieruchomości TYSZKIEWICZ NIERUCHOMOŚCI jako najważniejsze zalety działki wymienia: prąd, woda, las. Otodom 62237845",
+                  "__typename": "SeoDetails"
+                },
+                "__typename": "Seo"
+              },
+              "specialOffer": null,
+              "__typename": "AdvertListItem",
+              "totalPossibleImages": 20
+            },
+            {
+              "id": 62194695,
+              "title": "5 minut od plaży w Jelitkowie, ogródek działkowy!",
+              "slug": "5-minut-od-plazy-w-jelitkowie-ogrodek-dzialkowy-ID4cXGf",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": {
+                "mapDetails": {
+                  "radius": 0,
+                  "__typename": "MapDetails"
+                },
+                "address": {
+                  "street": {
+                    "name": "ul. Jelitkowska",
+                    "number": "",
+                    "__typename": "Street"
+                  },
+                  "city": {
+                    "name": "Gdańsk",
+                    "__typename": "City"
+                  },
+                  "province": {
+                    "name": "pomorskie",
+                    "__typename": "Province"
+                  },
+                  "__typename": "Address"
+                },
+                "reverseGeocoding": {
+                  "locations": [
+                    {
+                      "fullName": "pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Gdańsk, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    },
+                    {
+                      "fullName": "Jelitkowo, Gdańsk, pomorskie",
+                      "__typename": "BasicLocationObject"
+                    }
+                  ],
+                  "__typename": "ReverseGeocoding"
+                },
+                "__typename": "LocationDetails"
+              },
+              "locationLabel": {
+                "locale": "uk",
+                "value": "Jelitkowska, Gdańsk, pomorskie",
+                "__typename": "LocalizedString"
+              },
+              "images": [
+                {
+                  "medium": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6Inh5NzJlc216aTFycDMtQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.tJj6GKF9QR6lMsdU_0IbzUxZwJasIStJeM94zIAxyhk/image;s=655x491;q=80",
+                  "large": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6Inh5NzJlc216aTFycDMtQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.tJj6GKF9QR6lMsdU_0IbzUxZwJasIStJeM94zIAxyhk/image;s=1280x1024;q=80",
+                  "__typename": "AdImage"
+                }
+              ],
+              "isExclusiveOffer": false,
+              "isPrivateOwner": false,
+              "isPromoted": false,
+              "agency": {
+                "id": 7469324,
+                "name": "Home Experts",
+                "slug": "home-experts-ID7469324",
+                "imageUrl": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6IjlkcnpzMWZvdWdsNTItQVBMIn0.GUohoJQQSrlG4WG6b9cjnHkBLymenyUHauyLNa8BR_A/image;s=800x600;q=90",
+                "type": "AGENCY",
+                "brandingVisible": true,
+                "highlightedAds": false,
+                "__typename": "AgencyListingDetails"
+              },
+              "openDays": "",
+              "totalPrice": {
+                "value": 125000,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "rentPrice": null,
+              "priceFromPerSquareMeter": null,
+              "pricePerSquareMeter": {
+                "value": 446,
+                "currency": "PLN",
+                "__typename": "Money"
+              },
+              "areaInSquareMeters": 280,
+              "terrainAreaInSquareMeters": null,
+              "roomsNumber": null,
+              "hidePrice": false,
+              "investmentState": null,
+              "investmentUnitsAreaInSquareMeters": null,
+              "peoplePerRoom": null,
+              "dateCreated": "2021-08-20 15:32:22",
+              "dateCreatedFirst": "2021-08-20 15:31:33",
+              "investmentUnitsNumber": null,
+              "investmentUnitsRoomsNumber": null,
+              "investmentEstimatedDelivery": null,
+              "pushedUpAt": null,
+              "seo": {
+                "details": {
+                  "description": "Odkryj tę działkę na sprzedaż w miejscowości Gdańsk, pomorskie, za cenę 125 000 zł. Ta działka na sprzedaż ma 280 m² powierzchni a Biuro nieruchomości Home Experts jako najważniejsze zalety działki wymienia: szambo, prąd, woda. Otodom 62194695",
+                  "__typename": "SeoDetails"
+                },
+                "__typename": "Seo"
+              },
+              "specialOffer": null,
+              "__typename": "AdvertListItem",
+              "totalPossibleImages": 4
+            }
+          ],
+          "trackingSet": {
+            "cat_l1_id": 401,
+            "cat_l1_name": "Terrain",
+            "business": "sell",
+            "selected_street_id": "",
+            "selected_district_id": "",
+            "selected_city_id": "",
+            "selected_subregion_id": "",
+            "selected_region_id": ""
+          },
+          "pagination": {
+            "totalResults": 34,
+            "itemsPerPage": 36,
+            "page": 1,
+            "totalPages": 1,
+            "__typename": "SearchPagination"
+          },
+          "locationsData": [],
+          "locationString": ""
+        },
+        "searchMapPins": {
+          "__typename": "FoundMapPins",
+          "boundingBox": {
+            "neLat": 54.44800258614123,
+            "neLng": 18.9510009001242,
+            "swLat": 54.27400257787667,
+            "swLng": 18.428000875283033,
+            "__typename": "BoundingBox"
+          }
+        },
+        "searchAdsRandomPromoted": {
+          "__typename": "FoundPromotedAds",
+          "items": []
+        },
+        "searchAdsRandomInvestments": {
+          "__typename": "FoundRandomInvestments",
+          "items": [
+            {
+              "id": "59404166",
+              "images": [
+                "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6InpwYjR1dXlvcGJtbjMtRUNPU1lTVEVNIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.G3vzvSjzRobjDLXNOw7NXRv4xMVzI16_pdztgFfFpVc/image;s=314x236;q=80",
+                "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6InQzeTJhN2p1NXo4cTItRUNPU1lTVEVNIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.PV4XBNkNeGDoI2ER07kt9yjMvhSFG-C660vSaJgaCB4/image;s=314x236;q=80",
+                "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6ImNnZGQ4a2o2ZWRiYzEtRUNPU1lTVEVNIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.gV-EwYe_zM0YDUZQmTk-oONpjDuNFoW5RSe_yN95bMA/image;s=314x236;q=80",
+                "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6ImJkejNvcXAzaG41MDMtRUNPU1lTVEVNIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.7M3hG_JGYoniiuzhZ1BXq1VyFqc7bKM-dQaGpi6Ln-Y/image;s=314x236;q=80",
+                "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6InBqemExbTB6aG05bS1FQ09TWVNURU0iLCJ3IjpbeyJmbiI6ImVudmZxcWUxYXk0azEtQVBMIiwicyI6IjE0IiwicCI6IjEwLC0xMCIsImEiOiIwIn1dfQ.g1RHIyxxAO5FFrUTwBKHkIaOZEZ83eYbEpudMea9sPU/image;s=314x236;q=80"
+              ],
+              "price": "7 272 zł/m²",
+              "location": "Pierwoszyno, pucki, pomorskie",
+              "title": "Osiedle Bursztynowe | z widokiem na morze",
+              "hidePrice": null,
+              "businessName": "Bursztynowe Osiedle Sp. z o. o.",
+              "businessUserDetails": {
+                "id": 6330086,
+                "imageUrl": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6InZndnBzaTVpdThreTItQVBMIn0.tKi6sVnweNswHRvhlqnx9jLzI06m9DQfx-wz1cCt66g/image;s=800x600;q=90",
+                "name": "Bursztynowe Osiedle Sp. z o. o.",
+                "type": "developer",
+                "brandingVisible": true,
+                "__typename": "AgencyListingDetails"
+              },
+              "slug": "osiedle-bursztynowe-z-widokiem-na-morze-ID41fJI",
+              "state": "in_building",
+              "specialOffer": null,
+              "__typename": "RecommendedInvestment"
+            },
+            {
+              "id": "62878060",
+              "images": [
+                "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6Ind4bGM5NHM2dDJrcTEtQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.K53AtZRS4ak7Ig4GcJhXNSkwV_b8bYlKWxSBKc69e9M/image;s=314x236;q=80",
+                "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6Imc5end5Y2VheG15djMtQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.uvtqe0k2qrpRtV4DM4STP2rgur9K9i5lsQfNmmGzVfY/image;s=314x236;q=80",
+                "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6InMxN3ZtbnRuYzh3aDEtQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.wv34KGyYKttBFXpxt2xHvWKbVCJ5-TwpjmDlrLYzHyU/image;s=314x236;q=80",
+                "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6InVyc2k5bXVtbXN0di1BUEwiLCJ3IjpbeyJmbiI6ImVudmZxcWUxYXk0azEtQVBMIiwicyI6IjE0IiwicCI6IjEwLC0xMCIsImEiOiIwIn1dfQ.COQmxFZRQ-9cSVSK-9dTqeBHDgQfb0c7tjLXr9MnOGE/image;s=314x236;q=80"
+              ],
+              "price": "6 147 zł/m²",
+              "location": "Gdańsk, Jasień",
+              "title": "Perspectum",
+              "hidePrice": null,
+              "businessName": "Amprojekt Sp. z o.o.",
+              "businessUserDetails": {
+                "id": 6347662,
+                "imageUrl": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6InFtZWhjMDRpZHNvYjEtQVBMIn0.Xp-3UopjFPC-dZQg3lMrRpo_vYwMobFfudzpe2PWopE/image;s=800x600;q=90",
+                "name": "Amprojekt Sp. z o.o.",
+                "type": "developer",
+                "brandingVisible": false,
+                "__typename": "AgencyListingDetails"
+              },
+              "slug": "perspectum-ID4fPsg",
+              "state": "in_building",
+              "specialOffer": null,
+              "__typename": "RecommendedInvestment"
+            },
+            {
+              "id": "45109610",
+              "images": [
+                "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6InhpMWU4NzdsdzIyMjEtQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.2JpwEhf_IH0JZobST0yRfNsUKah0lSgyK_etp5Mak98/image;s=314x236;q=80",
+                "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6Im1ibzY2bzJhbDZ5aDMtQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.sKi5N1z28_DeRZYihJkGGDhcsEPbeTEiwZSzqxMcHYg/image;s=314x236;q=80",
+                "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6InFwcDN3Y2Y0c2czNS1BUEwiLCJ3IjpbeyJmbiI6ImVudmZxcWUxYXk0azEtQVBMIiwicyI6IjE0IiwicCI6IjEwLC0xMCIsImEiOiIwIn1dfQ.bkQ33f4uhQWPMd6VlCaoNE9emeafi7OlPd9snrM3JRY/image;s=314x236;q=80",
+                "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6Ink5Z3V2a3BvcWFzejEtQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.ghoCYRZwcTLhp900Uh3dJ76VeJK-1lmzFaSfsmneiro/image;s=314x236;q=80",
+                "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6ImZmNWFoMDg0ZHhxYTEtQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNCIsInAiOiIxMCwtMTAiLCJhIjoiMCJ9XX0.54iUUX7_ibkHNfC103UIny6gSyd_pnLBgSyp4Or6ZQc/image;s=314x236;q=80"
+              ],
+              "price": "7 115 zł/m²",
+              "location": "Gdańsk, Ujeścisko-Łostowice, Łostowice",
+              "title": "Kowalove",
+              "hidePrice": null,
+              "businessName": "Defis Sp. z oo.",
+              "businessUserDetails": {
+                "id": 1831646,
+                "imageUrl": null,
+                "name": "Defis Sp. z oo.",
+                "type": "developer",
+                "brandingVisible": false,
+                "__typename": "AgencyListingDetails"
+              },
+              "slug": "kowalove-ID33h4m",
+              "state": "in_building",
+              "specialOffer": null,
+              "__typename": "RecommendedInvestment"
+            }
+          ]
+        },
+        "searchLinksLocations": {
+          "items": [
+            {
+              "name": "Przymorze Wielkie",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": "pomorskie/gdansk/gdansk/gdansk/przymorze-wielkie",
+              "count": null,
+              "__typename": "LocationLink"
+            },
+            {
+              "name": "Wzgórze Mickiewicza",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": "pomorskie/gdansk/gdansk/gdansk/wzgorze-mickiewicza",
+              "count": null,
+              "__typename": "LocationLink"
+            },
+            {
+              "name": "Orunia Górna - Gdańsk Południe",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": "pomorskie/gdansk/gdansk/gdansk/orunia-gorna--gdansk-poludnie",
+              "count": null,
+              "__typename": "LocationLink"
+            },
+            {
+              "name": "Stogi",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": "pomorskie/gdansk/gdansk/gdansk/stogi",
+              "count": null,
+              "__typename": "LocationLink"
+            },
+            {
+              "name": "Zaspa-Rozstaje",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": "pomorskie/gdansk/gdansk/gdansk/zaspa--rozstaje",
+              "count": null,
+              "__typename": "LocationLink"
+            },
+            {
+              "name": "Siedlce",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": "pomorskie/gdansk/gdansk/gdansk/siedlce",
+              "count": null,
+              "__typename": "LocationLink"
+            },
+            {
+              "name": "Ujeścisko-Łostowice",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": "pomorskie/gdansk/gdansk/gdansk/ujescisko--lostowice",
+              "count": null,
+              "__typename": "LocationLink"
+            },
+            {
+              "name": "Wrzeszcz Dolny",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": "pomorskie/gdansk/gdansk/gdansk/wrzeszcz-dolny",
+              "count": null,
+              "__typename": "LocationLink"
+            },
+            {
+              "name": "Śródmieście",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": "pomorskie/gdansk/gdansk/gdansk/srodmiescie",
+              "count": null,
+              "__typename": "LocationLink"
+            },
+            {
+              "name": "Piecki-Migowo",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": "pomorskie/gdansk/gdansk/gdansk/piecki--migowo",
+              "count": null,
+              "__typename": "LocationLink"
+            },
+            {
+              "name": "VII Dwór",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": "pomorskie/gdansk/gdansk/gdansk/vii-dwor",
+              "count": null,
+              "__typename": "LocationLink"
+            },
+            {
+              "name": "Rudniki",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": "pomorskie/gdansk/gdansk/gdansk/rudniki",
+              "count": null,
+              "__typename": "LocationLink"
+            },
+            {
+              "name": "Jelitkowo",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": "pomorskie/gdansk/gdansk/gdansk/jelitkowo",
+              "count": null,
+              "__typename": "LocationLink"
+            },
+            {
+              "name": "Wejhera",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": "pomorskie/gdansk/gdansk/gdansk/wejhera",
+              "count": null,
+              "__typename": "LocationLink"
+            },
+            {
+              "name": "Wyspa Sobieszewska",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": "pomorskie/gdansk/gdansk/gdansk/wyspa-sobieszewska",
+              "count": null,
+              "__typename": "LocationLink"
+            },
+            {
+              "name": "Brętowo",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": "pomorskie/gdansk/gdansk/gdansk/bretowo",
+              "count": null,
+              "__typename": "LocationLink"
+            },
+            {
+              "name": "Oliwa",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": "pomorskie/gdansk/gdansk/gdansk/oliwa",
+              "count": null,
+              "__typename": "LocationLink"
+            },
+            {
+              "name": "Wrzeszcz Górny",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": "pomorskie/gdansk/gdansk/gdansk/wrzeszcz-gorny",
+              "count": null,
+              "__typename": "LocationLink"
+            },
+            {
+              "name": "Strzyża",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": "pomorskie/gdansk/gdansk/gdansk/strzyza",
+              "count": null,
+              "__typename": "LocationLink"
+            },
+            {
+              "name": "Aniołki",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": "pomorskie/gdansk/gdansk/gdansk/aniolki",
+              "count": null,
+              "__typename": "LocationLink"
+            },
+            {
+              "name": "Zaspa-Młyniec",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": "pomorskie/gdansk/gdansk/gdansk/zaspa--mlyniec",
+              "count": null,
+              "__typename": "LocationLink"
+            },
+            {
+              "name": "Nowy Port",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": "pomorskie/gdansk/gdansk/gdansk/nowy-port",
+              "count": null,
+              "__typename": "LocationLink"
+            },
+            {
+              "name": "Osowa",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": "pomorskie/gdansk/gdansk/gdansk/osowa",
+              "count": null,
+              "__typename": "LocationLink"
+            },
+            {
+              "name": "Żabianka",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": "pomorskie/gdansk/gdansk/gdansk/zabianka",
+              "count": null,
+              "__typename": "LocationLink"
+            },
+            {
+              "name": "Krakowiec-Górki Zachodnie",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": "pomorskie/gdansk/gdansk/gdansk/krakowiec--gorki-zachodnie",
+              "count": null,
+              "__typename": "LocationLink"
+            },
+            {
+              "name": "Matarnia",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": "pomorskie/gdansk/gdansk/gdansk/matarnia",
+              "count": null,
+              "__typename": "LocationLink"
+            },
+            {
+              "name": "Suchanino",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": "pomorskie/gdansk/gdansk/gdansk/suchanino",
+              "count": null,
+              "__typename": "LocationLink"
+            },
+            {
+              "name": "Młyniska",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": "pomorskie/gdansk/gdansk/gdansk/mlyniska",
+              "count": null,
+              "__typename": "LocationLink"
+            },
+            {
+              "name": "Tysiąclecia",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": "pomorskie/gdansk/gdansk/gdansk/tysiaclecia",
+              "count": null,
+              "__typename": "LocationLink"
+            },
+            {
+              "name": "Kokoszki",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": "pomorskie/gdansk/gdansk/gdansk/kokoszki",
+              "count": null,
+              "__typename": "LocationLink"
+            },
+            {
+              "name": "Orunia-Św. Wojciech-Lipce",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": "pomorskie/gdansk/gdansk/gdansk/orunia--sw.-wojciech--lipce",
+              "count": null,
+              "__typename": "LocationLink"
+            },
+            {
+              "name": "Przymorze Małe",
+              "estate": "TERRAIN",
+              "transaction": "SELL",
+              "location": "pomorskie/gdansk/gdansk/gdansk/przymorze-male",
+              "count": null,
+              "__typename": "LocationLink"
+            }
+          ],
+          "__typename": "FoundLinksLocations"
+        }
+      },
+      "mapBoundingBox": {
+        "__typename": "FoundMapPins",
+        "boundingBox": {
+          "neLat": 54.44800258614123,
+          "neLng": 18.9510009001242,
+          "swLat": 54.27400257787667,
+          "swLng": 18.428000875283033,
+          "__typename": "BoundingBox"
+        }
+      },
+      "urlViewType": "listing",
+      "transaction": "SELL",
+      "estate": "TERRAIN",
+      "location": "pomorskie/gdansk/gdansk/gdansk",
+      "market": "ALL",
+      "savedSearches": [],
+      "filteringQueryParams": {
+        "page": 1,
+        "limit": 36,
+        "market": "ALL",
+        "distanceRadius": 10,
+        "priceMin": 100000,
+        "priceMax": 150000,
+        "locations": [
+          {
+            "id": "pomorskie/gdansk/gdansk/gdansk",
+            "detailedLevel": "city",
+            "name": "Gdańsk",
+            "fullName": "Gdańsk, pomorskie",
+            "parentIds": [
+              "pomorskie",
+              "pomorskie/gdansk",
+              "pomorskie/gdansk/gdansk"
+            ],
+            "__typename": "LocationObject"
+          }
+        ]
+      },
+      "filterLocations": {
+        "byDomainId": [
+          {
+            "domainId": "pomorskie/gdansk/gdansk/gdansk"
+          }
+        ]
+      },
+      "filterAttributes": {
+        "market": "ALL",
+        "distanceRadius": 10,
+        "priceMin": 100000,
+        "priceMax": 150000,
+        "estate": "TERRAIN",
+        "transaction": "SELL"
+      },
+      "sortingOption": {
+        "by": "DEFAULT",
+        "direction": "DESC"
+      },
+      "canonicalURL": "/pl/oferty/sprzedaz/dzialka/gdansk",
+      "shouldEnableIndexingByMetaRobots": false,
+      "currentUser": null,
+      "featureFlags": {
+        "isAdAvmModuleEnabled": true,
+        "isAdFinanceBannerEnabled": true,
+        "isAdFinanceLinkEnabled": true,
+        "isAdMortgageSimulatorEnabled": true,
+        "isAgentsSubaccountsEnabled": false,
+        "isBulkSchedulingEnabled": false,
+        "isFeaturedDevelopmentVASEnabled": true,
+        "isListingRentPriceEnabled": true,
+        "isMapEnabled": true,
+        "isNewApartmentsForSalePostingFormEnabled": false,
+        "isNewPromotePageEnabled": false,
+        "isOldSaveSearchQueryEnabled": false,
+        "shouldRolloutLocationService": false,
+        "isOlxAdvertPromotionEnabled": false,
+        "isOtodomAnalyticsEnabled": false,
+        "isProjectREDEnabled": false,
+        "isPushNotificationServiceWorkerEnabled": true,
+        "isPushNotificationsToggleEnabled": true,
+        "isSavedSearchFrequencyChangeEnabled": true,
+        "isVasRecommendationsEnabled": false,
+        "isVasSchedulingEnabled": true,
+        "shouldUseNewInformation": true,
+        "shouldUseNewProjectPage": true,
+        "isFinanceCheckboxEnabled": true,
+        "isObservedAdsPageEnabled": true,
+        "isNewAskAboutPriceEnabled": false,
+        "isHomepageVasConverted": false,
+        "isDevelopersPricingCardsDesignEnabled": true,
+        "isUnifiedBusinessInvoicesPageActive": false,
+        "isRegularMyAccountAdsPageEnabled": false,
+        "isBikPromotionEnabled": true,
+        "isStudioFlatCategoryEnabled": true,
+        "isRegularRoomCategoryMigratedToNMF": true,
+        "isSpecialOfferForUnitsExperimentEnabled": false,
+        "isRegularExtendedBundlesEnabled": true,
+        "isNoOfRoomsFilterEnabled": true,
+        "isStaticInternalLinkingSectionEnabled": true,
+        "isNewMenuEnabled": true,
+        "isRegularOlxVasesEnabled": true,
+        "isSpecialOfferEnabled": true,
+        "isBulkOlxPromotionEnabled": false,
+        "isRegularVasRecommendationsEnabled": false,
+        "isSeoAdsDescriptionEnabled": false,
+        "__typename": "FeatureFlags"
+      },
+      "laquesisResult": "euads-4306@b|t#see-1753@b|t#see-1832@a|t#seore-207@b|t#seore-343@b|t#sfs-602@b|t#sfs-603@b|t#smr-1912@a|t#smr-1927@a|t",
+      "userSessionId": "ed9b0a63-59fd-48fe-ae0e-3f2f4851fc65",
+      "unconfirmedUserAuthToken": null,
+      "isBotDetected": false
+    },
+    "__N_SSP": true
+  }

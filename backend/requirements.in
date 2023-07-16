@@ -6,6 +6,8 @@ pydantic[email]
 sqlalchemy
 sqlmodel
 asyncpg
+aiohttp[speedups]
+jmespath
 
 # dev-packages
 black==23.3.0
