@@ -1,6 +1,8 @@
-from api.models import Search, Estate, Price
+from typing import Any
+from api.models import Category, Search, SearchEvent, Estate, Price
+from sqlmodel import select
 import jmespath
-import json
+from sqlalchemy.ext.asyncio import AsyncSession
 
 """
 class Estate(SQLModel, table=True):
@@ -61,12 +63,7 @@ class Search(SQLModel, table=True):
     search_events: List["SearchEvent"] = Relationship(back_populates="search")
     users: List[User] = Relationship(back_populates="searches", link_model=SearchUser)
 """
-# TODO from_surface i to_surface
-# Search.coordinates
-with open("body.json", "r") as f:
-    body = json.load(f)
-coordinates_org = jmespath.search("pageProps.mapBoundingBox.boundingBox", body)
-coordinates_alt = jmespath.search("pageProps.data.searchMapPins.boundingBox", body)
+CATEGORY_MAP = {"terrain": "Plot"}
 
 
 def parse_coordinates(
@@ -83,46 +80,60 @@ def parse_coordinates(
     return output.removesuffix(", ")
 
 
-category_map = {"terrain": "Plot"}
-category = jmespath.search("pageProps.estate", body)
+async def parse_scan_data(body: dict[str, Any], session: AsyncSession) -> None:
+    coordinates_org = jmespath.search("pageProps.mapBoundingBox.boundingBox", body)
+    coordinates_alt = jmespath.search("pageProps.data.searchMapPins.boundingBox", body)
 
-# Search.distance_radius
-distance_radius = jmespath.search("pageProps.filteringQueryParams.distanceRadius", body)
-
-# Search.from_price
-from_price = jmespath.search("pageProps.filteringQueryParams.priceMin", body)
-
-# Search.to_price
-to_price = jmespath.search("pageProps.filteringQueryParams.priceMax", body)
-
-# Search.location
-location = jmespath.search("pageProps.filteringQueryParams.locations[0]", body)
-
-search = Search(
-    location=location,
-    distance_radius=distance_radius,
-    coordinates=parse_coordinates(coordinates_org, coordinates_alt),
-    from_price=from_price,
-    to_price=to_price,
-)
-
-ads = jmespath.search("pageProps.data.searchAds.items", body)
-for ad in ads:
-    date_created = jmespath.search()
-    estate = Estate(
-        id=ad.get("id"),
-        title=ad.get("title", ""),
-        street=jmespath.search("location.address.street.name", ad),
-        city=jmespath.search("location.address.city.name", ad),
-        province=jmespath.search("location.address.province.name", ad),
-        location=jmespath.search("locationLabel.value", ad),
-        date_created=ad.get("dateCreatedFirst") or ad.get("dateCreated"),
-        url=ad.get("slug"),
+    estate_type = jmespath.search("pageProps.estate", body) or ""
+    cat_query = select(Category).where(
+        Category.name == CATEGORY_MAP[estate_type.lower()]
     )
-    price = Price(
-        price=jmespath.search("totalPrice.value", ad),
-        price_per_square_meter=jmespath.search("pricePerSquareMeter.value", ad),
-        area_in_square_meters=ad.get("areaInSquareMeters"),
-        terrain_area_in_square_meters=ad.get("terrainAreaInSquareMeters"),
-        estate_id=ad.get("id"),
+
+    # TODO handle missing category
+    category = (await session.execute(cat_query)).first()
+
+    search_params = jmespath.search("pageProps.filteringQueryParams", body)
+
+    search = Search(
+        location=jmespath.search("locations[0].fullName", search_params),
+        distance_radius=search_params.get("distanceRadius"),
+        coordinates=parse_coordinates(coordinates_org, coordinates_alt),
+        from_price=search_params.get("priceMin"),
+        to_price=search_params.get("priceMax"),
+        from_surface=search_params.get("areaMin"),
+        to_surface=search_params.get("areaMax"),
+        category=category,
     )
+
+    search_event = SearchEvent(search=search)
+    session.add_all([Search, SearchEvent])
+    await session.commit()
+
+    ads = jmespath.search("pageProps.data.searchAds.items", body)
+    estates = [
+        Estate(
+            id=ad.get("id"),
+            title=ad.get("title", ""),
+            street=jmespath.search("location.address.street.name", ad),
+            city=jmespath.search("location.address.city.name", ad),
+            province=jmespath.search("location.address.province.name", ad),
+            location=jmespath.search("locationLabel.value", ad),
+            date_created=ad.get("dateCreatedFirst") or ad.get("dateCreated"),
+            url=ad.get("slug"),
+        )
+        for ad in ads
+    ]
+    session.add_all(estates)
+    prices = [
+        Price(
+            price=jmespath.search("totalPrice.value", ad),
+            price_per_square_meter=jmespath.search("pricePerSquareMeter.value", ad),
+            area_in_square_meters=ad.get("areaInSquareMeters"),
+            terrain_area_in_square_meters=ad.get("terrainAreaInSquareMeters"),
+            estate_id=ad.get("id"),
+            search_event=search_event,
+        )
+        for ad in ads
+    ]
+    session.add_all(prices)
+    await session.commit()
