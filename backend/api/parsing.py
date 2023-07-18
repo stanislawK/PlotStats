@@ -90,7 +90,7 @@ async def parse_scan_data(body: dict[str, Any], session: AsyncSession) -> None:
     )
 
     # TODO handle missing category
-    category = (await session.execute(cat_query)).first()
+    category = (await session.exec(cat_query)).first()
 
     search_params = jmespath.search("pageProps.filteringQueryParams", body)
 
@@ -106,7 +106,7 @@ async def parse_scan_data(body: dict[str, Any], session: AsyncSession) -> None:
     )
 
     search_event = SearchEvent(search=search)
-    session.add_all([Search, SearchEvent])
+    session.add_all([search, search_event])
     await session.commit()
 
     ads = jmespath.search("pageProps.data.searchAds.items", body)
