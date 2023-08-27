@@ -1,69 +1,16 @@
 from typing import Any
-from api.models import Category, Search, SearchEvent, Estate, Price
-from sqlmodel import select
+
 import jmespath
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlmodel import select
 
-"""
-class Estate(SQLModel, table=True):
-    id: int = Field(primary_key=True)
-    title: str
-    street: Optional[str] = Field(default=None)
-    city: Optional[str] = Field(index=True)
-    province: Optional[str] = Field(default=None)
-    location: Optional[str] = Field(default=None)
-    date_created: Optional[datetime] = Field(default=None)
-    url: str
-    search_events: List[SearchEvent] = Relationship(
-        back_populates="estates", link_model=SearchEventEstate
-    )
-    prices: List["Price"] = Relationship(back_populates="estate")
+from api.models import Category, Estate, Price, Search, SearchEvent
 
-class Price(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
-    price: int
-    price_per_square_meter: Optional[int] = Field(default=None)
-    area_in_square_meters: Optional[int] = Field(default=None)
-    terrain_area_in_square_meters: Optional[int] = Field(default=None)
-    estate_id: Optional[int] = Field(default=None, foreign_key="estate.id")
-    estate: Estate = Relationship(back_populates="prices")
-    search_event_id: Optional[int] = Field(default=None, foreign_key="searchevent.id")
-    search_event: "SearchEvent" = Relationship(back_populates="prices")
-
-class SearchEventEstate(SQLModel, table=True):
-    search_event_id: Optional[int] = Field(
-        default=None, foreign_key="searchevent.id", primary_key=True
-    )
-    estate_id: Optional[int] = Field(
-        default=None, foreign_key="estate.id", primary_key=True
-    )
+CATEGORY_MAP = {"terrain": "Plot", "flat": "Apartment", "house": "House"}
 
 
-class SearchEvent(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
-    date: datetime = Field(default_factory=datetime.utcnow, nullable=False)
-    estates: List["Estate"] = Relationship(
-        back_populates="search_events", link_model=SearchEventEstate
-    )
-    search_id: Optional[int] = Field(default=None, foreign_key="search.id")
-    search: Optional["Search"] = Relationship(back_populates="search_events")
-    prices: List["Price"] = Relationship(back_populates="search_event")
-
-class Search(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
-    category_id: Optional[int] = Field(default=None, foreign_key="category.id")
-    category: Optional[Category] = Relationship(back_populates="searches")
-    location: str = Field(index=True)
-    distance_radius: int = Field(default=0)
-    coordinates: Optional[str] = Field(default=None)
-    from_price: Optional[int]
-    to_price: Optional[int]
-    from_surface: Optional[int]
-    to_surface: Optional[int]
-    search_events: List["SearchEvent"] = Relationship(back_populates="search")
-    users: List[User] = Relationship(back_populates="searches", link_model=SearchUser)
-"""
-CATEGORY_MAP = {"terrain": "Plot"}
+class CategoryNotFoundError(Exception):
+    pass
 
 
 def parse_coordinates(
@@ -89,8 +36,9 @@ async def parse_scan_data(body: dict[str, Any], session: AsyncSession) -> None:
         Category.name == CATEGORY_MAP[estate_type.lower()]
     )
 
-    # TODO handle missing category
-    category = (await session.exec(cat_query)).first()
+    category = (await session.exec(cat_query)).first()  # type: ignore
+    if not category:
+        raise CategoryNotFoundError
 
     search_params = jmespath.search("pageProps.filteringQueryParams", body)
 
