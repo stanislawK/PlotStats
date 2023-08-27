@@ -8,6 +8,7 @@ class Settings(BaseSettings):
     db_name: str
     db_user: str
     db_pass: str
+    base_url: str
 
     @property
     def db_uri(self) -> str:
