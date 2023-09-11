@@ -194,3 +194,28 @@ async def test_create_category_capitalize_name(
     assert result["data"]["createCategory"]["name"] == name.title()
     assert category_db
     assert category_db.name == name.title()
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("url", ["test", "test.com"])
+async def test_adhoc_scan_invalid_input(client: httpx.AsyncClient, url: str) -> None:
+    mutation = f"""
+        mutation adhocScan {{
+            adhocScan(input: {{url: "{url}"}}) {{
+                __typename
+                ... on ScanSucceeded {{
+                    message
+                }}
+                ... on ScanFailedError {{
+                    message
+                }}
+                ... on InputValidationError {{
+                    message
+                }}
+            }}
+        }}
+    """
+    response = await client.post("/graphql", json={"query": mutation})
+    result = response.json()
+    assert result["data"]["adhocScan"]["__typename"] == "InputValidationError"
+    assert "url" in result["data"]["adhocScan"]["message"]
