@@ -1,6 +1,7 @@
 import strawberry
 
 import api.schemas.category
+import api.schemas.scan
 
 
 @strawberry.type
@@ -9,7 +10,7 @@ class Query(api.schemas.category.Query):
 
 
 @strawberry.type
-class Mutation(api.schemas.category.Mutation):
+class Mutation(api.schemas.category.Mutation, api.schemas.scan.Mutation):
     pass
 
 
