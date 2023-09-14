@@ -1,4 +1,4 @@
-from typing import AsyncIterator, Generator
+from typing import Any, AsyncIterator, Generator
 
 import httpx
 import pytest
@@ -80,3 +80,18 @@ async def client(
     app.dependency_overrides[get_async_session] = override_db
     async with httpx.AsyncClient(app=app, base_url="http://testserver") as client:
         yield client
+
+
+class MockAioResponse:
+    def __init__(self, json: dict[str, Any], status: int):
+        self._json = json
+        self.status = status
+
+    async def json(self) -> dict[str, Any]:
+        return self._json
+
+    async def __aexit__(self, exc_type, exc, tb):  # type: ignore
+        pass
+
+    async def __aenter__(self):  # type: ignore
+        return self

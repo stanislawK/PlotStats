@@ -8,6 +8,7 @@ sqlmodel
 asyncpg
 aiohttp[speedups]
 jmespath
+lxml
 
 # dev-packages
 black==23.3.0
@@ -18,6 +19,7 @@ pep8-naming
 pip-tools
 polyfactory
 pytest
+pytest-aiohttp
 pytest-mock
 pytest-asyncio
 pytest-cov

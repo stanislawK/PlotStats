@@ -1,12 +1,17 @@
+import json
+
 import httpx
 import pytest
+from pytest_mock import MockerFixture
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from api.models import Category
+from api.models.estate import Estate
+from api.models.price import Price
 from api.types.category import CategoryExistsError
 
-from .conftest import examples
+from .conftest import MockAioResponse, examples
 
 
 @pytest.mark.asyncio
@@ -219,3 +224,72 @@ async def test_adhoc_scan_invalid_input(client: httpx.AsyncClient, url: str) -> 
     result = response.json()
     assert result["data"]["adhocScan"]["__typename"] == "InputValidationError"
     assert "url" in result["data"]["adhocScan"]["message"]
+
+
+@pytest.mark.asyncio
+async def test_adhoc_scan_correct_response(
+    client: httpx.AsyncClient, _db_session: AsyncSession, mocker: MockerFixture
+) -> None:
+    category = Category(name="Plot")
+    _db_session.add(category)
+    await _db_session.commit()
+    url = "https://www.test.io/test"
+    with open("tests/example_files/body_plot.json", "r") as f:
+        body = json.load(f)
+    resp = MockAioResponse(body, 200)
+    mocker.patch("aiohttp.ClientSession.get", return_value=resp)
+    mutation = f"""
+        mutation adhocScan {{
+            adhocScan(input: {{url: "{url}"}}) {{
+                __typename
+                ... on ScanSucceeded {{
+                    message
+                }}
+                ... on ScanFailedError {{
+                    message
+                }}
+                ... on InputValidationError {{
+                    message
+                }}
+            }}
+        }}
+    """
+    response = await client.post("/graphql", json={"query": mutation})
+    estates_parsed = (await _db_session.exec(select(Estate))).all()  # type: ignore
+    prices_parsed = (await _db_session.exec(select(Price))).all()  # type: ignore
+    assert len(estates_parsed) == 36
+    assert len(prices_parsed) == 36
+    result = response.json()
+    assert result["data"]["adhocScan"]["__typename"] == "ScanSucceeded"
+    assert "Scan has finished" in result["data"]["adhocScan"]["message"]
+
+
+@pytest.mark.asyncio
+async def test_adhoc_scan_incorrect_category(
+    client: httpx.AsyncClient, mocker: MockerFixture
+) -> None:
+    url = "https://www.test.io/test"
+    with open("tests/example_files/body_plot.json", "r") as f:
+        body = json.load(f)
+    resp = MockAioResponse(body, 200)
+    mocker.patch("aiohttp.ClientSession.get", return_value=resp)
+    mutation = f"""
+        mutation adhocScan {{
+            adhocScan(input: {{url: "{url}"}}) {{
+                __typename
+                ... on ScanSucceeded {{
+                    message
+                }}
+                ... on ScanFailedError {{
+                    message
+                }}
+                ... on InputValidationError {{
+                    message
+                }}
+            }}
+        }}
+    """
+    response = await client.post("/graphql", json={"query": mutation})
+    result = response.json()
+    assert result["data"]["adhocScan"]["__typename"] == "ScanFailedError"
+    assert "Document parsing failed." in result["data"]["adhocScan"]["message"]
