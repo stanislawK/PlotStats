@@ -19,9 +19,11 @@ HEADERS = {
 }
 
 TOKEN_REGEX = r"(?<=buildId\":).+?(?=\",)"
+TOKEN = "U-X80D14b5VUVY_qgIbBQ"
 
 
 async def make_request(url: str) -> tuple[int, dict[str, Any]]:
+    url = url.format(api_key=TOKEN)
     async with aiohttp.ClientSession() as session:
         async with session.get(url, headers=HEADERS) as resp:
             if resp.status != 200:
