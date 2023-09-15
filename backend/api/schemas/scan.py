@@ -1,3 +1,4 @@
+import logging
 from typing import Any
 
 import strawberry
@@ -14,6 +15,7 @@ from api.types.scan import (
     ScanSucceeded,
 )
 from api.utils.fetching import make_request
+from api.utils.url_parsing import parse_url
 
 
 @strawberry.type
@@ -26,9 +28,11 @@ class Mutation:
             data = input.to_pydantic()
         except ValidationError as error:
             return InputValidationError(message=str(error))
-        print(f"Sending request to {data.url}...")
-        status_code, body = await make_request(data.url)
+        url = parse_url(data.url)
+        logging.info(f"Sending request to {url}...")
+        status_code, body = await make_request(url)
         if status_code != 200:
+            logging.error(f"Scan has failed with {status_code} status code.")
             return ScanFailedError(
                 message=f"Scan has failed with {status_code} status code."
             )
