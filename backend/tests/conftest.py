@@ -82,13 +82,28 @@ async def client(
         yield client
 
 
-class MockAioResponse:
+class MockAioJSONResponse:
     def __init__(self, json: dict[str, Any], status: int):
         self._json = json
         self.status = status
 
     async def json(self) -> dict[str, Any]:
         return self._json
+
+    async def __aexit__(self, exc_type, exc, tb):  # type: ignore
+        pass
+
+    async def __aenter__(self):  # type: ignore
+        return self
+
+
+class MockAioTextResponse:
+    def __init__(self, text: str, status: int):
+        self._text = text
+        self.status = status
+
+    async def text(self) -> str:
+        return self._text
 
     async def __aexit__(self, exc_type, exc, tb):  # type: ignore
         pass
