@@ -1,3 +1,4 @@
+import api.utils.fetching
 from api.settings import settings
 from api.utils.url_parsing import parse_url
 
@@ -18,3 +19,10 @@ def test_parsing_url() -> None:
         f"searchingCriteria=wielkopolskie&searchingCriteria=poznan&"
         f"searchingCriteria=poznan&searchingCriteria=poznan"
     )
+
+
+def test_extracting_token() -> None:
+    with open("tests/example_files/404_resp.html", "r") as f:
+        body = f.read()
+    api.utils.fetching.extract_token(body)
+    assert api.utils.fetching.TOKEN == "U-X80D14b5VUVY_qgIbBQ"

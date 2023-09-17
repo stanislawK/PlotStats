@@ -1,6 +1,9 @@
+import asyncio
+import random
 from typing import Any
 
 import aiohttp
+import lxml.html
 
 from api.settings import settings
 
@@ -18,15 +21,36 @@ HEADERS = {
     "Accept": "*/*",
 }
 
-TOKEN_REGEX = r"(?<=buildId\":).+?(?=\",)"
-TOKEN = "U-X80D14b5VUVY_qgIbBQ"
+TOKEN = ""
+RETRIED = set()
+
+
+def extract_token(html_body: str) -> None:
+    global TOKEN
+    parser = lxml.html.fromstring(html_body)
+    parsed = parser.xpath('//script[contains(@src, "Manifest.js")]/@src')
+    extracted_url = next(iter(parsed), "/")
+    TOKEN = extracted_url.split("/")[-2]
 
 
 async def make_request(url: str) -> tuple[int, dict[str, Any]]:
-    url = url.format(api_key=TOKEN)
+    global RETRIED
+    formatted_url = url.format(api_key=TOKEN)
+    print(f"Sending request to {formatted_url}")
     async with aiohttp.ClientSession() as session:
-        async with session.get(url, headers=HEADERS) as resp:
-            if resp.status != 200:
+        async with session.get(formatted_url, headers=HEADERS) as resp:
+            if resp.status == 404 and url not in RETRIED:
+                print("404 status code - retrying...")
+                body = await resp.text()
+                extract_token(body)
+                delay = random.randint(20, 40)
+                print(f"waiting for {delay} seconds...")
+                RETRIED.add(url)
+                await asyncio.sleep(delay)
+                return await make_request(url)
+            elif resp.status != 200:
                 return resp.status, {}
+            if url in RETRIED:
+                RETRIED.remove(url)
             body = await resp.json()
-            return 200, body
+            return 200, body  # type: ignore
