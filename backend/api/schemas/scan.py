@@ -38,7 +38,7 @@ class Mutation:
             )
         session: AsyncSession = info.context["session"]
         try:
-            await parse_scan_data(body, session)
+            await parse_scan_data(data.url, body, session)
         except CategoryNotFoundError:
             return ScanFailedError(message="Document parsing failed.")
         return ScanSucceeded  # type: ignore

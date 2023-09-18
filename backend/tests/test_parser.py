@@ -109,7 +109,7 @@ async def test_plot_scan_parsing(_db_session: AsyncSession) -> None:
     with open("tests/example_files/body_plot.json", "r") as f:
         body = json.load(f)
 
-    await parse_scan_data(body, _db_session)
+    await parse_scan_data("https://www.test.io/test", body, _db_session)
 
     search_parsed = (await _db_session.exec(select(Search))).first()
     for key, value in SEARCH_EXPECTED["plot"].items():
@@ -150,7 +150,7 @@ async def test_apartment_scan_parsing(_db_session: AsyncSession) -> None:
     with open("tests/example_files/body_apartment.json", "r") as f:
         body = json.load(f)
 
-    await parse_scan_data(body, _db_session)
+    await parse_scan_data("https://www.test.io/test", body, _db_session)
 
     search_parsed = (await _db_session.exec(select(Search))).first()
     for key, value in SEARCH_EXPECTED["apartment"].items():
@@ -191,7 +191,7 @@ async def test_house_scan_parsing(_db_session: AsyncSession) -> None:
     with open("tests/example_files/body_house.json", "r") as f:
         body = json.load(f)
 
-    await parse_scan_data(body, _db_session)
+    await parse_scan_data("https://www.test.io/test", body, _db_session)
 
     search_parsed = (await _db_session.exec(select(Search))).first()
     for key, value in SEARCH_EXPECTED["house"].items():
@@ -221,3 +221,42 @@ async def test_house_scan_parsing(_db_session: AsyncSession) -> None:
     )
     for key, value in PRICE_EXPECTED["house"].items():
         assert getattr(price_parsed, key) == value
+
+
+@pytest.mark.asyncio
+async def test_second_scan_parsing(_db_session: AsyncSession) -> None:
+    category = Category(name="Plot")
+    _db_session.add(category)
+    await _db_session.commit()
+
+    with open("tests/example_files/body_plot.json", "r") as f:
+        body = json.load(f)
+
+    await parse_scan_data("https://www.test.io/test", body, _db_session)
+    first_estate = body["pageProps"]["data"]["searchAds"]["items"][0]
+    first_estate["title"] = "New Title"
+    await parse_scan_data("https://www.test.io/test", body, _db_session)
+
+    serches = (await _db_session.exec(select(Search))).all()
+    assert len(serches) == 1
+    search_parsed = serches[0]
+    for key, value in SEARCH_EXPECTED["plot"].items():
+        assert getattr(search_parsed, key) == value
+
+    search_events_parsed = (await _db_session.exec(select(SearchEvent))).all()
+    assert len(search_events_parsed) == 2
+    assert (
+        search_events_parsed[0].search
+        == search_events_parsed[1].search
+        == search_parsed
+    )
+    assert search_events_parsed[0].date != search_events_parsed[1].date
+
+    estates_parsed = (await _db_session.exec(select(Estate))).all()
+    first_estate_db = next(
+        (estate for estate in estates_parsed if estate.id == first_estate["id"])
+    )
+    assert first_estate_db.title == "New Title"
+    prices_parsed = (await _db_session.exec(select(Price))).all()
+    assert len(estates_parsed) == 36
+    assert len(prices_parsed) == 72

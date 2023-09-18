@@ -23,6 +23,7 @@ examples: dict[str, dict[str, str | int]] = {
         "to_price": 100000,
         "from_surface": 0,
         "to_surface": 5000,
+        "url": "https://www.test.io/test",
     },
     "user": {"email": "john@test.com"},
     "estate": {
