@@ -33,8 +33,13 @@ def extract_token(html_body: str) -> None:
     TOKEN = extracted_url.split("/")[-2]
 
 
-async def make_request(url: str) -> tuple[int, dict[str, Any]]:
+async def make_request(
+    url: str, wait_before_request: int = 0
+) -> tuple[int, dict[str, Any]]:
     global RETRIED
+    if wait_before_request:
+        print(f"waiting for {wait_before_request} seconds before next request...")
+        await asyncio.sleep(wait_before_request)
     formatted_url = url.format(api_key=TOKEN)
     print(f"Sending request to {formatted_url}")
     async with aiohttp.ClientSession() as session:
