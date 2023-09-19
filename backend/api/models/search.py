@@ -22,3 +22,4 @@ class Search(SQLModel, table=True):
     to_surface: Optional[int]
     search_events: List["SearchEvent"] = Relationship(back_populates="search")
     users: List[User] = Relationship(back_populates="searches", link_model=SearchUser)
+    url: str = Field(index=True, unique=True)
