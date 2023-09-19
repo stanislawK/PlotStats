@@ -45,9 +45,9 @@ def update_estate(
         session.add(existing_estate)
 
 
-async def parse_scan_data(
+async def parse_search_info(
     url: str, body: dict[str, Any], session: AsyncSession
-) -> None:
+) -> SearchEvent:
     coordinates_org = jmespath.search("pageProps.mapBoundingBox.boundingBox", body)
     coordinates_alt = jmespath.search("pageProps.data.searchMapPins.boundingBox", body)
 
@@ -83,7 +83,17 @@ async def parse_scan_data(
     search_event = SearchEvent(search=search)
     session.add(search_event)
     await session.commit()
+    return search_event
 
+
+async def parse_scan_data(
+    url: str,
+    body: dict[str, Any],
+    session: AsyncSession,
+    search_event: SearchEvent | None = None,
+) -> None:
+    if not search_event:
+        search_event = await parse_search_info(url, body, session)
     ads = jmespath.search("pageProps.data.searchAds.items", body)
     estates = [
         Estate(

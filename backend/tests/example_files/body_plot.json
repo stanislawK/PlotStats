@@ -4068,7 +4068,7 @@
                     "totalResults": 69,
                     "itemsPerPage": 36,
                     "page": 1,
-                    "totalPages": 2,
+                    "totalPages": 1,
                     "__typename": "SearchPagination"
                 },
                 "locationsData": [],
