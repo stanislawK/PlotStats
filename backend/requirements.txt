@@ -7,9 +7,7 @@
 aiodns==3.0.0
     # via aiohttp
 aiohttp[speedups]==3.8.4
-    # via
-    #   -r requirements.in
-    #   pytest-aiohttp
+    # via -r requirements.in
 aiosignal==1.3.1
     # via aiohttp
 aiosqlite==0.19.0
@@ -106,6 +104,8 @@ isort==5.12.0
     # via -r requirements.in
 jmespath==1.0.1
     # via -r requirements.in
+loguru==0.7.2
+    # via -r requirements.in
 lxml==4.9.3
     # via -r requirements.in
 mako==1.2.4
@@ -166,19 +166,14 @@ pyproject-hooks==1.0.0
 pytest==7.3.0
     # via
     #   -r requirements.in
-    #   pytest-aiohttp
     #   pytest-asyncio
     #   pytest-cov
     #   pytest-env
     #   pytest-mock
     #   pytest-sugar
     #   pytest-xdist
-pytest-aiohttp==1.0.5
-    # via -r requirements.in
 pytest-asyncio==0.21.0
-    # via
-    #   -r requirements.in
-    #   pytest-aiohttp
+    # via -r requirements.in
 pytest-cov==4.0.0
     # via -r requirements.in
 pytest-env==0.8.1

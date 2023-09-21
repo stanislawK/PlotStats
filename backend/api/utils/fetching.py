@@ -4,6 +4,7 @@ from typing import Any
 
 import aiohttp
 import lxml.html
+from loguru import logger
 
 from api.settings import settings
 
@@ -38,18 +39,18 @@ async def make_request(
 ) -> tuple[int, dict[str, Any]]:
     global RETRIED
     if wait_before_request:
-        print(f"waiting for {wait_before_request} seconds before next request...")
+        logger.info(f"waiting for {wait_before_request} seconds before next request...")
         await asyncio.sleep(wait_before_request)
     formatted_url = url.format(api_key=TOKEN)
-    print(f"Sending request to {formatted_url}")
+    logger.info(f"Sending request to {formatted_url}")
     async with aiohttp.ClientSession() as session:
         async with session.get(formatted_url, headers=HEADERS) as resp:
             if resp.status == 404 and url not in RETRIED:
-                print("404 status code - retrying...")
+                logger.warning("404 status code - retrying...")
                 body = await resp.text()
                 extract_token(body)
                 delay = random.randint(20, 40)
-                print(f"waiting for {delay} seconds...")
+                logger.info(f"waiting for {delay} seconds...")
                 RETRIED.add(url)
                 await asyncio.sleep(delay)
                 return await make_request(url)
