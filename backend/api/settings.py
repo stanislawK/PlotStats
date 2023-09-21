@@ -1,4 +1,7 @@
+from loguru import logger
 from pydantic import BaseSettings
+
+logger.add("file_{time:YYYY-MM-DD}.log", rotation="50 MB", retention="10 days")
 
 
 class Settings(BaseSettings):

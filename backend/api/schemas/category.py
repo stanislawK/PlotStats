@@ -1,6 +1,7 @@
 from typing import Any
 
 import strawberry
+from loguru import logger
 from pydantic import ValidationError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import select
@@ -46,6 +47,7 @@ class Mutation:
         ).scalar():
             return CategoryExistsError()
         category = Category(name=data.name)
+        logger.info(f"Creating new category {data.name}")
         session.add(category)
         await session.commit()
         await session.refresh(category)
