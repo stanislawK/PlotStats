@@ -8,6 +8,7 @@ from strawberry.schema import BaseSchema
 from api.database import get_async_session
 from api.schema import schema
 from api.settings import settings
+from api.utils.celery_utils import create_celery
 
 
 async def get_context(
@@ -23,5 +24,6 @@ def create_app() -> FastAPI:
         schema=schema, context_getter=get_context  # type: ignore
     )
     app = FastAPI(debug=settings.debug)
+    app.celery_app = create_celery()  # type: ignore
     app.include_router(graphql_app, prefix="/graphql")
     return app

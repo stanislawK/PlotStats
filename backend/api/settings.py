@@ -12,6 +12,8 @@ class Settings(BaseSettings):
     db_user: str
     db_pass: str
     base_url: str
+    celery_broker_url: str
+    celery_result_backend: str
 
     @property
     def db_uri(self) -> str:

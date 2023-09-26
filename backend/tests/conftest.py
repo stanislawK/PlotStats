@@ -1,9 +1,13 @@
 from typing import Any, AsyncIterator, Generator
 
+import fakeredis
 import httpx
 import pytest
 import pytest_asyncio
+from _pytest.logging import LogCaptureFixture
 from fastapi import FastAPI
+from loguru import logger
+from pytest_mock import MockerFixture
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.orm import sessionmaker
 from sqlmodel import SQLModel
@@ -49,6 +53,12 @@ def app() -> Generator[FastAPI, None, None]:
     yield _app
 
 
+@pytest.fixture
+def cache() -> Generator[fakeredis.FakeRedis, None, None]:
+    cache = fakeredis.FakeRedis(decode_responses=True)  # type:ignore
+    yield cache
+
+
 @pytest_asyncio.fixture
 async def _db_session() -> AsyncIterator[AsyncSession]:
     """Create temporary database for tests"""
@@ -71,14 +81,33 @@ async def _db_session() -> AsyncIterator[AsyncSession]:
 
 
 @pytest.fixture
+def caplog(caplog: LogCaptureFixture) -> Generator[LogCaptureFixture, None, None]:
+    handler_id = logger.add(
+        caplog.handler,
+        format="{message}",
+        level=0,
+        filter=lambda record: record["level"].no >= caplog.handler.level,
+        enqueue=False,
+    )
+    yield caplog
+    logger.remove(handler_id)
+
+
+@pytest.fixture
 async def client(
-    app: FastAPI, _db_session: AsyncSession
+    app: FastAPI,
+    _db_session: AsyncSession,
+    caplog: LogCaptureFixture,
+    mocker: MockerFixture,
+    cache: fakeredis.FakeRedis,
 ) -> AsyncIterator[httpx.AsyncClient]:
     async def override_db() -> AsyncIterator[AsyncSession]:
         async with _db_session as s:
             yield s
 
     app.dependency_overrides[get_async_session] = override_db
+
+    mocker.patch("api.utils.fetching.cache", cache)
     async with httpx.AsyncClient(app=app, base_url="http://testserver") as client:
         yield client
 
