@@ -6,6 +6,7 @@ import aiohttp
 import lxml.html
 from loguru import logger
 
+from api.database import get_cache
 from api.settings import settings
 
 HEADERS = {
@@ -22,16 +23,16 @@ HEADERS = {
     "Accept": "*/*",
 }
 
-TOKEN = ""
+cache = get_cache()
 RETRIED = set()
 
 
 def extract_token(html_body: str) -> None:
-    global TOKEN
     parser = lxml.html.fromstring(html_body)
     parsed = parser.xpath('//script[contains(@src, "Manifest.js")]/@src')
     extracted_url = next(iter(parsed), "/")
-    TOKEN = extracted_url.split("/")[-2]
+    token = extracted_url.split("/")[-2]
+    cache.set("token", token)
 
 
 async def make_request(
@@ -41,7 +42,8 @@ async def make_request(
     if wait_before_request:
         logger.info(f"waiting for {wait_before_request} seconds before next request...")
         await asyncio.sleep(wait_before_request)
-    formatted_url = url.format(api_key=TOKEN)
+    token = cache.get("token") or ""
+    formatted_url = url.format(api_key=token)
     logger.info(f"Sending request to {formatted_url}")
     async with aiohttp.ClientSession() as session:
         async with session.get(formatted_url, headers=HEADERS) as resp:

@@ -1,5 +1,6 @@
 from typing import AsyncGenerator
 
+import redis
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.orm import sessionmaker
 from sqlmodel.ext.asyncio.session import AsyncSession
@@ -21,3 +22,7 @@ async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
         raise
     finally:
         await session.close()
+
+
+def get_cache() -> redis.Redis:
+    return redis.Redis(host="redis", decode_responses=True)

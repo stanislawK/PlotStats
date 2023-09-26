@@ -1,12 +1,12 @@
 import json
 
+import fakeredis
 import httpx
 import pytest
 from pytest_mock import MockerFixture
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-import api.utils.fetching
 from api.models import Category
 from api.models.estate import Estate
 from api.models.price import Price
@@ -298,7 +298,7 @@ async def test_adhoc_scan_incorrect_category(
 
 @pytest.mark.asyncio
 async def test_adhoc_scan_404_response(
-    client: httpx.AsyncClient, mocker: MockerFixture
+    client: httpx.AsyncClient, mocker: MockerFixture, cache: fakeredis.FakeRedis
 ) -> None:
     url = "https://www.test.io/test"
     with open("tests/example_files/404_resp.html", "r") as f:
@@ -329,4 +329,4 @@ async def test_adhoc_scan_404_response(
         "Scan has failed with 404 status code."
         in result["data"]["adhocScan"]["message"]
     )
-    assert api.utils.fetching.TOKEN == "U-X80D14b5VUVY_qgIbBQ"
+    assert cache.get("token") == "U-X80D14b5VUVY_qgIbBQ"
