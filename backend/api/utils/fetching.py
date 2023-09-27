@@ -24,7 +24,6 @@ HEADERS = {
 }
 
 cache = get_cache()
-RETRIED = set()
 
 
 def extract_token(html_body: str) -> None:
@@ -38,7 +37,6 @@ def extract_token(html_body: str) -> None:
 async def make_request(
     url: str, wait_before_request: int = 0
 ) -> tuple[int, dict[str, Any]]:
-    global RETRIED
     if wait_before_request:
         logger.info(f"waiting for {wait_before_request} seconds before next request...")
         await asyncio.sleep(wait_before_request)
@@ -47,18 +45,18 @@ async def make_request(
     logger.info(f"Sending request to {formatted_url}")
     async with aiohttp.ClientSession() as session:
         async with session.get(formatted_url, headers=HEADERS) as resp:
-            if resp.status == 404 and url not in RETRIED:
+            if resp.status == 404 and not cache.get(f"retried_{url}"):
                 logger.warning("404 status code - retrying...")
                 body = await resp.text()
                 extract_token(body)
                 delay = random.randint(20, 40)
                 logger.info(f"waiting for {delay} seconds...")
-                RETRIED.add(url)
+                cache.set(f"retried_{url}", 1)
                 await asyncio.sleep(delay)
                 return await make_request(url)
-            elif resp.status != 200:
+            if cache.get(f"retried_{url}"):
+                cache.delete(f"retried_{url}")
+            if resp.status != 200:
                 return resp.status, {}
-            if url in RETRIED:
-                RETRIED.remove(url)
             body = await resp.json()
             return 200, body  # type: ignore

@@ -11,6 +11,7 @@ from api.models import Category
 from api.models.estate import Estate
 from api.models.price import Price
 from api.types.category import CategoryExistsError
+from api.utils.url_parsing import parse_url
 
 from .conftest import MockAioJSONResponse, MockAioTextResponse, examples
 
@@ -301,6 +302,7 @@ async def test_adhoc_scan_404_response(
     client: httpx.AsyncClient, mocker: MockerFixture, cache: fakeredis.FakeRedis
 ) -> None:
     url = "https://www.test.io/test"
+    parsed_url = parse_url(url)
     with open("tests/example_files/404_resp.html", "r") as f:
         body = f.read()
     resp = MockAioTextResponse(body, 404)
@@ -330,3 +332,4 @@ async def test_adhoc_scan_404_response(
         in result["data"]["adhocScan"]["message"]
     )
     assert cache.get("token") == "U-X80D14b5VUVY_qgIbBQ"
+    assert cache.get(f"retried_{parsed_url}") == "1"
