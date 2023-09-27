@@ -11,7 +11,6 @@ from api.models import Category
 from api.models.estate import Estate
 from api.models.price import Price
 from api.types.category import CategoryExistsError
-from api.utils.url_parsing import parse_url
 
 from .conftest import MockAioJSONResponse, MockAioTextResponse, examples
 
