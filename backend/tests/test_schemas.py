@@ -302,7 +302,6 @@ async def test_adhoc_scan_404_response(
     client: httpx.AsyncClient, mocker: MockerFixture, cache: fakeredis.FakeRedis
 ) -> None:
     url = "https://www.test.io/test"
-    parsed_url = parse_url(url)
     with open("tests/example_files/404_resp.html", "r") as f:
         body = f.read()
     resp = MockAioTextResponse(body, 404)
