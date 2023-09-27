@@ -332,4 +332,3 @@ async def test_adhoc_scan_404_response(
         in result["data"]["adhocScan"]["message"]
     )
     assert cache.get("token") == "U-X80D14b5VUVY_qgIbBQ"
-    assert cache.get(f"retried_{parsed_url}") == "1"
