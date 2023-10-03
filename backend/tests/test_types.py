@@ -17,9 +17,10 @@ def test_category_type() -> None:
 
 
 def test_adhoc_scan_input_type() -> None:
-    [url_field] = AdhocScanInput._type_definition.fields  # type: ignore
+    [url_field, schedule_field] = AdhocScanInput._type_definition.fields  # type: ignore
 
     assert url_field.python_name == "url"
+    assert schedule_field.python_name == "schedule"
     with pytest.raises(
         ValidationError,
         match=("invalid or missing URL scheme"),
@@ -30,6 +31,21 @@ def test_adhoc_scan_input_type() -> None:
         match=("url has to contain base url"),
     ):
         PydanticAdhocScanInput(url="https://test.com")
-    instance = PydanticAdhocScanInput(url="https://www.test.io/query_params")
+    with pytest.raises(
+        ValidationError,
+        match=(
+            "day_of_week\\n  field required \(type=value_error\.missing\)\\nschedule -> minute\\n  field required \(type=value_error\.missing\)"  # noqa
+        ),
+    ):
+        PydanticAdhocScanInput(
+            url="https://www.test.io/query_params", schedule={"hour": 1}
+        )
+    instance = PydanticAdhocScanInput(
+        url="https://www.test.io/query_params",
+        schedule={"day_of_week": 0, "hour": 1, "minute": 2},
+    )
     data = AdhocScanInput.from_pydantic(instance)
-    assert data.url == "https://www.test.io/query_params"  # type: ignore
+    assert data.url == "https://www.test.io/query_params"
+    assert data.schedule.hour == 1  # type: ignore
+    assert data.schedule.minute == 2  # type: ignore
+    assert data.schedule.day_of_week == 0  # type: ignore

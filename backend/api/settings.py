@@ -14,6 +14,8 @@ class Settings(BaseSettings):
     base_url: str
     celery_broker_url: str
     celery_result_backend: str
+    redbeat_redis_url: str
+    imports: tuple[str] = ("api.periodic_tasks",)
 
     @property
     def db_uri(self) -> str:

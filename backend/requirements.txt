@@ -21,6 +21,8 @@ anyio==3.6.2
     #   httpcore
     #   starlette
     #   watchfiles
+asgiref==3.7.2
+    # via -r requirements.in
 async-timeout==4.0.2
     # via
     #   aiohttp
@@ -38,6 +40,11 @@ brotli==1.0.9
 build==0.10.0
     # via pip-tools
 celery==5.3.4
+    # via
+    #   -r requirements.in
+    #   celery-redbeat
+    #   pytest-celery
+celery-redbeat==2.1.1
     # via -r requirements.in
 certifi==2023.5.7
     # via
@@ -198,6 +205,8 @@ pytest==7.3.0
     #   pytest-xdist
 pytest-asyncio==0.21.0
     # via -r requirements.in
+pytest-celery==0.0.0
+    # via -r requirements.in
 pytest-cov==4.0.0
     # via -r requirements.in
 pytest-env==0.8.1
@@ -211,6 +220,7 @@ pytest-xdist==3.2.1
 python-dateutil==2.8.2
     # via
     #   celery
+    #   celery-redbeat
     #   faker
     #   freezegun
     #   strawberry-graphql
@@ -225,6 +235,7 @@ pyyaml==6.0
 redis==5.0.0
     # via
     #   -r requirements.in
+    #   celery-redbeat
     #   fakeredis
 six==1.16.0
     # via python-dateutil
@@ -248,6 +259,8 @@ starlette==0.26.1
     # via fastapi
 strawberry-graphql[fastapi]==0.171.1
     # via -r requirements.in
+tenacity==8.2.3
+    # via celery-redbeat
 termcolor==2.2.0
     # via pytest-sugar
 tomli==2.0.1
@@ -261,6 +274,7 @@ tomli==2.0.1
 typing-extensions==4.5.0
     # via
     #   alembic
+    #   asgiref
     #   mypy
     #   polyfactory
     #   pydantic

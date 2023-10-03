@@ -93,6 +93,11 @@ def caplog(caplog: LogCaptureFixture) -> Generator[LogCaptureFixture, None, None
     logger.remove(handler_id)
 
 
+@pytest.fixture(scope="session")
+def celery_config() -> dict[str, str]:
+    return {"broker_url": "redis://", "result_backend": "redis://"}
+
+
 @pytest.fixture
 async def client(
     app: FastAPI,
@@ -100,6 +105,7 @@ async def client(
     caplog: LogCaptureFixture,
     mocker: MockerFixture,
     cache: fakeredis.FakeRedis,
+    celery_config: dict[str, str],
 ) -> AsyncIterator[httpx.AsyncClient]:
     async def override_db() -> AsyncIterator[AsyncSession]:
         async with _db_session as s:

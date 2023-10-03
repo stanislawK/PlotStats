@@ -1,12 +1,34 @@
+from typing import Optional
+
 import strawberry
 from pydantic import BaseModel, HttpUrl, validator
+from strawberry import LazyType
 
 from api.settings import settings
 from api.types.general import Error, InputValidationError
 
 
+class PydanticScanSchedule(BaseModel):
+    day_of_week: int
+    hour: int
+    minute: int
+
+
+@strawberry.experimental.pydantic.input(
+    model=PydanticScanSchedule,
+    fields=[
+        "day_of_week",
+        "hour",
+        "minute",
+    ],
+)
+class ScanSchedule:
+    pass
+
+
 class PydanticAdhocScanInput(BaseModel):
     url: HttpUrl
+    schedule: Optional[PydanticScanSchedule] = None
 
     @validator("url")
     @classmethod
@@ -15,9 +37,10 @@ class PydanticAdhocScanInput(BaseModel):
         return value
 
 
-@strawberry.experimental.pydantic.input(model=PydanticAdhocScanInput, fields=["url"])
+@strawberry.experimental.pydantic.input(model=PydanticAdhocScanInput)
 class AdhocScanInput:
-    pass
+    url: strawberry.auto
+    schedule: Optional[LazyType["ScanSchedule", __name__]]
 
 
 @strawberry.type

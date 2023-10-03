@@ -3,11 +3,14 @@ from typing import AsyncGenerator
 import redis
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.pool import NullPool
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from .settings import settings
 
-async_engine = create_async_engine(settings.db_uri, echo=True, future=True)
+async_engine = create_async_engine(
+    settings.db_uri, echo=True, future=True, poolclass=NullPool
+)
 
 
 async def get_async_session() -> AsyncGenerator[AsyncSession, None]:

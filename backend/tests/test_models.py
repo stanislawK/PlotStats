@@ -5,6 +5,7 @@ from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from api.models import Category, Estate, Price, Search, SearchEvent, User
+from api.models.search import decode_url, encode_url
 
 from .conftest import examples
 
@@ -22,13 +23,18 @@ async def test_category(_db_session: AsyncSession) -> None:
 @pytest.mark.asyncio
 async def test_search(_db_session: AsyncSession) -> None:
     category = Category(**examples["category"])
-    search = Search(**examples["search"], category=category)
+    search_data = examples["search"].copy()
+    org_url = search_data.pop("url")
+    search = Search(
+        url=encode_url(org_url), **search_data, category=category  # type:ignore
+    )
     _db_session.add(search)
     await _db_session.commit()
     from_db: Search | None = (await _db_session.execute(select(Search))).scalar()
     assert from_db is not None
-    for key, value in examples["search"].items():
+    for key, value in search_data.items():
         assert getattr(from_db, key) == value
+    assert decode_url(from_db.url) == org_url  # type:ignore
     assert from_db.category is not None
     assert from_db.category.name == category.name
 
