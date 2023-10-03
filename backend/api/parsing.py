@@ -70,6 +70,7 @@ async def parse_search_info(
     search_query = select(Search).where(Search.url == encoded_url.decode("ascii"))
     search = (await session.exec(search_query)).first()  # type: ignore
 
+    schedule_dict = None
     if schedule is not None:
         schedule_dict = schedule.__dict__
         setup_scan_periodic_task(url, schedule_dict)
