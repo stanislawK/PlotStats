@@ -1,11 +1,13 @@
-import base64
-from typing import Any
+from typing import Any, Optional
 
 import jmespath
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import select
 
 from api.models import Category, Estate, Price, Search, SearchEvent
+from api.models.search import encode_url
+from api.schedulers import setup_scan_periodic_task
+from api.types.scan import PydanticScanSchedule
 
 CATEGORY_MAP = {"terrain": "Plot", "flat": "Apartment", "house": "House"}
 
@@ -46,7 +48,10 @@ def update_estate(
 
 
 async def parse_search_info(
-    url: str, body: dict[str, Any], session: AsyncSession
+    url: str,
+    schedule: Optional[PydanticScanSchedule],
+    body: dict[str, Any],
+    session: AsyncSession,
 ) -> SearchEvent:
     coordinates_org = jmespath.search("pageProps.mapBoundingBox.boundingBox", body)
     coordinates_alt = jmespath.search("pageProps.data.searchMapPins.boundingBox", body)
@@ -61,9 +66,14 @@ async def parse_search_info(
         raise CategoryNotFoundError
 
     search_params = jmespath.search("pageProps.filteringQueryParams", body)
-    encoded_url = base64.urlsafe_b64encode(url.encode("ascii"))
+    encoded_url = encode_url(url)
     search_query = select(Search).where(Search.url == encoded_url.decode("ascii"))
     search = (await session.exec(search_query)).first()  # type: ignore
+
+    schedule_dict = None
+    if schedule is not None:
+        schedule_dict = schedule.__dict__
+        setup_scan_periodic_task(url, schedule_dict)
 
     if not search:
         search = Search(
@@ -76,7 +86,12 @@ async def parse_search_info(
             to_surface=search_params.get("areaMax"),
             category=category,
             url=encoded_url,
+            schedule=schedule_dict,
         )
+        session.add(search)
+        await session.commit()
+    elif search and schedule_dict and search.schedule != schedule_dict:
+        search.schedule = schedule_dict
         session.add(search)
         await session.commit()
 
@@ -91,9 +106,10 @@ async def parse_scan_data(
     body: dict[str, Any],
     session: AsyncSession,
     search_event: SearchEvent | None = None,
+    schedule: Optional[PydanticScanSchedule] = None,
 ) -> None:
     if not search_event:
-        search_event = await parse_search_info(url, body, session)
+        search_event = await parse_search_info(url, schedule, body, session)
     ads = jmespath.search("pageProps.data.searchAds.items", body)
     estates = [
         Estate(

@@ -58,7 +58,7 @@ services:
     build:
       context: .
       dockerfile: config/backend.Dockerfile
-    command: "celery -A api.asgi.celery beat -l INFO"
+    command: "celery -A api.asgi.celery beat -S redbeat.RedBeatScheduler --max-interval 30 -l INFO"
     volumes:
       - ./backend:/backend
     depends_on:

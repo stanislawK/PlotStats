@@ -1,4 +1,5 @@
 alembic
+asgiref
 fastapi
 strawberry-graphql[fastapi]
 uvicorn[standard]
@@ -11,6 +12,7 @@ jmespath
 lxml
 loguru
 celery
+celery-redbeat
 redis
 
 # dev-packages
@@ -24,6 +26,7 @@ polyfactory
 pytest
 pytest-mock
 pytest-asyncio
+pytest-celery
 pytest-cov
 pytest-env
 pytest-sugar

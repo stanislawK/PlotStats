@@ -41,14 +41,16 @@ class Mutation:
             )
         session: AsyncSession = info.context["session"]
         try:
-            search_event = await parse_search_info(data.url, body, session)
+            search_event = await parse_search_info(
+                data.url, data.schedule, body, session
+            )
             await parse_scan_data(data.url, body, session, search_event)
         except CategoryNotFoundError:
             logger.critical(f"Parsing document for {url} has failed.")
             return ScanFailedError(message="Document parsing failed.")
         # Check for pagination
         total_pages = jmespath.search(TOTAL_PAGES_PATH, body) or 1
-        if total_pages <= 0:
+        if total_pages <= 1:
             return ScanSucceeded  # type: ignore
         for page_number in range(2, total_pages + 1):
             next_url = url + f"&page={page_number}"
