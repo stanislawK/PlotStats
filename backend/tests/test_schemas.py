@@ -228,8 +228,6 @@ async def test_adhoc_scan_invalid_input(client: httpx.AsyncClient, url: str) -> 
     assert "url" in result["data"]["adhocScan"]["message"]
 
 
-@pytest.mark.skip(reason="redis connection for tests on docker is failing")
-@pytest.mark.celery(result_backend=fakeredis)
 @pytest.mark.asyncio
 async def test_adhoc_scan_correct_response(
     client: httpx.AsyncClient, _db_session: AsyncSession, mocker: MockerFixture
@@ -243,6 +241,7 @@ async def test_adhoc_scan_correct_response(
         body = json.load(f)
     resp = MockAioJSONResponse(body, 200)
     mocker.patch("aiohttp.ClientSession.get", return_value=resp)
+    schedule_mock = mocker.patch("api.parsing.setup_scan_periodic_task")
     mutation = f"""
         mutation adhocScan {{
             adhocScan(input: {{
@@ -268,6 +267,7 @@ async def test_adhoc_scan_correct_response(
     search_parsed: Search = (
         await _db_session.exec(select(Search))  # type: ignore
     ).first()
+    schedule_mock.assert_called_once()
     assert len(estates_parsed) == 36
     assert len(prices_parsed) == 36
     assert search_parsed.schedule == schedule
