@@ -102,7 +102,6 @@ PRICE_EXPECTED = {
 }
 
 
-@pytest.mark.skip(reason="redis connection for tests on docker is failing")
 @pytest.mark.celery(result_backend="redis://")
 @pytest.mark.asyncio
 async def test_plot_scan_parsing(
@@ -116,8 +115,7 @@ async def test_plot_scan_parsing(
         body = json.load(f)
 
     schedule = PydanticScanSchedule(day_of_week=0, hour=1, minute=2)
-    mocker.patch("api.schedulers.setup_scan_periodic_task")
-    mocker.patch("api.periodic_tasks.run_periodic_scan")
+    schedule_mock = mocker.patch("api.parsing.setup_scan_periodic_task")
     await parse_scan_data(
         url="https://www.test.io/test",
         body=body,
@@ -130,7 +128,7 @@ async def test_plot_scan_parsing(
         assert getattr(search_parsed, key) == value
 
     assert search_parsed.schedule == {"day_of_week": 0, "hour": 1, "minute": 2}
-
+    schedule_mock.assert_called_once()
     search_event_parsed = (await _db_session.exec(select(SearchEvent))).first()
     assert search_event_parsed.search == search_parsed
 
