@@ -1,6 +1,7 @@
 from typing import Any
 
 from fastapi import Depends, FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.ext.asyncio import AsyncSession
 from strawberry.fastapi import GraphQLRouter
 from strawberry.schema import BaseSchema
@@ -26,4 +27,11 @@ def create_app() -> FastAPI:
     app = FastAPI(debug=settings.debug)
     app.celery_app = create_celery()  # type: ignore
     app.include_router(graphql_app, prefix="/graphql")
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
     return app

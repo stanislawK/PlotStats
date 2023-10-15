@@ -4,6 +4,8 @@ ENV PYTHONUNBUFFERED 1
 
 ENV PYTHONPATH "${PYTHONPATH}:/backend/"
 
+EXPOSE 8000
+
 COPY ./backend/requirements.txt /backend/
 WORKDIR /backend
 RUN pip install --no-deps --no-cache-dir -r requirements.txt
