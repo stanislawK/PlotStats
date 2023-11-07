@@ -4,6 +4,7 @@ import fakeredis
 import httpx
 import pytest
 from pytest_mock import MockerFixture
+from sqlalchemy.orm import selectinload
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
@@ -262,7 +263,9 @@ async def test_adhoc_scan_correct_response(
         }}
     """
     response = await client.post("/graphql", json={"query": mutation})
-    estates_parsed = (await _db_session.exec(select(Estate))).all()  # type: ignore
+    estates_parsed = (
+        await _db_session.exec(select(Estate).options(selectinload(Estate.prices)))
+    ).all()  # type: ignore
     prices_parsed = (await _db_session.exec(select(Price))).all()  # type: ignore
     search_parsed: Search = (
         await _db_session.exec(select(Search))  # type: ignore
@@ -271,6 +274,7 @@ async def test_adhoc_scan_correct_response(
     assert len(estates_parsed) == 36
     assert len(prices_parsed) == 36
     assert search_parsed.schedule == schedule
+    assert estates_parsed[0].prices[0] in prices_parsed
     assert decode_url(search_parsed.url) == url  # type: ignore
     result = response.json()
     assert result["data"]["adhocScan"]["__typename"] == "ScanSucceeded"

@@ -1,9 +1,20 @@
+import json
+
+import httpx
 import pytest
 from pydantic.error_wrappers import ValidationError
+from pytest_mock import MockerFixture
+from sqlmodel import select
+from sqlmodel.ext.asyncio.session import AsyncSession
 
 from api.models.category import Category
+from api.models.search_event import SearchEvent
 from api.types.category import CategoryType
+from api.types.event_stats import EventStatsType, convert_price_from_db
 from api.types.scan import AdhocScanInput, PydanticAdhocScanInput
+from api.utils.search_event import get_search_event_prices
+
+from .conftest import MockAioJSONResponse
 
 
 def test_category_type() -> None:
@@ -49,3 +60,56 @@ def test_adhoc_scan_input_type() -> None:
     assert data.schedule.hour == 1  # type: ignore
     assert data.schedule.minute == 2  # type: ignore
     assert data.schedule.day_of_week == 0  # type: ignore
+
+
+@pytest.mark.asyncio
+async def test_event_stats_type(
+    client: httpx.AsyncClient, _db_session: AsyncSession, mocker: MockerFixture
+) -> None:
+    category = Category(name="Plot")
+    _db_session.add(category)
+    await _db_session.commit()
+    url = "https://www.test.io/test"
+    with open("tests/example_files/body_plot.json", "r") as f:
+        body = json.load(f)
+    resp = MockAioJSONResponse(body, 200)
+    mocker.patch("aiohttp.ClientSession.get", return_value=resp)
+    mutation = f"""
+        mutation adhocScan {{
+            adhocScan(input: {{
+                    url: "{url}"
+                }}) {{
+                __typename
+                ... on ScanSucceeded {{
+                    message
+                }}
+                ... on ScanFailedError {{
+                    message
+                }}
+                ... on InputValidationError {{
+                    message
+                }}
+            }}
+        }}
+    """
+    await client.post("/graphql", json={"query": mutation})
+    search_event = (await _db_session.exec(select(SearchEvent))).first()
+    prices = await get_search_event_prices(_db_session, search_event)
+    price = prices[0]
+    event_stats = EventStatsType(
+        avg_price=55.55,
+        avg_price_per_square_meter=55.55,
+        avg_terrain_area_in_square_meters=999.99,
+        avg_area_in_square_meters=999.99,
+        min_price=convert_price_from_db(price),
+        min_price_per_square_meter=convert_price_from_db(price),
+        min_prices=[convert_price_from_db(price)],
+        min_prices_per_square_meter=[convert_price_from_db(price)],
+    )
+    for key, value in event_stats.min_price.__dict__.items():
+        if key == "estate":
+            continue
+        assert getattr(price, key) == value
+
+    for estate_key, estate_value in event_stats.min_price.estate.__dict__.items():
+        assert getattr(price.estate, estate_key) == estate_value
