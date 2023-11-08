@@ -10,20 +10,22 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 
 import api.utils.fetching
 from api.models.category import Category
+from api.models.estate import Estate
 from api.models.price import Price
+from api.models.search import Search
 from api.models.search_event import SearchEvent
 from api.settings import settings
 from api.utils.search_event import (
-    get_search_event_prices,
-    get_search_event_by_id,
     get_search_event_avg_stats,
+    get_search_event_by_id,
     get_search_event_min_prices,
+    get_search_event_prices,
 )
 from api.utils.url_parsing import parse_url
-from api.models.estate import Estate
-from api.models.search import Search
 
-from .conftest import examples, MockAioJSONResponse
+from .conftest import MockAioJSONResponse, examples
+
+# mypy: ignore-errors
 
 
 def test_parsing_url() -> None:
@@ -192,5 +194,20 @@ async def test_get_search_event_min_prices(
             select(SearchEvent).options(selectinload(SearchEvent.prices))
         )
     ).first()
-    min_prices_without_top_x = get_search_event_min_prices(search_event.prices)
-    assert min_prices_without_top_x == "test"
+    prices = await get_search_event_prices(_db_session, search_event)
+    min_prices_without_top_x = get_search_event_min_prices(prices)
+    assert min_prices_without_top_x["min_price"].price == 100000
+    assert (
+        min_prices_without_top_x["min_price_per_square_meter"].price_per_square_meter
+        == 26
+    )
+    min_prices = get_search_event_min_prices(prices, 3)
+    assert (
+        len(min_prices["min_prices"])
+        == len(min_prices["min_prices_per_square_meter"])
+        == 3
+    )
+    assert [p.price for p in min_prices["min_prices"]] == [100000, 100000, 102960]
+    assert [
+        p.price_per_square_meter for p in min_prices["min_prices_per_square_meter"]
+    ] == [26, 49, 81]

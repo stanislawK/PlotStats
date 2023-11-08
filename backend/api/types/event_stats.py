@@ -7,10 +7,10 @@ from api.models.price import Price
 from api.types.general import Error
 
 
-@strawberry.type
+@strawberry.input
 class EventStatsInput:
     id: int
-    top_prices: Optional[int]
+    top_prices: Optional[int] = strawberry.UNSET
 
 
 @strawberry.experimental.pydantic.type(
@@ -34,12 +34,12 @@ class PriceType:
 class EventStatsType:
     avg_price: float
     avg_price_per_square_meter: float
-    avg_area_in_square_meters: Optional[float]
-    avg_terrain_area_in_square_meters: Optional[float]
+    avg_area_in_square_meters: Optional[float] = strawberry.UNSET
+    avg_terrain_area_in_square_meters: Optional[float] = strawberry.UNSET
     min_price: PriceType
     min_price_per_square_meter: PriceType
-    min_prices: Optional[list[PriceType]]
-    min_prices_per_square_meter: Optional[list[PriceType]]
+    min_prices: Optional[list[PriceType]] = strawberry.UNSET
+    min_prices_per_square_meter: Optional[list[PriceType]] = strawberry.UNSET
 
 
 def convert_price_from_db(price: Price) -> PriceType:
@@ -67,7 +67,12 @@ class SearchEventDoesntExistError(Error):
     message: str = "Search Event with provided id doesn't exist"
 
 
+@strawberry.type
+class NoPricesFoundError(Error):
+    message: str = "Search Event has no prices"
+
+
 GetSearchEventStatsResponse = strawberry.union(
     name="GetSearchEventStatsResponse",
-    types=(EventStatsType, SearchEventDoesntExistError),
+    types=(EventStatsType, SearchEventDoesntExistError, NoPricesFoundError),
 )

@@ -93,8 +93,8 @@ async def test_event_stats_type(
         }}
     """
     await client.post("/graphql", json={"query": mutation})
-    search_event = (await _db_session.exec(select(SearchEvent))).first()
-    prices = await get_search_event_prices(_db_session, search_event)
+    search_event = (await _db_session.exec(select(SearchEvent))).first()  # type: ignore
+    prices = await get_search_event_prices(_db_session, search_event)  # type: ignore
     price = prices[0]
     event_stats = EventStatsType(
         avg_price=55.55,

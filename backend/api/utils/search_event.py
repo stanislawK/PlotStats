@@ -1,18 +1,20 @@
-from typing import Optional
+from typing import Any, Optional
+
 from sqlalchemy.orm import selectinload
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from api.models.price import Price
 from api.models.search_event import SearchEvent
+from api.types.event_stats import convert_price_from_db
 
 
 async def get_search_event_prices(
     session: AsyncSession, search_event: "SearchEvent"
 ) -> list["Price"]:
-    prices = (
+    prices: list["Price"] = (  # type: ignore
         await session.exec(
-            select(Price)
+            select(Price)  # type: ignore
             .where(Price.search_event_id == search_event.id)
             .options(selectinload(Price.estate))
         )
@@ -22,9 +24,11 @@ async def get_search_event_prices(
 
 async def get_search_event_by_id(
     session: AsyncSession, search_event_id: int
-) -> "SearchEvent":
+) -> Optional["SearchEvent"]:
     return (
-        await session.exec(select(SearchEvent).where(SearchEvent.id == search_event_id))
+        await session.exec(
+            select(SearchEvent).where(SearchEvent.id == search_event_id)  # type: ignore
+        )
     ).first()
 
 
@@ -33,7 +37,9 @@ def get_search_event_avg_stats(prices: list["Price"]) -> dict[str, Optional[floa
     stats = {
         "avg_price": round(sum((p.price for p in prices)) / num_of_prices, 2),
         "avg_price_per_square_meter": round(
-            sum((p.price_per_square_meter for p in prices)) / len(prices), 2
+            sum((p.price_per_square_meter for p in prices))  # type: ignore
+            / len(prices),
+            2,
         ),
     }
     area_in_square_meters_sum = sum(
@@ -56,27 +62,32 @@ def get_search_event_avg_stats(prices: list["Price"]) -> dict[str, Optional[floa
         if terrain_area_in_square_meters_sum
         else None
     )
-    stats["avg_area_in_square_meters"] = avg_area_in_square_meters
-    stats["avg_terrain_area_in_square_meters"] = avg_terrain_area_in_square_meters
-    return stats
+    stats["avg_area_in_square_meters"] = avg_area_in_square_meters  # type: ignore
+    stats[
+        "avg_terrain_area_in_square_meters"
+    ] = avg_terrain_area_in_square_meters  # type: ignore
+    return stats  # type: ignore
 
 
 def get_search_event_min_prices(
     prices: list["Price"], top_prices: Optional[int] = None
-) -> list["Price"]:
+) -> dict[str, Any]:
     stats = dict()
-    import pdb
-
-    pdb.set_trace()
     sorted_by_price = sorted(prices, key=lambda p: p.price)
-    stats["min_price"] = sorted_by_price[0]
+    stats["min_price"] = convert_price_from_db(sorted_by_price[0])
     sorted_by_price_per_square_meter = sorted(
-        prices, key=lambda p: p.price_per_square_meter
+        prices, key=lambda p: p.price_per_square_meter  # type: ignore
     )
-    stats["min_price_per_square_meter"] = sorted_by_price_per_square_meter[0]
+    stats["min_price_per_square_meter"] = convert_price_from_db(
+        sorted_by_price_per_square_meter[0]
+    )
     if top_prices and top_prices > 0:
-        stats["min_prices"] = sorted_by_price[:top_prices]
-        stats["min_prices_per_square_meter"] = sorted_by_price_per_square_meter[
-            :top_prices
+        stats["min_prices"] = [
+            convert_price_from_db(p)
+            for p in sorted_by_price[:top_prices]  # type: ignore
+        ]
+        stats["min_prices_per_square_meter"] = [
+            convert_price_from_db(p)
+            for p in sorted_by_price_per_square_meter[:top_prices]  # type: ignore
         ]
     return stats
