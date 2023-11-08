@@ -4,6 +4,7 @@ import fakeredis
 import httpx
 import pytest
 from pytest_mock import MockerFixture
+from sqlalchemy.orm import selectinload
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
@@ -11,9 +12,12 @@ from api.models import Category
 from api.models.estate import Estate
 from api.models.price import Price
 from api.models.search import Search, decode_url
+from api.models.search_event import SearchEvent
 from api.types.category import CategoryExistsError
 
 from .conftest import MockAioJSONResponse, MockAioTextResponse, examples
+
+# mypy: ignore-errors
 
 
 @pytest.mark.asyncio
@@ -262,7 +266,9 @@ async def test_adhoc_scan_correct_response(
         }}
     """
     response = await client.post("/graphql", json={"query": mutation})
-    estates_parsed = (await _db_session.exec(select(Estate))).all()  # type: ignore
+    estates_parsed = (
+        await _db_session.exec(select(Estate).options(selectinload(Estate.prices)))
+    ).all()  # type: ignore
     prices_parsed = (await _db_session.exec(select(Price))).all()  # type: ignore
     search_parsed: Search = (
         await _db_session.exec(select(Search))  # type: ignore
@@ -271,6 +277,7 @@ async def test_adhoc_scan_correct_response(
     assert len(estates_parsed) == 36
     assert len(prices_parsed) == 36
     assert search_parsed.schedule == schedule
+    assert estates_parsed[0].prices[0] in prices_parsed
     assert decode_url(search_parsed.url) == url  # type: ignore
     result = response.json()
     assert result["data"]["adhocScan"]["__typename"] == "ScanSucceeded"
@@ -342,3 +349,144 @@ async def test_adhoc_scan_404_response(
         in result["data"]["adhocScan"]["message"]
     )
     assert cache.get("token") == "U-X80D14b5VUVY_qgIbBQ"
+
+
+@pytest.mark.asyncio
+async def test_search_event_stats_without_top(
+    client: httpx.AsyncClient, _db_session: AsyncSession, mocker: MockerFixture
+) -> None:
+    """
+    SETUP
+    """
+    category = Category(name="Plot")
+    _db_session.add(category)
+    await _db_session.commit()
+    url = "https://www.test.io/test"
+    with open("tests/example_files/body_plot.json", "r") as f:
+        body = json.load(f)
+    resp = MockAioJSONResponse(body, 200)
+    mocker.patch("aiohttp.ClientSession.get", return_value=resp)
+    mutation = f"""
+        mutation adhocScan {{
+            adhocScan(input: {{
+                    url: "{url}"
+                }}) {{
+                __typename
+                ... on ScanSucceeded {{
+                    message
+                }}
+            }}
+        }}
+    """
+    await client.post("/graphql", json={"query": mutation})
+    search_event = (await _db_session.exec(select(SearchEvent))).first()
+    query = f"""
+        query eventStats {{
+            searchEventStats(input: {{
+                    id: {search_event.id}
+                }}) {{
+                __typename
+                ... on EventStatsType {{
+                avgAreaInSquareMeters
+                avgTerrainAreaInSquareMeters
+                avgPrice
+                avgPricePerSquareMeter
+                minPrice {{
+                    price
+                    areaInSquareMeters
+                    estate {{
+                    title
+                    }}
+                }}
+                minPricePerSquareMeter {{
+                    areaInSquareMeters
+                    price
+                    pricePerSquareMeter
+                    estate {{
+                    title
+                    }}
+                }}
+                }}
+                ... on SearchEventDoesntExistError {{
+                    message
+                }}
+                ... on NoPricesFoundError {{
+                    message
+                }}
+            }}
+        }}
+    """
+    response = await client.post("/graphql", json={"query": query})
+    result = response.json()["data"]["searchEventStats"]
+    expected_result = {
+        "__typename": "EventStatsType",
+        "avgAreaInSquareMeters": 1075.25,
+        "avgPrice": 132315.72,
+        "avgPricePerSquareMeter": 158.67,
+        "avgTerrainAreaInSquareMeters": None,
+        "minPrice": {
+            "areaInSquareMeters": 1242,
+            "estate": {"title": '"Działki na Żuławach"'},
+            "price": 100000,
+        },
+        "minPricePerSquareMeter": {
+            "areaInSquareMeters": 4900,
+            "estate": {"title": "Z warunkami zabudowy nad " "Wisłą, piękna sceneria!"},
+            "price": 129000,
+            "pricePerSquareMeter": 26,
+        },
+    }
+    assert result == expected_result
+
+
+@pytest.mark.asyncio
+async def test_search_event_doesnt_exist(
+    client: httpx.AsyncClient, _db_session: AsyncSession, mocker: MockerFixture
+) -> None:
+    """
+    SETUP
+    """
+    category = Category(name="Plot")
+    _db_session.add(category)
+    await _db_session.commit()
+    url = "https://www.test.io/test"
+    with open("tests/example_files/body_plot.json", "r") as f:
+        body = json.load(f)
+    resp = MockAioJSONResponse(body, 200)
+    mocker.patch("aiohttp.ClientSession.get", return_value=resp)
+    mutation = f"""
+        mutation adhocScan {{
+            adhocScan(input: {{
+                    url: "{url}"
+                }}) {{
+                __typename
+                ... on ScanSucceeded {{
+                    message
+                }}
+            }}
+        }}
+    """
+    await client.post("/graphql", json={"query": mutation})
+    search_event = (await _db_session.exec(select(SearchEvent))).first()
+    query = f"""
+        query eventStats {{
+            searchEventStats(input: {{
+                    id: {search_event.id + 1}
+                }}) {{
+                __typename
+                ... on EventStatsType {{
+                    avgPrice
+                }}
+                ... on SearchEventDoesntExistError {{
+                    message
+                }}
+                ... on NoPricesFoundError {{
+                    message
+                }}
+            }}
+        }}
+    """
+    response = await client.post("/graphql", json={"query": query})
+    result = response.json()["data"]["searchEventStats"]
+    assert result["__typename"] == "SearchEventDoesntExistError"
+    assert result["message"] == "Search Event with provided id doesn't exist"
