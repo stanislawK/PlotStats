@@ -12,15 +12,16 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from api.models.category import Category
 from api.models.search import Search
 from api.models.search_event import SearchEvent
-from api.types.category import CategoryType, convert_category_from_db
+from api.types.category import CategoryType
 from api.types.event_stats import EventStatsType
 from api.types.price import convert_price_from_db
 from api.types.scan import AdhocScanInput, PydanticAdhocScanInput
-from api.types.search_stats import SearchStatsType, convert_search_stats_from_db
-from api.utils.search import get_search_events_for_search
+from api.types.search_stats import convert_search_stats_from_db
 from api.utils.search_event import get_search_event_prices
 
 from .conftest import MockAioJSONResponse
+
+# mypy: ignore-errors
 
 
 def test_category_type() -> None:
@@ -153,8 +154,11 @@ async def test_search_stats_type(
     """
     await client.post("/graphql", json={"query": mutation})
     await client.post("/graphql", json={"query": mutation})
-    search = (await _db_session.exec(select(Search).options(selectinload(Search.category)))).first()  # type: ignore
-    search_stats = convert_search_stats_from_db(
+    search = (
+        await _db_session.exec(select(Search).options(selectinload(Search.category)))
+    ).first()  # type: ignore
+    search_stats = await convert_search_stats_from_db(
+        _db_session,
         search,
         date_from=datetime.utcnow() - timedelta(days=365),
         date_to=datetime.utcnow() + timedelta(days=1),

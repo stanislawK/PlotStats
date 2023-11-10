@@ -1,9 +1,9 @@
 import json
+from datetime import datetime, timedelta
 
 import fakeredis
 import httpx
 import pytest
-from datetime import datetime, timedelta
 from pytest_mock import MockerFixture
 from sqlalchemy.orm import selectinload
 from sqlmodel import select
@@ -16,6 +16,7 @@ from api.models.price import Price
 from api.models.search import Search
 from api.models.search_event import SearchEvent
 from api.settings import settings
+from api.utils.search import get_search_events_for_search, get_search_stats
 from api.utils.search_event import (
     get_search_event_avg_stats,
     get_search_event_by_id,
@@ -23,7 +24,6 @@ from api.utils.search_event import (
     get_search_event_prices,
 )
 from api.utils.url_parsing import parse_url
-from api.utils.search import get_search_stats, get_search_events_for_search
 
 from .conftest import MockAioJSONResponse, examples
 
@@ -247,7 +247,9 @@ async def test_search_events_for_search(
     """
     await client.post("/graphql", json={"query": mutation})
     await client.post("/graphql", json={"query": mutation})
-    search = (await _db_session.exec(select(Search).options(selectinload(Search.category)))).first()  # type: ignore
+    search = (
+        await _db_session.exec(select(Search).options(selectinload(Search.category)))
+    ).first()  # type: ignore
     events = await get_search_events_for_search(
         _db_session,
         search,

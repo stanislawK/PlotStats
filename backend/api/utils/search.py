@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Any
 
 from sqlalchemy import and_
@@ -6,13 +7,12 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 
 from api.models.search import Search
 from api.models.search_event import SearchEvent
+from api.types.event_stats import EventStatsType
 from api.utils.search_event import (
     get_search_event_avg_stats,
     get_search_event_min_prices,
     get_search_event_prices,
 )
-from datetime import datetime
-from api.types.event_stats import EventStatsType
 
 
 async def get_search_events_for_search(
@@ -21,9 +21,9 @@ async def get_search_events_for_search(
     date_from: datetime,
     date_to: datetime,
 ) -> list["EventStatsType"]:
-    search_events = (
+    search_events: list[Any] = (
         await session.exec(
-            select(SearchEvent).where(
+            select(SearchEvent).where(  # type: ignore
                 and_(
                     SearchEvent.search_id == search.id,
                     SearchEvent.date >= date_from,
@@ -31,7 +31,7 @@ async def get_search_events_for_search(
                 )
             )
         )
-    ).all()  # type: ignore
+    ).all()
     events = []
     for event in search_events:
         prices = await get_search_event_prices(session, event)
