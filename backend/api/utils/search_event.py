@@ -6,7 +6,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 
 from api.models.price import Price
 from api.models.search_event import SearchEvent
-from api.types.event_stats import convert_price_from_db
+from api.types.price import convert_price_from_db
 
 
 async def get_search_event_prices(
