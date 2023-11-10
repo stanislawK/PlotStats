@@ -3,6 +3,7 @@ import json
 import fakeredis
 import httpx
 import pytest
+from datetime import datetime, timedelta
 from pytest_mock import MockerFixture
 from sqlalchemy.orm import selectinload
 from sqlmodel import select
@@ -22,6 +23,7 @@ from api.utils.search_event import (
     get_search_event_prices,
 )
 from api.utils.url_parsing import parse_url
+from api.utils.search import get_search_stats, get_search_events_for_search
 
 from .conftest import MockAioJSONResponse, examples
 
@@ -211,3 +213,52 @@ async def test_get_search_event_min_prices(
     assert [
         p.price_per_square_meter for p in min_prices["min_prices_per_square_meter"]
     ] == [26, 49, 81]
+
+
+@pytest.mark.asyncio
+async def test_search_events_for_search(
+    client: httpx.AsyncClient, _db_session: AsyncSession, mocker: MockerFixture
+) -> None:
+    category = Category(name="Plot")
+    _db_session.add(category)
+    await _db_session.commit()
+    url = "https://www.test.io/test"
+    with open("tests/example_files/body_plot.json", "r") as f:
+        body = json.load(f)
+    resp = MockAioJSONResponse(body, 200)
+    mocker.patch("aiohttp.ClientSession.get", return_value=resp)
+    mutation = f"""
+        mutation adhocScan {{
+            adhocScan(input: {{
+                    url: "{url}"
+                }}) {{
+                __typename
+                ... on ScanSucceeded {{
+                    message
+                }}
+                ... on ScanFailedError {{
+                    message
+                }}
+                ... on InputValidationError {{
+                    message
+                }}
+            }}
+        }}
+    """
+    await client.post("/graphql", json={"query": mutation})
+    await client.post("/graphql", json={"query": mutation})
+    search = (await _db_session.exec(select(Search).options(selectinload(Search.category)))).first()  # type: ignore
+    events = await get_search_events_for_search(
+        _db_session,
+        search,
+        date_to=datetime.utcnow() + timedelta(hours=1),
+        date_from=datetime.utcnow() - timedelta(days=365),
+    )  # type: ignore
+    stats = get_search_stats(events)
+    expected_output = {
+        "avg_area_total": 1075.25,
+        "avg_price_per_square_meter_total": 158.67,
+        "avg_price_total": 132315.72,
+        "avg_terrain_total": None,
+    }
+    assert stats == expected_output

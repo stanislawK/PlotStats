@@ -1,17 +1,23 @@
 import json
+from datetime import datetime, timedelta
 
 import httpx
 import pytest
 from pydantic.error_wrappers import ValidationError
 from pytest_mock import MockerFixture
+from sqlalchemy.orm import selectinload
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from api.models.category import Category
+from api.models.search import Search
 from api.models.search_event import SearchEvent
-from api.types.category import CategoryType
-from api.types.event_stats import EventStatsType, convert_price_from_db
+from api.types.category import CategoryType, convert_category_from_db
+from api.types.event_stats import EventStatsType
+from api.types.price import convert_price_from_db
 from api.types.scan import AdhocScanInput, PydanticAdhocScanInput
+from api.types.search_stats import SearchStatsType, convert_search_stats_from_db
+from api.utils.search import get_search_events_for_search
 from api.utils.search_event import get_search_event_prices
 
 from .conftest import MockAioJSONResponse
@@ -113,3 +119,50 @@ async def test_event_stats_type(
 
     for estate_key, estate_value in event_stats.min_price.estate.__dict__.items():
         assert getattr(price.estate, estate_key) == estate_value
+
+
+@pytest.mark.asyncio
+async def test_search_stats_type(
+    client: httpx.AsyncClient, _db_session: AsyncSession, mocker: MockerFixture
+) -> None:
+    category = Category(name="Plot")
+    _db_session.add(category)
+    await _db_session.commit()
+    url = "https://www.test.io/test"
+    with open("tests/example_files/body_plot.json", "r") as f:
+        body = json.load(f)
+    resp = MockAioJSONResponse(body, 200)
+    mocker.patch("aiohttp.ClientSession.get", return_value=resp)
+    mutation = f"""
+        mutation adhocScan {{
+            adhocScan(input: {{
+                    url: "{url}"
+                }}) {{
+                __typename
+                ... on ScanSucceeded {{
+                    message
+                }}
+                ... on ScanFailedError {{
+                    message
+                }}
+                ... on InputValidationError {{
+                    message
+                }}
+            }}
+        }}
+    """
+    await client.post("/graphql", json={"query": mutation})
+    await client.post("/graphql", json={"query": mutation})
+    search = (await _db_session.exec(select(Search).options(selectinload(Search.category)))).first()  # type: ignore
+    search_stats = convert_search_stats_from_db(
+        search,
+        date_from=datetime.utcnow() - timedelta(days=365),
+        date_to=datetime.utcnow() + timedelta(days=1),
+    )
+    search_events_db = (
+        await _db_session.exec(
+            select(SearchEvent).where(SearchEvent.search_id == search.id)
+        )
+    ).all()
+    assert len(search_stats.events) == len(search_events_db)
+    assert search_stats.category.name == "Plot"
