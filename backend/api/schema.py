@@ -2,11 +2,14 @@ import strawberry
 
 import api.schemas.category
 import api.schemas.scan
+import api.schemas.search
 import api.schemas.search_event
 
 
 @strawberry.type
-class Query(api.schemas.category.Query, api.schemas.search_event.Query):
+class Query(
+    api.schemas.category.Query, api.schemas.search_event.Query, api.schemas.search.Query
+):
     pass
 
 

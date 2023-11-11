@@ -1,7 +1,8 @@
 from datetime import datetime
-from typing import Any
+from typing import Any, Optional
 
 from sqlalchemy import and_
+from sqlalchemy.orm import selectinload
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
@@ -13,6 +14,16 @@ from api.utils.search_event import (
     get_search_event_min_prices,
     get_search_event_prices,
 )
+
+
+async def get_search_by_id(session: AsyncSession, id: int) -> Optional["Search"]:
+    return (
+        await session.exec(
+            select(Search)
+            .where(Search.id == id)
+            .options(selectinload(Search.category))  # type: ignore
+        )
+    ).first()
 
 
 async def get_search_events_for_search(

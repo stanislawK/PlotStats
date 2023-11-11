@@ -71,7 +71,7 @@ class SearchDoesntExistError(Error):
     message: str = "Search with provided id doesn't exist"
 
 
-GetSearchEventStatsResponse = strawberry.union(
-    name="GetSearchEventStatsResponse",
+GetSearchStatsResponse = strawberry.union(
+    name="GetSearchStatsResponse",
     types=(SearchStatsType, SearchDoesntExistError),
 )
