@@ -490,3 +490,149 @@ async def test_search_event_doesnt_exist(
     result = response.json()["data"]["searchEventStats"]
     assert result["__typename"] == "SearchEventDoesntExistError"
     assert result["message"] == "Search Event with provided id doesn't exist"
+
+
+@pytest.mark.asyncio
+async def test_search_doesnt_exist(
+    client: httpx.AsyncClient, _db_session: AsyncSession, mocker: MockerFixture
+) -> None:
+    """
+    SETUP
+    """
+    category = Category(name="Plot")
+    _db_session.add(category)
+    await _db_session.commit()
+    url = "https://www.test.io/test"
+    with open("tests/example_files/body_plot.json", "r") as f:
+        body = json.load(f)
+    resp = MockAioJSONResponse(body, 200)
+    mocker.patch("aiohttp.ClientSession.get", return_value=resp)
+    mutation = f"""
+        mutation adhocScan {{
+            adhocScan(input: {{
+                    url: "{url}"
+                }}) {{
+                __typename
+                ... on ScanSucceeded {{
+                    message
+                }}
+            }}
+        }}
+    """
+    await client.post("/graphql", json={"query": mutation})
+    search = (await _db_session.exec(select(Search))).first()
+    query = f"""
+        query searchStats {{
+            searchStats(input: {{
+                    id: {search.id + 1}
+                }}) {{
+                __typename
+                ... on SearchStatsType {{
+                    avgPriceTotal
+                }}
+                ... on SearchDoesntExistError {{
+                    message
+                }}
+            }}
+        }}
+    """
+    response = await client.post("/graphql", json={"query": query})
+    result = response.json()["data"]["searchStats"]
+    assert result["__typename"] == "SearchDoesntExistError"
+    assert result["message"] == "Search with provided id doesn't exist"
+
+
+@pytest.mark.asyncio
+async def test_search_stats_query(
+    client: httpx.AsyncClient, _db_session: AsyncSession, mocker: MockerFixture
+) -> None:
+    """
+    SETUP
+    """
+    category = Category(name="Plot")
+    _db_session.add(category)
+    await _db_session.commit()
+    url = "https://www.test.io/test"
+    with open("tests/example_files/body_plot.json", "r") as f:
+        body = json.load(f)
+    resp = MockAioJSONResponse(body, 200)
+    mocker.patch("aiohttp.ClientSession.get", return_value=resp)
+    mutation = f"""
+        mutation adhocScan {{
+            adhocScan(input: {{
+                    url: "{url}"
+                }}) {{
+                __typename
+                ... on ScanSucceeded {{
+                    message
+                }}
+            }}
+        }}
+    """
+    await client.post("/graphql", json={"query": mutation})
+    await client.post("/graphql", json={"query": mutation})
+    search = (await _db_session.exec(select(Search))).first()
+    query = f"""
+        query searchStats {{
+            searchStats(input: {{
+                    id: {search.id}
+                }}) {{
+                __typename
+                ... on SearchStatsType {{
+                    avgAreaTotal
+                    avgTerrainTotal
+                    avgPricePerSquareMeterTotal
+                    avgPriceTotal
+                    category {{
+                        name
+                    }}
+                    dateFrom
+                    dateTo
+                    distanceRadius
+                    events {{
+                        avgAreaInSquareMeters
+                        avgPrice
+                        avgPricePerSquareMeter
+                        avgTerrainAreaInSquareMeters
+                    }}
+                    location
+                    fromPrice
+                    toPrice
+                }}
+                ... on SearchDoesntExistError {{
+                    message
+                }}
+            }}
+        }}
+    """
+    response = await client.post("/graphql", json={"query": query})
+    result = response.json()["data"]["searchStats"]
+    expected = {
+        "__typename": "SearchStatsType",
+        "avgAreaTotal": 1075.25,
+        "avgPricePerSquareMeterTotal": 158.67,
+        "avgPriceTotal": 132315.72,
+        "avgTerrainTotal": None,
+        "category": {"name": "Plot"},
+        "distanceRadius": 15,
+        "events": [
+            {
+                "avgAreaInSquareMeters": 1075.25,
+                "avgPrice": 132315.72,
+                "avgPricePerSquareMeter": 158.67,
+                "avgTerrainAreaInSquareMeters": None,
+            },
+            {
+                "avgAreaInSquareMeters": 1075.25,
+                "avgPrice": 132315.72,
+                "avgPricePerSquareMeter": 158.67,
+                "avgTerrainAreaInSquareMeters": None,
+            },
+        ],
+        "fromPrice": 100000,
+        "location": "Gdańsk, pomorskie",
+        "toPrice": 150000,
+    }
+    result.pop("dateFrom")
+    result.pop("dateTo")
+    assert result == expected
