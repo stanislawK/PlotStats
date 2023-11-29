@@ -15,6 +15,10 @@ class Settings(BaseSettings):
     celery_broker_url: str
     celery_result_backend: str
     redbeat_redis_url: str
+    jwt_secret_key: str
+    jwt_algorithm: str
+    access_token_expire_minutes: int
+    refresh_token_expire_minutes: int
     imports: tuple[str] = ("api.periodic_tasks",)
 
     @property

@@ -29,7 +29,7 @@ examples: dict[str, dict[str, str | int]] = {
         "to_surface": 5000,
         "url": "https://www.test.io/test",
     },
-    "user": {"email": "john@test.com"},
+    "user": {"email": "john@test.com", "password": "testpass"},
     "estate": {
         "title": "Some great deal",
         "street": "Glowna 31",

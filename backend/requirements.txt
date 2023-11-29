@@ -31,6 +31,8 @@ asyncpg==0.27.0
     # via -r requirements.in
 attrs==23.1.0
     # via aiohttp
+bcrypt==4.0.1
+    # via passlib
 billiard==4.1.0
     # via celery
 black==23.3.0
@@ -51,7 +53,9 @@ certifi==2023.5.7
     #   httpcore
     #   httpx
 cffi==1.15.1
-    # via pycares
+    # via
+    #   cryptography
+    #   pycares
 cfgv==3.3.1
     # via pre-commit
 charset-normalizer==3.2.0
@@ -73,10 +77,14 @@ click-repl==0.3.0
     # via celery
 coverage[toml]==7.2.3
     # via pytest-cov
+cryptography==41.0.5
+    # via python-jose
 distlib==0.3.6
     # via virtualenv
 dnspython==2.3.0
     # via email-validator
+ecdsa==0.18.0
+    # via python-jose
 email-validator==2.0.0.post2
     # via pydantic
 exceptiongroup==1.1.1
@@ -161,6 +169,8 @@ packaging==23.0
     #   build
     #   pytest
     #   pytest-sugar
+passlib[bcrypt]==1.7.4
+    # via -r requirements.in
 pathspec==0.11.1
     # via black
 pep8-naming==0.13.3
@@ -179,6 +189,10 @@ pre-commit==3.3.2
     # via -r requirements.in
 prompt-toolkit==3.0.39
     # via click-repl
+pyasn1==0.5.1
+    # via
+    #   python-jose
+    #   rsa
 pycares==4.3.0
     # via aiodns
 pycodestyle==2.10.0
@@ -226,6 +240,8 @@ python-dateutil==2.8.2
     #   strawberry-graphql
 python-dotenv==1.0.0
     # via uvicorn
+python-jose[cryptography]==3.3.0
+    # via -r requirements.in
 python-multipart==0.0.6
     # via strawberry-graphql
 pyyaml==6.0
@@ -237,8 +253,12 @@ redis==5.0.0
     #   -r requirements.in
     #   celery-redbeat
     #   fakeredis
+rsa==4.9
+    # via python-jose
 six==1.16.0
-    # via python-dateutil
+    # via
+    #   ecdsa
+    #   python-dateutil
 sniffio==1.3.0
     # via
     #   anyio

@@ -55,8 +55,8 @@ async def test_user(_db_session: AsyncSession) -> None:
     # Invalid email should fail
     for email in ("john@test.com", "test"):
         with pytest.raises((IntegrityError, ValidationError)) as exc_info:
-            User.validate({"email": email})
-            user = User(email=email)
+            User.validate({"email": email, "password": "test"})
+            user = User(email=email, password="test")
             _db_session.add(user)
             await _db_session.commit()
         exc_type = type(exc_info.value)

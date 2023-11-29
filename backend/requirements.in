@@ -14,6 +14,8 @@ loguru
 celery
 celery-redbeat
 redis
+python-jose[cryptography]
+passlib[bcrypt]
 
 # dev-packages
 black==23.3.0
