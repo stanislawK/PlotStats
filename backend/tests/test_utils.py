@@ -10,11 +10,14 @@ from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 import api.utils.fetching
+import api.utils.jwt as jwt_utils
+import api.utils.user as user_utils
 from api.models.category import Category
 from api.models.estate import Estate
 from api.models.price import Price
 from api.models.search import Search
 from api.models.search_event import SearchEvent
+from api.models.user import User
 from api.settings import settings
 from api.utils.search import get_search_events_for_search, get_search_stats
 from api.utils.search_event import (
@@ -264,3 +267,58 @@ async def test_search_events_for_search(
         "avg_terrain_total": None,
     }
     assert stats == expected_output
+
+
+@pytest.mark.asyncio
+async def test_authenticate_user_valid_credentials(
+    _db_session: AsyncSession, add_user: User
+) -> None:
+    user = await user_utils.authenticate_user(
+        _db_session, examples["user"]["email"], examples["user"]["password"]
+    )
+    assert isinstance(user, User)
+    assert user.email == examples["user"]["email"]
+
+
+@pytest.mark.asyncio
+async def test_authenticate_user_wrong_data(
+    _db_session: AsyncSession, add_user: User
+) -> None:
+    attempt_with_wrong_password = await user_utils.authenticate_user(
+        _db_session, examples["user"]["email"], "wrong"
+    )
+    attempt_with_wrong_email = await user_utils.authenticate_user(
+        _db_session, "wrong", examples["user"]["password"]
+    )
+    assert attempt_with_wrong_password is False
+    assert attempt_with_wrong_email is False
+
+
+def test_create_jwt_token() -> None:
+    access_token = jwt_utils.create_jwt_token(
+        subject="666", fresh=True, token_type="access"
+    )
+    refresh_token = jwt_utils.create_jwt_token(
+        subject="666", fresh=False, token_type="refresh"
+    )
+    assert isinstance(access_token, str)
+    assert isinstance(refresh_token, str)
+    access_token_decoded = jwt_utils.decode_jwt_token(access_token)
+    refresh_token_decoded = jwt_utils.decode_jwt_token(refresh_token)
+    assert access_token_decoded["sub"] == "666"
+    assert refresh_token_decoded["sub"] == "666"
+    assert access_token_decoded["fresh"] is True
+    assert refresh_token_decoded["fresh"] is False
+    assert access_token_decoded["type"] == "access"
+    assert refresh_token_decoded["type"] == "refresh"
+
+
+@pytest.mark.asyncio
+async def test_get_user_from_token(_db_session: AsyncSession, add_user: User) -> None:
+    access_token = jwt_utils.create_jwt_token(
+        subject=str(add_user.id), fresh=True, token_type="access"
+    )
+    user = await jwt_utils.get_user_from_token(access_token, _db_session)
+    assert isinstance(user, User)
+    assert user.email == add_user.email
+    assert user.id == add_user.id
