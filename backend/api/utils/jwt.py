@@ -4,10 +4,10 @@ from typing import Any, Optional
 
 from fastapi import Request
 from jose import JWTError, jwt
-from models.user import User
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
+from api.models.user import User
 from api.settings import settings
 
 JWT_UNAUTHORIZED_MSG = "401_UNAUTHORIZED"
@@ -16,7 +16,7 @@ JWT_AUTH_HEADER_PREFIX = "Bearer "
 
 
 class PermissionDeniedError(Exception):
-    def __init__(self, message=JWT_UNAUTHORIZED_MSG):
+    def __init__(self, message: str = JWT_UNAUTHORIZED_MSG):
         super().__init__(message)
 
 
@@ -37,19 +37,19 @@ def create_jwt_token(subject: str, fresh: bool, token_type: str = "access") -> s
     )
     expire = now + expires_delta
     token_data.update({"exp": expire})
-    encoded_jwt = jwt.encode(
+    encoded_jwt: str = jwt.encode(
         token_data, settings.jwt_secret_key, algorithm=settings.jwt_algorithm
     )
     return encoded_jwt
 
 
 def decode_jwt_token(token: str) -> dict[str, Any]:
-    return jwt.decode(
+    return jwt.decode(  # type: ignore
         token, settings.jwt_secret_key, algorithms=[settings.jwt_algorithm]
     )
 
 
-def get_jwt_payload(token: str) -> Optional[dict[str, Any]]:
+def get_jwt_payload(token: str) -> dict[str, Any]:
     try:
         decoded_token = decode_jwt_token(token)
     except JWTError:
@@ -68,9 +68,9 @@ def verify_token_type(type: str, refresh: bool) -> None:
 
 
 async def get_user_from_payload(
-    payload: dict[str, Any], session: AsyncSession, refresh=False
+    payload: dict[str, Any], session: AsyncSession, refresh: bool = False
 ) -> User:
-    verify_token_type(refresh, payload["type"])
+    verify_token_type(payload["type"], refresh)
     id = payload["sub"]
 
     if not id:

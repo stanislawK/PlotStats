@@ -4,6 +4,7 @@ import api.schemas.category
 import api.schemas.scan
 import api.schemas.search
 import api.schemas.search_event
+import api.schemas.user
 
 
 @strawberry.type
@@ -14,7 +15,9 @@ class Query(
 
 
 @strawberry.type
-class Mutation(api.schemas.category.Mutation, api.schemas.scan.Mutation):
+class Mutation(
+    api.schemas.category.Mutation, api.schemas.scan.Mutation, api.schemas.user.Mutation
+):
     pass
 
 

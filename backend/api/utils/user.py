@@ -1,9 +1,10 @@
 from typing import Optional
 
-from models.user import User
 from passlib.context import CryptContext
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
+
+from api.models.user import User
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -18,18 +19,20 @@ async def get_user_by_email(
     return user
 
 
-def verify_password(plain_password, hashed_password) -> bool:
-    return pwd_context.verify(plain_password, hashed_password)
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    return pwd_context.verify(plain_password, hashed_password)  # type: ignore
 
 
-def get_password_hash(password) -> str:
-    return pwd_context.hash(password)
+def get_password_hash(password: str) -> str:
+    return pwd_context.hash(password)  # type: ignore
 
 
-def authenticate_user(session: AsyncSession, email: str, password: str) -> User:
-    user = get_user_by_email(session, email)
-    if not user:
+async def authenticate_user(
+    session: AsyncSession, email: str, password: str
+) -> User | bool:
+    user = await get_user_by_email(session, email)
+    if not user or not password:
         return False
-    if not verify_password(password, user.hashed_password):
+    if not verify_password(password, user.password):
         return False
     return user

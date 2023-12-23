@@ -14,9 +14,9 @@ from api.utils.jwt import (
 class IsAuthenticated(BasePermission):
     message = "User is not authenticated"
 
-    def has_permission(self, source: Any, info: Info, **kwargs) -> bool:
+    def has_permission(self, source: Any, info: Info, **kwargs) -> bool:  # type: ignore
         request: Request = info.context["request"]
-        token = extract_token_from_request()
+        token = extract_token_from_request(request)
         if not token:
             return False
         try:
@@ -24,6 +24,6 @@ class IsAuthenticated(BasePermission):
         except PermissionDeniedError:
             return False
         if user:
-            request.user = user
+            request.state.user = user
             return True
         return False

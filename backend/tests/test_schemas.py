@@ -13,7 +13,9 @@ from api.models.estate import Estate
 from api.models.price import Price
 from api.models.search import Search, decode_url
 from api.models.search_event import SearchEvent
+from api.models.user import User
 from api.types.category import CategoryExistsError
+from api.utils.jwt import get_jwt_payload
 
 from .conftest import MockAioJSONResponse, MockAioTextResponse, examples
 
@@ -636,3 +638,101 @@ async def test_search_stats_query(
     result.pop("dateFrom")
     result.pop("dateTo")
     assert result == expected
+
+
+@pytest.mark.asyncio
+async def test_login_correct_credentials(
+    client: httpx.AsyncClient, _db_session: AsyncSession, add_user: User
+) -> None:
+    """
+    SETUP
+    """
+    email, password = examples["user"]["email"], examples["user"]["password"]
+    mutation = f"""
+        mutation login {{
+            login(input: {{
+                    email: "{email}", password: "{password}"
+                }}) {{
+                __typename
+                ... on JWTPair {{
+                    accessToken
+                    refreshToken
+                }}
+            }}
+        }}
+    """
+    response = await client.post("/graphql", json={"query": mutation})
+    result = response.json()["data"]["login"]
+    assert result["__typename"] == "JWTPair"
+    access_token, refresh_token = result["accessToken"], result["refreshToken"]
+    access_token_decoded, refresh_token_decoded = get_jwt_payload(
+        access_token
+    ), get_jwt_payload(refresh_token)
+    assert access_token_decoded["sub"] == str(add_user.id)
+    assert refresh_token_decoded["sub"] == str(add_user.id)
+    assert access_token_decoded["fresh"] is True
+    assert refresh_token_decoded["fresh"] is False
+    assert access_token_decoded["type"] == "access"
+    assert refresh_token_decoded["type"] == "refresh"
+
+
+@pytest.mark.asyncio
+async def test_login_wrong_credentials(
+    client: httpx.AsyncClient, _db_session: AsyncSession, add_user: User
+) -> None:
+    """
+    SETUP
+    """
+    email, password = "invalid_email", examples["user"]["password"]
+    mutation = f"""
+        mutation login {{
+            login(input: {{
+                    email: "{email}", password: "{password}"
+                }}) {{
+                __typename
+                ... on JWTPair {{
+                    accessToken
+                    refreshToken
+                }}
+                ... on LoginUserError {{
+                    __typename
+                    message
+                }}
+                ... on InputValidationError {{
+                    __typename
+                    message
+                }}
+            }}
+        }}
+    """
+    response = await client.post("/graphql", json={"query": mutation})
+    result = response.json()["data"]["login"]
+    assert result["__typename"] == "LoginUserError"
+    assert result["message"] == "Login user error"
+
+    email, password = examples["user"]["email"], "invalid_password"
+    mutation = f"""
+        mutation login {{
+            login(input: {{
+                    email: "{email}", password: "{password}"
+                }}) {{
+                __typename
+                ... on JWTPair {{
+                    accessToken
+                    refreshToken
+                }}
+                ... on LoginUserError {{
+                    __typename
+                    message
+                }}
+                ... on InputValidationError {{
+                    __typename
+                    message
+                }}
+            }}
+        }}
+    """
+    response = await client.post("/graphql", json={"query": mutation})
+    result = response.json()["data"]["login"]
+    assert result["__typename"] == "LoginUserError"
+    assert result["message"] == "Login user error"

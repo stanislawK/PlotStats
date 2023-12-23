@@ -16,6 +16,8 @@ from sqlmodel.pool import StaticPool
 
 from api.database import get_async_session
 from api.main import create_app
+from api.models.user import User
+from api.utils.user import get_password_hash
 
 examples: dict[str, dict[str, str | int]] = {
     "category": {"name": "Plot"},
@@ -116,6 +118,18 @@ async def client(
     mocker.patch("api.utils.fetching.cache", cache)
     async with httpx.AsyncClient(app=app, base_url="http://testserver") as client:
         yield client
+
+
+@pytest.fixture
+async def add_user(_db_session: AsyncSession) -> User:
+    user = User(
+        email=examples["user"]["email"],
+        password=get_password_hash(examples["user"]["password"]),  # type: ignore
+        is_active=True,
+    )
+    _db_session.add(user)
+    await _db_session.commit()
+    return user
 
 
 class MockAioJSONResponse:
