@@ -12,7 +12,7 @@ from api.settings import settings
 
 JWT_UNAUTHORIZED_MSG = "401_UNAUTHORIZED"
 JWT_EXPIRED_MSG = "JWT_EXPIRED"
-JWT_AUTH_HEADER_PREFIX = "Bearer "
+JWT_AUTH_HEADER_PREFIX = "Bearer"
 
 
 class PermissionDeniedError(Exception):
@@ -73,11 +73,11 @@ async def get_user_from_payload(
     verify_token_type(payload["type"], refresh)
     id = payload["sub"]
 
-    if not id:
+    if not id or not id.isnumeric():
         raise PermissionDeniedError()
 
     user: Optional[User] = (
-        await session.exec(select(User).where(User.id == id))  # type: ignore
+        await session.exec(select(User).where(User.id == int(id)))
     ).first()
     if not user or not user.is_active:
         raise PermissionDeniedError()
@@ -91,7 +91,10 @@ async def get_user_from_token(token: str, session: AsyncSession) -> User:
 
 
 def extract_token_from_request(request: Request) -> Optional[str]:
-    auth = request.headers.get("Authorization", "").split()
+    auth = (
+        request.headers.get("Authorization", "").split()
+        or request.headers.get("authorization", "").split()
+    )
     prefix = JWT_AUTH_HEADER_PREFIX
 
     if len(auth) != 2 or auth[0].lower() != prefix.lower():

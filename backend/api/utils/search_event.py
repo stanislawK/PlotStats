@@ -12,9 +12,9 @@ from api.types.price import convert_price_from_db
 async def get_search_event_prices(
     session: AsyncSession, search_event: "SearchEvent"
 ) -> list["Price"]:
-    prices: list["Price"] = (  # type: ignore
+    prices: list["Price"] = (
         await session.exec(
-            select(Price)  # type: ignore
+            select(Price)
             .where(Price.search_event_id == search_event.id)
             .options(selectinload(Price.estate))
         )
@@ -26,9 +26,7 @@ async def get_search_event_by_id(
     session: AsyncSession, search_event_id: int
 ) -> Optional["SearchEvent"]:
     return (
-        await session.exec(
-            select(SearchEvent).where(SearchEvent.id == search_event_id)  # type: ignore
-        )
+        await session.exec(select(SearchEvent).where(SearchEvent.id == search_event_id))
     ).first()
 
 

@@ -5,7 +5,12 @@ from api.models.estate import Estate
 
 @strawberry.experimental.pydantic.type(
     Estate,
-    fields=["title", "street", "city", "province", "location", "date_created", "url"],
 )
 class EstateType:
-    pass
+    title: strawberry.auto
+    street: strawberry.auto
+    city: strawberry.auto
+    province: strawberry.auto
+    location: strawberry.auto
+    date_created: strawberry.auto
+    url: strawberry.auto

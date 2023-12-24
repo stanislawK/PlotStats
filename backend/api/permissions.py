@@ -14,16 +14,38 @@ from api.utils.jwt import (
 class IsAuthenticated(BasePermission):
     message = "User is not authenticated"
 
-    def has_permission(self, source: Any, info: Info, **kwargs) -> bool:  # type: ignore
+    async def has_permission(  # type: ignore
+        self, source: Any, info: Info, **kwargs  # type: ignore
+    ) -> bool:
         request: Request = info.context["request"]
         token = extract_token_from_request(request)
         if not token:
             return False
         try:
-            user = get_user_from_token(token, info.context["session"])
+            user = await get_user_from_token(token, info.context["session"])
         except PermissionDeniedError:
             return False
         if user:
+            request.state.user = user
+            return True
+        return False
+
+
+class IsAdminUser(BasePermission):
+    message = "User is not authenticated"
+
+    async def has_permission(  # type: ignore
+        self, source: Any, info: Info, **kwargs  # type: ignore
+    ) -> bool:
+        request: Request = info.context["request"]
+        token = extract_token_from_request(request)
+        if not token:
+            return False
+        try:
+            user = await get_user_from_token(token, info.context["session"])
+        except PermissionDeniedError:
+            return False
+        if user and isinstance(user.roles, list) and "admin" in user.roles:
             request.state.user = user
             return True
         return False

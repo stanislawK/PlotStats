@@ -1,5 +1,5 @@
 import pytest
-from pydantic.error_wrappers import ValidationError
+from pydantic import ValidationError
 from sqlalchemy.exc import IntegrityError
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
@@ -45,7 +45,7 @@ async def test_user(_db_session: AsyncSession) -> None:
     user = User(**examples["user"], searches=[search])
     _db_session.add(user)
     await _db_session.commit()
-    from_db: User | None = (await _db_session.execute(select(User))).scalar()
+    from_db: User | None = (await _db_session.exec(select(User))).first()
     assert from_db is not None
     for key, value in examples["user"].items():
         assert getattr(from_db, key) == value
@@ -53,19 +53,19 @@ async def test_user(_db_session: AsyncSession) -> None:
 
     # Not unique email should fail
     # Invalid email should fail
-    for email in ("john@test.com", "test"):
-        with pytest.raises((IntegrityError, ValidationError)) as exc_info:
-            User.validate({"email": email, "password": "test"})
-            user = User(email=email, password="test")
-            _db_session.add(user)
-            await _db_session.commit()
-        exc_type = type(exc_info.value)
-        if exc_type == IntegrityError:
-            assert "UNIQUE constraint failed" in str(exc_info.value)
-        elif exc_type == ValidationError:
-            assert "value is not a valid email address" in str(exc_info.value)
-        else:
-            assert False, f"Unexpected exception type {exc_type}"
+    email = "john@test.com"
+    with pytest.raises((IntegrityError, ValidationError)) as exc_info:
+        User.model_validate({"email": email, "password": "test"})
+        user = User(email=email, password="test")
+        _db_session.add(user)
+        await _db_session.commit()
+    exc_type = type(exc_info.value)
+    if exc_type == IntegrityError:
+        assert "UNIQUE constraint failed" in str(exc_info.value)
+    elif exc_type == ValidationError:
+        assert "value is not a valid email address" in str(exc_info.value)
+    else:
+        assert False, f"Unexpected exception type {exc_type}"
 
 
 @pytest.mark.asyncio

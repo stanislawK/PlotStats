@@ -19,9 +19,7 @@ from api.utils.search_event import (
 async def get_search_by_id(session: AsyncSession, id: int) -> Optional["Search"]:
     return (
         await session.exec(
-            select(Search)
-            .where(Search.id == id)
-            .options(selectinload(Search.category))  # type: ignore
+            select(Search).where(Search.id == id).options(selectinload(Search.category))
         )
     ).first()
 
@@ -34,7 +32,7 @@ async def get_search_events_for_search(
 ) -> list["EventStatsType"]:
     search_events: list[Any] = (
         await session.exec(
-            select(SearchEvent).where(  # type: ignore
+            select(SearchEvent).where(
                 and_(
                     SearchEvent.search_id == search.id,
                     SearchEvent.date >= date_from,

@@ -8,6 +8,7 @@ from sqlmodel import select
 from strawberry.types import Info
 
 from api.models.category import Category
+from api.permissions import IsAdminUser, IsAuthenticated
 from api.types.category import (
     CategoryExistsError,
     CategoryType,
@@ -20,19 +21,21 @@ from api.types.general import InputValidationError
 
 async def resolve_categories(root: Any, info: Info[Any, Any]) -> list[CategoryType]:
     session: AsyncSession = info.context["session"]
-    query = select(Category)
+    query = select(Category)  # type: ignore
     categories_db = (await session.execute(query)).scalars().all()
     return [convert_category_from_db(cat) for cat in categories_db]
 
 
 @strawberry.type
 class Query:
-    categories: list[CategoryType] = strawberry.field(resolver=resolve_categories)
+    categories: list[CategoryType] = strawberry.field(
+        resolver=resolve_categories, permission_classes=[IsAuthenticated]
+    )
 
 
 @strawberry.type
 class Mutation:
-    @strawberry.mutation
+    @strawberry.mutation(permission_classes=[IsAdminUser])  # type: ignore
     async def create_category(
         self, info: Info[Any, Any], input: CreateUserInput
     ) -> CreateCategoryResponse:

@@ -130,7 +130,7 @@ async def test_plot_scan_parsing(
     assert search_parsed.schedule == {"day_of_week": 0, "hour": 1, "minute": 2}
     schedule_mock.assert_called_once()
     search_event_parsed = (await _db_session.exec(select(SearchEvent))).first()
-    assert search_event_parsed.search == search_parsed
+    assert search_event_parsed.search.__dict__ == search_parsed.__dict__
 
     estates_parsed = (await _db_session.exec(select(Estate))).all()
     prices_parsed = (await _db_session.exec(select(Price))).all()
@@ -171,7 +171,7 @@ async def test_apartment_scan_parsing(_db_session: AsyncSession) -> None:
         assert getattr(search_parsed, key) == value
 
     search_event_parsed = (await _db_session.exec(select(SearchEvent))).first()
-    assert search_event_parsed.search == search_parsed
+    assert search_event_parsed.search.__dict__ == search_parsed.__dict__
 
     estates_parsed = (await _db_session.exec(select(Estate))).all()
     prices_parsed = (await _db_session.exec(select(Price))).all()
@@ -212,7 +212,7 @@ async def test_house_scan_parsing(_db_session: AsyncSession) -> None:
         assert getattr(search_parsed, key) == value
 
     search_event_parsed = (await _db_session.exec(select(SearchEvent))).first()
-    assert search_event_parsed.search == search_parsed
+    assert search_event_parsed.search.__dict__ == search_parsed.__dict__
 
     estates_parsed = (await _db_session.exec(select(Estate))).all()
     prices_parsed = (await _db_session.exec(select(Price))).all()
@@ -260,9 +260,9 @@ async def test_second_scan_parsing(_db_session: AsyncSession) -> None:
     search_events_parsed = (await _db_session.exec(select(SearchEvent))).all()
     assert len(search_events_parsed) == 2
     assert (
-        search_events_parsed[0].search
-        == search_events_parsed[1].search
-        == search_parsed
+        search_events_parsed[0].search.__dict__
+        == search_events_parsed[1].search.__dict__
+        == search_parsed.__dict__
     )
     assert search_events_parsed[0].date != search_events_parsed[1].date
 

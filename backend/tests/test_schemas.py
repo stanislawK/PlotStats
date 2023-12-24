@@ -24,6 +24,27 @@ from .conftest import MockAioJSONResponse, MockAioTextResponse, examples
 
 @pytest.mark.asyncio
 async def test_categories_query(
+    authenticated_client: httpx.AsyncClient, _db_session: AsyncSession
+) -> None:
+    category = Category(**examples["category"])
+    _db_session.add(category)
+    await _db_session.commit()
+    query = """
+        query MyQuery {
+            categories {
+                name
+            }
+        }
+    """
+    response = await authenticated_client.get("/graphql", params={"query": query})
+    assert response.status_code == 200
+    result = response.json()
+    assert len(result["data"]["categories"]) == 1
+    assert result["data"]["categories"][0]["name"] == examples["category"]["name"]
+
+
+@pytest.mark.asyncio
+async def test_categories_unauthenticated(
     client: httpx.AsyncClient, _db_session: AsyncSession
 ) -> None:
     category = Category(**examples["category"])
@@ -37,10 +58,9 @@ async def test_categories_query(
         }
     """
     response = await client.get("/graphql", params={"query": query})
-    assert response.status_code == 200
     result = response.json()
-    assert len(result["data"]["categories"]) == 1
-    assert result["data"]["categories"][0]["name"] == examples["category"]["name"]
+    assert result["data"] is None
+    assert result["errors"][0]["message"] == "User is not authenticated"
 
 
 @pytest.mark.asyncio
@@ -66,7 +86,7 @@ async def test_categories_query_fetch_id_should_fail(
 
 @pytest.mark.asyncio
 async def test_create_category_mutation(
-    client: httpx.AsyncClient, _db_session: AsyncSession
+    admin_client: httpx.AsyncClient, _db_session: AsyncSession
 ) -> None:
     mutation = """
         mutation newCategory {
@@ -81,7 +101,7 @@ async def test_create_category_mutation(
             }
         }
     """
-    response = await client.post("/graphql", json={"query": mutation})
+    response = await admin_client.post("/graphql", json={"query": mutation})
     assert response.status_code == 200
     result = response.json()
     assert result["data"]["createCategory"]["__typename"] == "CategoryType"
@@ -92,8 +112,50 @@ async def test_create_category_mutation(
 
 
 @pytest.mark.asyncio
-async def test_create_category_mutation_duplicate_should_produce_error(
+async def test_create_category_mutation_unauthorized(
     client: httpx.AsyncClient, _db_session: AsyncSession
+) -> None:
+    mutation = """
+        mutation newCategory {
+            createCategory(input: {name: "Test2"}) {
+                __typename
+                ... on CategoryType {
+                    name
+                }
+            }
+        }
+    """
+    response = await client.post("/graphql", json={"query": mutation})
+    assert response.status_code == 200
+    result = response.json()
+    assert result["data"] is None
+    assert result["errors"][0]["message"] == "User is not authenticated"
+
+
+@pytest.mark.asyncio
+async def test_create_category_mutation_non_admin(
+    authenticated_client: httpx.AsyncClient, _db_session: AsyncSession
+) -> None:
+    mutation = """
+        mutation newCategory {
+            createCategory(input: {name: "Test2"}) {
+                __typename
+                ... on CategoryType {
+                    name
+                }
+            }
+        }
+    """
+    response = await authenticated_client.post("/graphql", json={"query": mutation})
+    assert response.status_code == 200
+    result = response.json()
+    assert result["data"] is None
+    assert result["errors"][0]["message"] == "User is not authenticated"
+
+
+@pytest.mark.asyncio
+async def test_create_category_mutation_duplicate_should_produce_error(
+    admin_client: httpx.AsyncClient, _db_session: AsyncSession
 ) -> None:
     category = Category(name="Test2")
     _db_session.add(category)
@@ -111,7 +173,7 @@ async def test_create_category_mutation_duplicate_should_produce_error(
             }
         }
     """
-    response = await client.post("/graphql", json={"query": mutation})
+    response = await admin_client.post("/graphql", json={"query": mutation})
     result = response.json()
     assert result["data"]["createCategory"]["__typename"] == "CategoryExistsError"
     err = CategoryExistsError()
@@ -120,7 +182,7 @@ async def test_create_category_mutation_duplicate_should_produce_error(
 
 @pytest.mark.asyncio
 async def test_create_category_with_too_long_name_should_produce_error(
-    client: httpx.AsyncClient, _db_session: AsyncSession
+    admin_client: httpx.AsyncClient, _db_session: AsyncSession
 ) -> None:
     name = "a" * 33
     mutation = f"""
@@ -139,18 +201,18 @@ async def test_create_category_with_too_long_name_should_produce_error(
             }}
         }}
     """
-    response = await client.post("/graphql", json={"query": mutation})
+    response = await admin_client.post("/graphql", json={"query": mutation})
     result = response.json()
     assert result["data"]["createCategory"]["__typename"] == "InputValidationError"
     assert (
-        "ensure this value has at most 32 characters"
+        "String should have at most 32 characters"
         in result["data"]["createCategory"]["message"]
     )
 
 
 @pytest.mark.asyncio
 async def test_create_category_with_too_short_name_should_produce_error(
-    client: httpx.AsyncClient, _db_session: AsyncSession
+    admin_client: httpx.AsyncClient, _db_session: AsyncSession
 ) -> None:
     name = ""
     mutation = f"""
@@ -169,18 +231,18 @@ async def test_create_category_with_too_short_name_should_produce_error(
             }}
         }}
     """
-    response = await client.post("/graphql", json={"query": mutation})
+    response = await admin_client.post("/graphql", json={"query": mutation})
     result = response.json()
     assert result["data"]["createCategory"]["__typename"] == "InputValidationError"
     assert (
-        "ensure this value has at least 1 characters "
+        "String should have at least 1 character"
         in result["data"]["createCategory"]["message"]
     )
 
 
 @pytest.mark.asyncio
 async def test_create_category_capitalize_name(
-    client: httpx.AsyncClient, _db_session: AsyncSession
+    admin_client: httpx.AsyncClient, _db_session: AsyncSession
 ) -> None:
     name = "test"
     mutation = f"""
@@ -199,7 +261,7 @@ async def test_create_category_capitalize_name(
             }}
         }}
     """
-    response = await client.post("/graphql", json={"query": mutation})
+    response = await admin_client.post("/graphql", json={"query": mutation})
     result = response.json()
     query = select(Category)
     category_db = (await _db_session.execute(query)).scalar()

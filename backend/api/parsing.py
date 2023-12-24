@@ -57,7 +57,7 @@ async def parse_search_info(
     coordinates_alt = jmespath.search("pageProps.data.searchMapPins.boundingBox", body)
 
     estate_type = jmespath.search("pageProps.estate", body) or ""
-    cat_query = select(Category).where(
+    cat_query = select(Category).where(  # type: ignore
         Category.name == CATEGORY_MAP[estate_type.lower()]
     )
 
@@ -67,26 +67,29 @@ async def parse_search_info(
 
     search_params = jmespath.search("pageProps.filteringQueryParams", body)
     encoded_url = encode_url(url)
-    search_query = select(Search).where(Search.url == encoded_url.decode("ascii"))
+    search_query = select(Search).where(
+        Search.url == encoded_url.decode("ascii")  # type: ignore
+    )
     search = (await session.exec(search_query)).first()  # type: ignore
-
     schedule_dict = None
     if schedule is not None:
         schedule_dict = schedule.__dict__
         setup_scan_periodic_task(url, schedule_dict)
 
     if not search:
-        search = Search(
-            location=jmespath.search("locations[0].fullName", search_params),
-            distance_radius=search_params.get("distanceRadius"),
-            coordinates=parse_coordinates(coordinates_org, coordinates_alt),
-            from_price=search_params.get("priceMin"),
-            to_price=search_params.get("priceMax"),
-            from_surface=search_params.get("areaMin"),
-            to_surface=search_params.get("areaMax"),
-            category=category,
-            url=encoded_url,
-            schedule=schedule_dict,
+        search = Search.model_validate(
+            Search(
+                location=jmespath.search("locations[0].fullName", search_params),
+                distance_radius=search_params.get("distanceRadius"),
+                coordinates=parse_coordinates(coordinates_org, coordinates_alt),
+                from_price=search_params.get("priceMin"),
+                to_price=search_params.get("priceMax"),
+                from_surface=search_params.get("areaMin"),
+                to_surface=search_params.get("areaMax"),
+                category=category,
+                url=encoded_url,
+                schedule=schedule_dict,
+            )
         )
         session.add(search)
         await session.commit()
@@ -112,15 +115,17 @@ async def parse_scan_data(
         search_event = await parse_search_info(url, schedule, body, session)
     ads = jmespath.search("pageProps.data.searchAds.items", body)
     estates = [
-        Estate(
-            id=ad.get("id"),
-            title=ad.get("title", ""),
-            street=jmespath.search("location.address.street.name", ad),
-            city=jmespath.search("location.address.city.name", ad),
-            province=jmespath.search("location.address.province.name", ad),
-            location=jmespath.search("locationLabel.value", ad),
-            date_created=ad.get("dateCreatedFirst") or ad.get("dateCreated"),
-            url=ad.get("slug"),
+        Estate.model_validate(
+            Estate(
+                id=ad.get("id"),
+                title=ad.get("title", ""),
+                street=jmespath.search("location.address.street.name", ad),
+                city=jmespath.search("location.address.city.name", ad),
+                province=jmespath.search("location.address.province.name", ad),
+                location=jmespath.search("locationLabel.value", ad),
+                date_created=ad.get("dateCreatedFirst") or ad.get("dateCreated"),
+                url=ad.get("slug"),
+            )
         )
         for ad in ads
     ]
@@ -149,7 +154,6 @@ async def parse_scan_data(
             "province",
             "location",
             "url",
-            "date_created",
         ]
         update_estate(existing_estate, new_estate, fields_to_update, session)
     prices = [
