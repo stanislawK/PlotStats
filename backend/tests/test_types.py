@@ -69,7 +69,9 @@ def test_adhoc_scan_input_type() -> None:
 
 @pytest.mark.asyncio
 async def test_event_stats_type(
-    client: httpx.AsyncClient, _db_session: AsyncSession, mocker: MockerFixture
+    authenticated_client: httpx.AsyncClient,
+    _db_session: AsyncSession,
+    mocker: MockerFixture,
 ) -> None:
     category = Category(name="Plot")
     _db_session.add(category)
@@ -97,7 +99,7 @@ async def test_event_stats_type(
             }}
         }}
     """
-    await client.post("/graphql", json={"query": mutation})
+    await authenticated_client.post("/graphql", json={"query": mutation})
     search_event = (await _db_session.exec(select(SearchEvent))).first()  # type: ignore
     prices = await get_search_event_prices(_db_session, search_event)  # type: ignore
 
@@ -123,7 +125,9 @@ async def test_event_stats_type(
 
 @pytest.mark.asyncio
 async def test_search_stats_type(
-    client: httpx.AsyncClient, _db_session: AsyncSession, mocker: MockerFixture
+    authenticated_client: httpx.AsyncClient,
+    _db_session: AsyncSession,
+    mocker: MockerFixture,
 ) -> None:
     category = Category(name="Plot")
     _db_session.add(category)
@@ -151,8 +155,8 @@ async def test_search_stats_type(
             }}
         }}
     """
-    await client.post("/graphql", json={"query": mutation})
-    await client.post("/graphql", json={"query": mutation})
+    await authenticated_client.post("/graphql", json={"query": mutation})
+    await authenticated_client.post("/graphql", json={"query": mutation})
     search = (
         await _db_session.exec(select(Search).options(selectinload(Search.category)))
     ).first()  # type: ignore

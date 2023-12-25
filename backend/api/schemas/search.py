@@ -4,6 +4,7 @@ from typing import Any
 import strawberry
 from strawberry.types import Info
 
+from api.permissions import IsAuthenticated
 from api.types.search_stats import (
     GetSearchStatsResponse,
     SearchDoesntExistError,
@@ -15,7 +16,7 @@ from api.utils.search import get_search_by_id
 
 @strawberry.type
 class Query:
-    @strawberry.field
+    @strawberry.field(permission_classes=[IsAuthenticated])  # type: ignore
     async def search_stats(
         self, info: Info[Any, Any], input: SearchStatsInput
     ) -> GetSearchStatsResponse:

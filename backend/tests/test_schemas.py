@@ -107,7 +107,7 @@ async def test_create_category_mutation(
     assert result["data"]["createCategory"]["__typename"] == "CategoryType"
     assert result["data"]["createCategory"]["name"] == "Test2"
     query = select(Category).where(Category.name == "Test2")
-    category_db = (await _db_session.execute(query)).scalar()
+    category_db = (await _db_session.exec(query)).first()
     assert category_db.name == "Test2"  # type: ignore
 
 
@@ -264,7 +264,7 @@ async def test_create_category_capitalize_name(
     response = await admin_client.post("/graphql", json={"query": mutation})
     result = response.json()
     query = select(Category)
-    category_db = (await _db_session.execute(query)).scalar()
+    category_db = (await _db_session.exec(query)).first()
     assert result["data"]["createCategory"]["__typename"] == "CategoryType"
     assert result["data"]["createCategory"]["name"] == name.title()
     assert category_db
@@ -273,7 +273,34 @@ async def test_create_category_capitalize_name(
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("url", ["test", "test.com"])
-async def test_adhoc_scan_invalid_input(client: httpx.AsyncClient, url: str) -> None:
+async def test_adhoc_scan_invalid_input(
+    authenticated_client: httpx.AsyncClient, url: str
+) -> None:
+    mutation = f"""
+        mutation adhocScan {{
+            adhocScan(input: {{url: "{url}"}}) {{
+                __typename
+                ... on ScanSucceeded {{
+                    message
+                }}
+                ... on ScanFailedError {{
+                    message
+                }}
+                ... on InputValidationError {{
+                    message
+                }}
+            }}
+        }}
+    """
+    response = await authenticated_client.post("/graphql", json={"query": mutation})
+    result = response.json()
+    assert result["data"]["adhocScan"]["__typename"] == "InputValidationError"
+    assert "url" in result["data"]["adhocScan"]["message"]
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("url", ["test", "test.com"])
+async def test_adhoc_scan_unauthorized(client: httpx.AsyncClient, url: str) -> None:
     mutation = f"""
         mutation adhocScan {{
             adhocScan(input: {{url: "{url}"}}) {{
@@ -292,13 +319,15 @@ async def test_adhoc_scan_invalid_input(client: httpx.AsyncClient, url: str) -> 
     """
     response = await client.post("/graphql", json={"query": mutation})
     result = response.json()
-    assert result["data"]["adhocScan"]["__typename"] == "InputValidationError"
-    assert "url" in result["data"]["adhocScan"]["message"]
+    assert result["data"] is None
+    assert result["errors"][0]["message"] == "User is not authenticated"
 
 
 @pytest.mark.asyncio
 async def test_adhoc_scan_correct_response(
-    client: httpx.AsyncClient, _db_session: AsyncSession, mocker: MockerFixture
+    authenticated_client: httpx.AsyncClient,
+    _db_session: AsyncSession,
+    mocker: MockerFixture,
 ) -> None:
     category = Category(name="Plot")
     _db_session.add(category)
@@ -329,7 +358,7 @@ async def test_adhoc_scan_correct_response(
             }}
         }}
     """
-    response = await client.post("/graphql", json={"query": mutation})
+    response = await authenticated_client.post("/graphql", json={"query": mutation})
     estates_parsed = (
         await _db_session.exec(select(Estate).options(selectinload(Estate.prices)))
     ).all()  # type: ignore
@@ -350,7 +379,7 @@ async def test_adhoc_scan_correct_response(
 
 @pytest.mark.asyncio
 async def test_adhoc_scan_incorrect_category(
-    client: httpx.AsyncClient, mocker: MockerFixture
+    authenticated_client: httpx.AsyncClient, mocker: MockerFixture
 ) -> None:
     url = "https://www.test.io/test"
     with open("tests/example_files/body_plot.json", "r") as f:
@@ -373,7 +402,7 @@ async def test_adhoc_scan_incorrect_category(
             }}
         }}
     """
-    response = await client.post("/graphql", json={"query": mutation})
+    response = await authenticated_client.post("/graphql", json={"query": mutation})
     result = response.json()
     assert result["data"]["adhocScan"]["__typename"] == "ScanFailedError"
     assert "Document parsing failed." in result["data"]["adhocScan"]["message"]
@@ -381,7 +410,9 @@ async def test_adhoc_scan_incorrect_category(
 
 @pytest.mark.asyncio
 async def test_adhoc_scan_404_response(
-    client: httpx.AsyncClient, mocker: MockerFixture, cache: fakeredis.FakeRedis
+    authenticated_client: httpx.AsyncClient,
+    mocker: MockerFixture,
+    cache: fakeredis.FakeRedis,
 ) -> None:
     url = "https://www.test.io/test"
     with open("tests/example_files/404_resp.html", "r") as f:
@@ -405,7 +436,7 @@ async def test_adhoc_scan_404_response(
             }}
         }}
     """
-    response = await client.post("/graphql", json={"query": mutation})
+    response = await authenticated_client.post("/graphql", json={"query": mutation})
     result = response.json()
     assert result["data"]["adhocScan"]["__typename"] == "ScanFailedError"
     assert (
@@ -417,7 +448,9 @@ async def test_adhoc_scan_404_response(
 
 @pytest.mark.asyncio
 async def test_search_event_stats_without_top(
-    client: httpx.AsyncClient, _db_session: AsyncSession, mocker: MockerFixture
+    authenticated_client: httpx.AsyncClient,
+    _db_session: AsyncSession,
+    mocker: MockerFixture,
 ) -> None:
     """
     SETUP
@@ -442,7 +475,7 @@ async def test_search_event_stats_without_top(
             }}
         }}
     """
-    await client.post("/graphql", json={"query": mutation})
+    await authenticated_client.post("/graphql", json={"query": mutation})
     search_event = (await _db_session.exec(select(SearchEvent))).first()
     query = f"""
         query eventStats {{
@@ -480,7 +513,7 @@ async def test_search_event_stats_without_top(
             }}
         }}
     """
-    response = await client.post("/graphql", json={"query": query})
+    response = await authenticated_client.post("/graphql", json={"query": query})
     result = response.json()["data"]["searchEventStats"]
     expected_result = {
         "__typename": "EventStatsType",
@@ -505,7 +538,9 @@ async def test_search_event_stats_without_top(
 
 @pytest.mark.asyncio
 async def test_search_event_doesnt_exist(
-    client: httpx.AsyncClient, _db_session: AsyncSession, mocker: MockerFixture
+    authenticated_client: httpx.AsyncClient,
+    _db_session: AsyncSession,
+    mocker: MockerFixture,
 ) -> None:
     """
     SETUP
@@ -530,7 +565,63 @@ async def test_search_event_doesnt_exist(
             }}
         }}
     """
-    await client.post("/graphql", json={"query": mutation})
+    await authenticated_client.post("/graphql", json={"query": mutation})
+    search_event = (await _db_session.exec(select(SearchEvent))).first()
+    query = f"""
+        query eventStats {{
+            searchEventStats(input: {{
+                    id: {search_event.id + 1}
+                }}) {{
+                __typename
+                ... on EventStatsType {{
+                    avgPrice
+                }}
+                ... on SearchEventDoesntExistError {{
+                    message
+                }}
+                ... on NoPricesFoundError {{
+                    message
+                }}
+            }}
+        }}
+    """
+    response = await authenticated_client.post("/graphql", json={"query": query})
+    result = response.json()["data"]["searchEventStats"]
+    assert result["__typename"] == "SearchEventDoesntExistError"
+    assert result["message"] == "Search Event with provided id doesn't exist"
+
+
+@pytest.mark.asyncio
+async def test_search_event_unauthorized(
+    authenticated_client: httpx.AsyncClient,
+    client: httpx.AsyncClient,
+    _db_session: AsyncSession,
+    mocker: MockerFixture,
+) -> None:
+    """
+    SETUP
+    """
+    category = Category(name="Plot")
+    _db_session.add(category)
+    await _db_session.commit()
+    url = "https://www.test.io/test"
+    with open("tests/example_files/body_plot.json", "r") as f:
+        body = json.load(f)
+    resp = MockAioJSONResponse(body, 200)
+    mocker.patch("aiohttp.ClientSession.get", return_value=resp)
+    mutation = f"""
+        mutation adhocScan {{
+            adhocScan(input: {{
+                    url: "{url}"
+                }}) {{
+                __typename
+                ... on ScanSucceeded {{
+                    message
+                }}
+            }}
+        }}
+    """
+    await authenticated_client.post("/graphql", json={"query": mutation})
     search_event = (await _db_session.exec(select(SearchEvent))).first()
     query = f"""
         query eventStats {{
@@ -551,14 +642,16 @@ async def test_search_event_doesnt_exist(
         }}
     """
     response = await client.post("/graphql", json={"query": query})
-    result = response.json()["data"]["searchEventStats"]
-    assert result["__typename"] == "SearchEventDoesntExistError"
-    assert result["message"] == "Search Event with provided id doesn't exist"
+    result = response.json()
+    assert result["data"] is None
+    assert result["errors"][0]["message"] == "User is not authenticated"
 
 
 @pytest.mark.asyncio
 async def test_search_doesnt_exist(
-    client: httpx.AsyncClient, _db_session: AsyncSession, mocker: MockerFixture
+    authenticated_client: httpx.AsyncClient,
+    _db_session: AsyncSession,
+    mocker: MockerFixture,
 ) -> None:
     """
     SETUP
@@ -583,7 +676,7 @@ async def test_search_doesnt_exist(
             }}
         }}
     """
-    await client.post("/graphql", json={"query": mutation})
+    await authenticated_client.post("/graphql", json={"query": mutation})
     search = (await _db_session.exec(select(Search))).first()
     query = f"""
         query searchStats {{
@@ -600,7 +693,7 @@ async def test_search_doesnt_exist(
             }}
         }}
     """
-    response = await client.post("/graphql", json={"query": query})
+    response = await authenticated_client.post("/graphql", json={"query": query})
     result = response.json()["data"]["searchStats"]
     assert result["__typename"] == "SearchDoesntExistError"
     assert result["message"] == "Search with provided id doesn't exist"
@@ -608,7 +701,9 @@ async def test_search_doesnt_exist(
 
 @pytest.mark.asyncio
 async def test_search_stats_query(
-    client: httpx.AsyncClient, _db_session: AsyncSession, mocker: MockerFixture
+    authenticated_client: httpx.AsyncClient,
+    _db_session: AsyncSession,
+    mocker: MockerFixture,
 ) -> None:
     """
     SETUP
@@ -633,8 +728,8 @@ async def test_search_stats_query(
             }}
         }}
     """
-    await client.post("/graphql", json={"query": mutation})
-    await client.post("/graphql", json={"query": mutation})
+    await authenticated_client.post("/graphql", json={"query": mutation})
+    await authenticated_client.post("/graphql", json={"query": mutation})
     search = (await _db_session.exec(select(Search))).first()
     query = f"""
         query searchStats {{
@@ -669,7 +764,7 @@ async def test_search_stats_query(
             }}
         }}
     """
-    response = await client.post("/graphql", json={"query": query})
+    response = await authenticated_client.post("/graphql", json={"query": query})
     result = response.json()["data"]["searchStats"]
     expected = {
         "__typename": "SearchStatsType",
@@ -700,6 +795,60 @@ async def test_search_stats_query(
     result.pop("dateFrom")
     result.pop("dateTo")
     assert result == expected
+
+
+@pytest.mark.asyncio
+async def test_search_stats_query_unauthorized(
+    client: httpx.AsyncClient,
+    authenticated_client: httpx.AsyncClient,
+    _db_session: AsyncSession,
+    mocker: MockerFixture,
+) -> None:
+    """
+    SETUP
+    """
+    category = Category(name="Plot")
+    _db_session.add(category)
+    await _db_session.commit()
+    url = "https://www.test.io/test"
+    with open("tests/example_files/body_plot.json", "r") as f:
+        body = json.load(f)
+    resp = MockAioJSONResponse(body, 200)
+    mocker.patch("aiohttp.ClientSession.get", return_value=resp)
+    mutation = f"""
+        mutation adhocScan {{
+            adhocScan(input: {{
+                    url: "{url}"
+                }}) {{
+                __typename
+                ... on ScanSucceeded {{
+                    message
+                }}
+            }}
+        }}
+    """
+    await authenticated_client.post("/graphql", json={"query": mutation})
+    await authenticated_client.post("/graphql", json={"query": mutation})
+    search = (await _db_session.exec(select(Search))).first()
+    query = f"""
+        query searchStats {{
+            searchStats(input: {{
+                    id: {search.id}
+                }}) {{
+                __typename
+                ... on SearchStatsType {{
+                    avgAreaTotal
+                }}
+                ... on SearchDoesntExistError {{
+                    message
+                }}
+            }}
+        }}
+    """
+    response = await client.post("/graphql", json={"query": query})
+    result = response.json()
+    assert result["data"] is None
+    assert result["errors"][0]["message"] == "User is not authenticated"
 
 
 @pytest.mark.asyncio

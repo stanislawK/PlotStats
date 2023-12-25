@@ -9,6 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from strawberry.types import Info
 
 from api.parsing import CategoryNotFoundError, parse_scan_data, parse_search_info
+from api.permissions import IsAuthenticated
 from api.types.general import InputValidationError
 from api.types.scan import (
     AdhocScanInput,
@@ -24,7 +25,7 @@ TOTAL_PAGES_PATH = "pageProps.data.searchAds.pagination.totalPages"
 
 @strawberry.type
 class Mutation:
-    @strawberry.mutation
+    @strawberry.mutation(permission_classes=[IsAuthenticated])  # type: ignore
     async def adhoc_scan(
         self, info: Info[Any, Any], input: AdhocScanInput
     ) -> AdhocScanResponse:
