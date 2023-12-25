@@ -17,6 +17,7 @@ from sqlmodel.pool import StaticPool
 from api.database import get_async_session
 from api.main import create_app
 from api.models.user import User
+from api.utils.jwt import create_jwt_token
 from api.utils.user import get_password_hash
 
 examples: dict[str, dict[str, str | int]] = {
@@ -69,7 +70,9 @@ async def _db_session() -> AsyncIterator[AsyncSession]:
         connect_args={"check_same_thread": False},
         poolclass=StaticPool,
     )
-    session = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
+    session = sessionmaker(
+        engine, class_=AsyncSession, expire_on_commit=False  # type: ignore
+    )
     async with session() as s:
         async with engine.begin() as conn:
             await conn.run_sync(SQLModel.metadata.create_all)
@@ -121,11 +124,70 @@ async def client(
 
 
 @pytest.fixture
+async def authenticated_client(
+    app: FastAPI,
+    _db_session: AsyncSession,
+    add_user: User,
+    caplog: LogCaptureFixture,
+    mocker: MockerFixture,
+    cache: fakeredis.FakeRedis,
+    celery_config: dict[str, str],
+) -> AsyncIterator[httpx.AsyncClient]:
+    async def override_db() -> AsyncIterator[AsyncSession]:
+        async with _db_session as s:
+            yield s
+
+    app.dependency_overrides[get_async_session] = override_db
+
+    mocker.patch("api.utils.fetching.cache", cache)
+    token = create_jwt_token(subject=str(add_user.id), fresh=True, token_type="access")
+    async with httpx.AsyncClient(app=app, base_url="http://testserver") as client:
+        client.headers.update({"Authorization": f"Bearer {token}"})
+        yield client
+
+
+@pytest.fixture
+async def admin_client(
+    app: FastAPI,
+    _db_session: AsyncSession,
+    add_admin: User,
+    caplog: LogCaptureFixture,
+    mocker: MockerFixture,
+    cache: fakeredis.FakeRedis,
+    celery_config: dict[str, str],
+) -> AsyncIterator[httpx.AsyncClient]:
+    async def override_db() -> AsyncIterator[AsyncSession]:
+        async with _db_session as s:
+            yield s
+
+    app.dependency_overrides[get_async_session] = override_db
+
+    mocker.patch("api.utils.fetching.cache", cache)
+    token = create_jwt_token(subject=str(add_admin.id), fresh=True, token_type="access")
+    async with httpx.AsyncClient(app=app, base_url="http://testserver") as client:
+        client.headers.update({"Authorization": f"Bearer {token}"})
+        yield client
+
+
+@pytest.fixture
 async def add_user(_db_session: AsyncSession) -> User:
     user = User(
         email=examples["user"]["email"],
         password=get_password_hash(examples["user"]["password"]),  # type: ignore
         is_active=True,
+    )
+    _db_session.add(user)
+    await _db_session.commit()
+    return user
+
+
+@pytest.fixture
+async def add_admin(_db_session: AsyncSession) -> User:
+    user = User(
+        email=examples["user"]["email"],
+        password=get_password_hash(examples["user"]["password"]),  # type: ignore
+        is_active=True,
+        roles=["admin"],
     )
     _db_session.add(user)
     await _db_session.commit()

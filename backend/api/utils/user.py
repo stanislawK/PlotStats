@@ -14,7 +14,7 @@ async def get_user_by_email(
     email: str,
 ) -> Optional[User]:
     user: Optional[User] = (
-        await session.exec(select(User).where(User.email == email))  # type: ignore
+        await session.exec(select(User).where(User.email == email))
     ).first()
     return user
 

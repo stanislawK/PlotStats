@@ -1,6 +1,5 @@
 from typing import TYPE_CHECKING, List, Optional
 
-from pydantic import EmailStr
 from sqlmodel import JSON, Column, Field, Relationship, SQLModel
 
 if TYPE_CHECKING:
@@ -18,7 +17,7 @@ class SearchUser(SQLModel, table=True):
 
 class User(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    email: EmailStr = Field(unique=True)
+    email: str = Field(unique=True)
     password: str
     roles: List[str] = Field(default=["user"], sa_column=Column(JSON))
     is_active: bool = Field(default=False)

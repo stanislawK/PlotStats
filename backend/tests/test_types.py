@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 
 import httpx
 import pytest
-from pydantic.error_wrappers import ValidationError
+from pydantic import ValidationError
 from pytest_mock import MockerFixture
 from sqlalchemy.orm import selectinload
 from sqlmodel import select
@@ -25,7 +25,7 @@ from .conftest import MockAioJSONResponse
 
 
 def test_category_type() -> None:
-    [name_field] = CategoryType._type_definition.fields  # type: ignore
+    [name_field] = CategoryType.__strawberry_definition__.fields
 
     assert name_field.python_name == "name"
 
@@ -35,13 +35,13 @@ def test_category_type() -> None:
 
 
 def test_adhoc_scan_input_type() -> None:
-    [url_field, schedule_field] = AdhocScanInput._type_definition.fields  # type: ignore
+    [url_field, schedule_field] = AdhocScanInput.__strawberry_definition__.fields
 
     assert url_field.python_name == "url"
     assert schedule_field.python_name == "schedule"
     with pytest.raises(
         ValidationError,
-        match=("invalid or missing URL scheme"),
+        match=("Input should be a valid URL"),
     ):
         PydanticAdhocScanInput(url="test")
     with pytest.raises(
@@ -51,9 +51,7 @@ def test_adhoc_scan_input_type() -> None:
         PydanticAdhocScanInput(url="https://test.com")
     with pytest.raises(
         ValidationError,
-        match=(
-            "day_of_week\\n  field required \(type=value_error\.missing\)\\nschedule -> minute\\n  field required \(type=value_error\.missing\)"  # noqa
-        ),
+        match=("schedule.day_of_week\\n  Field required"),  # noqa
     ):
         PydanticAdhocScanInput(
             url="https://www.test.io/query_params", schedule={"hour": 1}
@@ -63,7 +61,7 @@ def test_adhoc_scan_input_type() -> None:
         schedule={"day_of_week": 0, "hour": 1, "minute": 2},
     )
     data = AdhocScanInput.from_pydantic(instance)
-    assert data.url == "https://www.test.io/query_params"
+    assert data.url.unicode_string() == "https://www.test.io/query_params"
     assert data.schedule.hour == 1  # type: ignore
     assert data.schedule.minute == 2  # type: ignore
     assert data.schedule.day_of_week == 0  # type: ignore
@@ -102,6 +100,7 @@ async def test_event_stats_type(
     await client.post("/graphql", json={"query": mutation})
     search_event = (await _db_session.exec(select(SearchEvent))).first()  # type: ignore
     prices = await get_search_event_prices(_db_session, search_event)  # type: ignore
+
     price = prices[0]
     event_stats = EventStatsType(
         avg_price=55.55,

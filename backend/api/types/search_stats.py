@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from typing import List, Optional
+from typing import Annotated, List, Optional, Union
 
 import strawberry
 from sqlmodel.ext.asyncio.session import AsyncSession
@@ -71,7 +71,7 @@ class SearchDoesntExistError(Error):
     message: str = "Search with provided id doesn't exist"
 
 
-GetSearchStatsResponse = strawberry.union(
-    name="GetSearchStatsResponse",
-    types=(SearchStatsType, SearchDoesntExistError),
-)
+GetSearchStatsResponse = Annotated[
+    Union[SearchStatsType, SearchDoesntExistError],
+    strawberry.union("GetSearchStatsResponse"),
+]

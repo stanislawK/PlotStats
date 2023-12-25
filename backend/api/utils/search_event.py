@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any, Optional, Sequence
 
 from sqlalchemy.orm import selectinload
 from sqlmodel import select
@@ -11,12 +11,12 @@ from api.types.price import convert_price_from_db
 
 async def get_search_event_prices(
     session: AsyncSession, search_event: "SearchEvent"
-) -> list["Price"]:
-    prices: list["Price"] = (  # type: ignore
+) -> Sequence["Price"]:
+    prices: Sequence["Price"] = (
         await session.exec(
-            select(Price)  # type: ignore
+            select(Price)
             .where(Price.search_event_id == search_event.id)
-            .options(selectinload(Price.estate))
+            .options(selectinload(Price.estate))  # type: ignore
         )
     ).all()
     return prices
@@ -26,13 +26,11 @@ async def get_search_event_by_id(
     session: AsyncSession, search_event_id: int
 ) -> Optional["SearchEvent"]:
     return (
-        await session.exec(
-            select(SearchEvent).where(SearchEvent.id == search_event_id)  # type: ignore
-        )
+        await session.exec(select(SearchEvent).where(SearchEvent.id == search_event_id))
     ).first()
 
 
-def get_search_event_avg_stats(prices: list["Price"]) -> dict[str, Optional[float]]:
+def get_search_event_avg_stats(prices: Sequence["Price"]) -> dict[str, Optional[float]]:
     num_of_prices: int = len(prices)
     stats = {
         "avg_price": round(sum((p.price for p in prices)) / num_of_prices, 2),
@@ -70,7 +68,7 @@ def get_search_event_avg_stats(prices: list["Price"]) -> dict[str, Optional[floa
 
 
 def get_search_event_min_prices(
-    prices: list["Price"], top_prices: Optional[int] = None
+    prices: Sequence["Price"], top_prices: Optional[int] = None
 ) -> dict[str, Any]:
     stats = dict()
     sorted_by_price = sorted(prices, key=lambda p: p.price)

@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Annotated, Optional, Union
 
 import strawberry
 
@@ -34,7 +34,7 @@ class NoPricesFoundError(Error):
     message: str = "Search Event has no prices"
 
 
-GetSearchEventStatsResponse = strawberry.union(
-    name="GetSearchEventStatsResponse",
-    types=(EventStatsType, SearchEventDoesntExistError, NoPricesFoundError),
-)
+GetSearchEventStatsResponse = Annotated[
+    Union[EventStatsType, SearchEventDoesntExistError, NoPricesFoundError],
+    strawberry.union("GetSearchEventStatsResponse"),
+]

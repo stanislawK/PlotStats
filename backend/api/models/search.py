@@ -24,7 +24,7 @@ class Search(SQLModel, table=True):
     category_id: Optional[int] = Field(default=None, foreign_key="category.id")
     category: Optional[Category] = Relationship(back_populates="searches")
     location: str = Field(index=True)
-    distance_radius: int = Field(default=0)
+    distance_radius: Optional[int] = Field(default=0)
     coordinates: Optional[str] = Field(default=None)
     from_price: Optional[int]
     to_price: Optional[int]
@@ -33,4 +33,4 @@ class Search(SQLModel, table=True):
     search_events: List["SearchEvent"] = Relationship(back_populates="search")
     users: List[User] = Relationship(back_populates="searches", link_model=SearchUser)
     url: str = Field(index=True, unique=True)
-    schedule: dict[str, int] = Field(sa_column=Column(JSON), default=None)
+    schedule: Optional[dict[str, int]] = Field(sa_column=Column(JSON), default=None)

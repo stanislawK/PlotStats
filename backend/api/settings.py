@@ -1,5 +1,5 @@
 from loguru import logger
-from pydantic import BaseSettings
+from pydantic_settings import BaseSettings
 
 logger.add("file_{time:YYYY-MM-DD}.log", rotation="50 MB", retention="10 days")
 

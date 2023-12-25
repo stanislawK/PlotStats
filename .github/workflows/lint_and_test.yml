@@ -24,4 +24,4 @@ jobs:
       - name: Running mypy
         run: mypy . --strict
       - name: Running tests
-        run: pytest .
+        run: pytest ./tests

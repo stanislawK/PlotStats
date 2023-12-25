@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, Optional
+from typing import Any, Optional, Sequence
 
 from sqlalchemy import and_
 from sqlalchemy.orm import selectinload
@@ -31,14 +31,14 @@ async def get_search_events_for_search(
     search: Search,
     date_from: datetime,
     date_to: datetime,
-) -> list["EventStatsType"]:
-    search_events: list[Any] = (
+) -> Sequence["EventStatsType"]:
+    search_events: Sequence["SearchEvent"] = (
         await session.exec(
-            select(SearchEvent).where(  # type: ignore
+            select(SearchEvent).where(
                 and_(
-                    SearchEvent.search_id == search.id,
-                    SearchEvent.date >= date_from,
-                    SearchEvent.date <= date_to,
+                    SearchEvent.search_id == search.id,  # type: ignore
+                    SearchEvent.date >= date_from,  # type: ignore
+                    SearchEvent.date <= date_to,  # type: ignore
                 )
             )
         )
@@ -54,7 +54,7 @@ async def get_search_events_for_search(
     return events
 
 
-def get_search_stats(search_events: list[EventStatsType]) -> dict[str, Any]:
+def get_search_stats(search_events: Sequence[EventStatsType]) -> dict[str, Any]:
     events_num = len(search_events)
     stats = {
         "avg_price_total": round(

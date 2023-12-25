@@ -1,3 +1,5 @@
+from typing import Annotated, Union
+
 import strawberry
 
 from api.models.user import User
@@ -10,9 +12,10 @@ class JWTPair:
     refresh_token: str
 
 
-@strawberry.experimental.pydantic.input(model=User, fields=["email", "password"])
+@strawberry.experimental.pydantic.input(model=User)
 class LoginUserData:
-    pass
+    email: strawberry.auto
+    password: strawberry.auto
 
 
 @strawberry.type
@@ -20,6 +23,7 @@ class LoginUserError(Error):
     message: str = "Login user error"
 
 
-LoginUserResponse = strawberry.union(
-    "LoginUserResponse", (JWTPair, LoginUserError, InputValidationError)
-)
+LoginUserResponse = Annotated[
+    Union[JWTPair, LoginUserError, InputValidationError],
+    strawberry.union("LoginUserResponse"),
+]

@@ -32,7 +32,7 @@ class Mutation:
             data = input.to_pydantic()
         except ValidationError as error:
             return InputValidationError(message=str(error))
-        url = parse_url(data.url)
+        url = parse_url(str(data.url))
         status_code, body = await make_request(url)
         if status_code != 200:
             logger.critical(f"Scan has failed with {status_code} status code.")
@@ -42,9 +42,9 @@ class Mutation:
         session: AsyncSession = info.context["session"]
         try:
             search_event = await parse_search_info(
-                data.url, data.schedule, body, session
+                str(data.url), data.schedule, body, session
             )
-            await parse_scan_data(data.url, body, session, search_event)
+            await parse_scan_data(str(data.url), body, session, search_event)
         except CategoryNotFoundError:
             logger.critical(f"Parsing document for {url} has failed.")
             return ScanFailedError(message="Document parsing failed.")
@@ -57,5 +57,5 @@ class Mutation:
             status_code, body = await make_request(
                 url=next_url, wait_before_request=random.randint(10, 20)
             )
-            await parse_scan_data(data.url, body, session, search_event)
+            await parse_scan_data(str(data.url), body, session, search_event)
         return ScanSucceeded  # type: ignore

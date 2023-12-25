@@ -8,6 +8,7 @@ from sqlmodel import select
 from strawberry.types import Info
 
 from api.models.category import Category
+from api.permissions import IsAdminUser, IsAuthenticated
 from api.types.category import (
     CategoryExistsError,
     CategoryType,
@@ -27,12 +28,14 @@ async def resolve_categories(root: Any, info: Info[Any, Any]) -> list[CategoryTy
 
 @strawberry.type
 class Query:
-    categories: list[CategoryType] = strawberry.field(resolver=resolve_categories)
+    categories: list[CategoryType] = strawberry.field(
+        resolver=resolve_categories, permission_classes=[IsAuthenticated]
+    )
 
 
 @strawberry.type
 class Mutation:
-    @strawberry.mutation
+    @strawberry.mutation(permission_classes=[IsAdminUser])  # type: ignore
     async def create_category(
         self, info: Info[Any, Any], input: CreateUserInput
     ) -> CreateCategoryResponse:

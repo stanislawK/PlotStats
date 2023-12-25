@@ -1,7 +1,7 @@
-from typing import Optional
+from typing import Annotated, Optional, Union
 
 import strawberry
-from pydantic import BaseModel, HttpUrl, validator
+from pydantic import BaseModel, HttpUrl, field_validator
 from strawberry import LazyType
 
 from api.settings import settings
@@ -14,26 +14,22 @@ class PydanticScanSchedule(BaseModel):
     minute: int
 
 
-@strawberry.experimental.pydantic.input(
-    model=PydanticScanSchedule,
-    fields=[
-        "day_of_week",
-        "hour",
-        "minute",
-    ],
-)
+@strawberry.experimental.pydantic.input(model=PydanticScanSchedule)
 class ScanSchedule:
-    pass
+    day_of_week: strawberry.auto
+    hour: strawberry.auto
+    minute: strawberry.auto
 
 
 class PydanticAdhocScanInput(BaseModel):
     url: HttpUrl
     schedule: Optional[PydanticScanSchedule] = None
 
-    @validator("url")
+    @field_validator("url")
+    @classmethod
     @classmethod
     def check_url(cls, value: str) -> str:
-        assert settings.base_url in value, "url has to contain base url"
+        assert settings.base_url in str(value), "url has to contain base url"
         return value
 
 
@@ -53,6 +49,7 @@ class ScanSucceeded:
     message: str = "Scan has finished"
 
 
-AdhocScanResponse = strawberry.union(
-    "AdhocScanResponse", (InputValidationError, ScanFailedError, ScanSucceeded)
-)
+AdhocScanResponse = Annotated[
+    Union[InputValidationError, ScanFailedError, ScanSucceeded],
+    strawberry.union("AdhocScanResponse"),
+]
