@@ -3,8 +3,8 @@ from typing import Any
 import strawberry
 from loguru import logger
 from pydantic import ValidationError
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import select
+from sqlmodel.ext.asyncio.session import AsyncSession
 from strawberry.types import Info
 
 from api.models.category import Category
@@ -22,7 +22,7 @@ from api.types.general import InputValidationError
 async def resolve_categories(root: Any, info: Info[Any, Any]) -> list[CategoryType]:
     session: AsyncSession = info.context["session"]
     query = select(Category)
-    categories_db = (await session.execute(query)).scalars().all()
+    categories_db = (await session.exec(query)).all()
     return [convert_category_from_db(cat) for cat in categories_db]
 
 
@@ -46,8 +46,8 @@ class Mutation:
             return InputValidationError(message=str(error))
         session: AsyncSession = info.context["session"]
         if (
-            await session.execute(select(Category).where(Category.name == data.name))
-        ).scalar():
+            await session.exec(select(Category).where(Category.name == data.name))
+        ).first():
             return CategoryExistsError()
         category = Category(name=data.name)
         logger.info(f"Creating new category {data.name}")

@@ -63,7 +63,9 @@ def test_extracting_token(mocker: MockerFixture) -> None:
 
 @pytest.mark.asyncio
 async def test_get_search_event_prices(
-    client: httpx.AsyncClient, _db_session: AsyncSession, mocker: MockerFixture
+    authenticated_client: httpx.AsyncClient,
+    _db_session: AsyncSession,
+    mocker: MockerFixture,
 ) -> None:
     category = Category(name="Plot")
     _db_session.add(category)
@@ -91,7 +93,7 @@ async def test_get_search_event_prices(
             }}
         }}
     """
-    await client.post("/graphql", json={"query": mutation})
+    await authenticated_client.post("/graphql", json={"query": mutation})
     search_event = (await _db_session.exec(select(SearchEvent))).first()
     parsed_prices = (
         await _db_session.exec(select(Price).options(selectinload(Price.estate)))
@@ -102,7 +104,7 @@ async def test_get_search_event_prices(
 
 @pytest.mark.asyncio
 async def test_get_search_event_by_id(
-    client: httpx.AsyncClient, _db_session: AsyncSession
+    authenticated_client: httpx.AsyncClient, _db_session: AsyncSession
 ) -> None:
     estate = Estate(**examples["estate"])
     search = Search(**examples["search"])
@@ -110,16 +112,16 @@ async def test_get_search_event_by_id(
     search_event = SearchEvent(estates=[estate], search=search, prices=[price])
     _db_session.add(search_event)
     await _db_session.commit()
-    from_db: SearchEvent | None = (
-        await _db_session.execute(select(SearchEvent))
-    ).scalar()
+    from_db: SearchEvent | None = (await _db_session.exec(select(SearchEvent))).first()
     assert await get_search_event_by_id(_db_session, from_db.id + 1) is None
     assert await get_search_event_by_id(_db_session, from_db.id) == from_db
 
 
 @pytest.mark.asyncio
 async def test_get_search_event_avg_stats(
-    client: httpx.AsyncClient, _db_session: AsyncSession, mocker: MockerFixture
+    authenticated_client: httpx.AsyncClient,
+    _db_session: AsyncSession,
+    mocker: MockerFixture,
 ) -> None:
     category = Category(name="Plot")
     _db_session.add(category)
@@ -147,7 +149,7 @@ async def test_get_search_event_avg_stats(
             }}
         }}
     """
-    await client.post("/graphql", json={"query": mutation})
+    await authenticated_client.post("/graphql", json={"query": mutation})
     search_event = (
         await _db_session.exec(
             select(SearchEvent).options(selectinload(SearchEvent.prices))
@@ -165,7 +167,9 @@ async def test_get_search_event_avg_stats(
 
 @pytest.mark.asyncio
 async def test_get_search_event_min_prices(
-    client: httpx.AsyncClient, _db_session: AsyncSession, mocker: MockerFixture
+    authenticated_client: httpx.AsyncClient,
+    _db_session: AsyncSession,
+    mocker: MockerFixture,
 ) -> None:
     category = Category(name="Plot")
     _db_session.add(category)
@@ -193,7 +197,7 @@ async def test_get_search_event_min_prices(
             }}
         }}
     """
-    await client.post("/graphql", json={"query": mutation})
+    await authenticated_client.post("/graphql", json={"query": mutation})
     search_event = (
         await _db_session.exec(
             select(SearchEvent).options(selectinload(SearchEvent.prices))
@@ -220,7 +224,9 @@ async def test_get_search_event_min_prices(
 
 @pytest.mark.asyncio
 async def test_search_events_for_search(
-    client: httpx.AsyncClient, _db_session: AsyncSession, mocker: MockerFixture
+    authenticated_client: httpx.AsyncClient,
+    _db_session: AsyncSession,
+    mocker: MockerFixture,
 ) -> None:
     category = Category(name="Plot")
     _db_session.add(category)
@@ -248,8 +254,8 @@ async def test_search_events_for_search(
             }}
         }}
     """
-    await client.post("/graphql", json={"query": mutation})
-    await client.post("/graphql", json={"query": mutation})
+    await authenticated_client.post("/graphql", json={"query": mutation})
+    await authenticated_client.post("/graphql", json={"query": mutation})
     search = (
         await _db_session.exec(select(Search).options(selectinload(Search.category)))
     ).first()  # type: ignore

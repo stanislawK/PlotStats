@@ -3,6 +3,7 @@ from typing import Any
 import strawberry
 from strawberry.types import Info
 
+from api.permissions import IsAuthenticated
 from api.types.event_stats import (
     EventStatsInput,
     EventStatsType,
@@ -20,7 +21,7 @@ from api.utils.search_event import (
 
 @strawberry.type
 class Query:
-    @strawberry.field
+    @strawberry.field(permission_classes=[IsAuthenticated])  # type: ignore
     async def search_event_stats(
         self, info: Info[Any, Any], input: EventStatsInput
     ) -> GetSearchEventStatsResponse:
