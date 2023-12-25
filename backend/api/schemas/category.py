@@ -21,7 +21,7 @@ from api.types.general import InputValidationError
 
 async def resolve_categories(root: Any, info: Info[Any, Any]) -> list[CategoryType]:
     session: AsyncSession = info.context["session"]
-    query = select(Category)  # type: ignore
+    query = select(Category)
     categories_db = (await session.execute(query)).scalars().all()
     return [convert_category_from_db(cat) for cat in categories_db]
 

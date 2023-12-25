@@ -57,7 +57,7 @@ async def parse_search_info(
     coordinates_alt = jmespath.search("pageProps.data.searchMapPins.boundingBox", body)
 
     estate_type = jmespath.search("pageProps.estate", body) or ""
-    cat_query = select(Category).where(  # type: ignore
+    cat_query = select(Category).where(
         Category.name == CATEGORY_MAP[estate_type.lower()]
     )
 
@@ -67,9 +67,7 @@ async def parse_search_info(
 
     search_params = jmespath.search("pageProps.filteringQueryParams", body)
     encoded_url = encode_url(url)
-    search_query = select(Search).where(
-        Search.url == encoded_url.decode("ascii")  # type: ignore
-    )
+    search_query = select(Search).where(Search.url == encoded_url.decode("ascii"))
     search = (await session.exec(search_query)).first()  # type: ignore
     schedule_dict = None
     if schedule is not None:
