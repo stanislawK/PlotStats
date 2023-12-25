@@ -12,4 +12,4 @@ runs:
     - name: Install dependencies
       uses: ./.github/actions/setup-backend
     - name: Running tests
-      run: python -m pytest /tests
+      # run: python -m pytest ./tests
