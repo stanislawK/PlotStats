@@ -16,6 +16,7 @@ from sqlmodel.pool import StaticPool
 
 from api.database import get_async_session
 from api.main import create_app
+from api.models.category import Category
 from api.models.user import User
 from api.utils.jwt import create_jwt_token
 from api.utils.user import get_password_hash
@@ -192,6 +193,14 @@ async def add_admin(_db_session: AsyncSession) -> User:
     _db_session.add(user)
     await _db_session.commit()
     return user
+
+
+@pytest.fixture
+async def add_category(_db_session: AsyncSession) -> Category:
+    category = Category(**examples["category"])
+    _db_session.add(category)
+    await _db_session.commit()
+    return category
 
 
 class MockAioJSONResponse:

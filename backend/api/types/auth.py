@@ -12,6 +12,11 @@ class JWTPair:
     refresh_token: str
 
 
+@strawberry.type
+class AccessToken:
+    access_token: str
+
+
 @strawberry.experimental.pydantic.input(model=User)
 class LoginUserData:
     email: strawberry.auto
@@ -23,7 +28,17 @@ class LoginUserError(Error):
     message: str = "Login user error"
 
 
+@strawberry.type
+class RefreshTokenError(Error):
+    message: str = "Refresh token error"
+
+
 LoginUserResponse = Annotated[
     Union[JWTPair, LoginUserError, InputValidationError],
     strawberry.union("LoginUserResponse"),
+]
+
+RefreshTokenResponse = Annotated[
+    Union[AccessToken, RefreshTokenError],
+    strawberry.union("RefreshTokenResponse"),
 ]

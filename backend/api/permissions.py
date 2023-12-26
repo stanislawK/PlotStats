@@ -49,3 +49,25 @@ class IsAdminUser(BasePermission):
             request.state.user = user
             return True
         return False
+
+
+class HasValidRefreshToken(BasePermission):
+    message = "User is not authenticated"
+
+    async def has_permission(  # type: ignore
+        self, source: Any, info: Info, **kwargs  # type: ignore
+    ) -> bool:
+        request: Request = info.context["request"]
+        token = extract_token_from_request(request)
+        if not token:
+            return False
+        try:
+            user = await get_user_from_token(
+                token, info.context["session"], refresh=True
+            )
+        except PermissionDeniedError:
+            return False
+        if user:
+            request.state.user = user
+            return True
+        return False
