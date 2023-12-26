@@ -85,9 +85,11 @@ async def get_user_from_payload(
     return user
 
 
-async def get_user_from_token(token: str, session: AsyncSession) -> User:
+async def get_user_from_token(
+    token: str, session: AsyncSession, refresh: bool = False
+) -> User:
     payload = get_jwt_payload(token)
-    return await get_user_from_payload(payload, session)
+    return await get_user_from_payload(payload, session, refresh)
 
 
 def extract_token_from_request(request: Request) -> Optional[str]:

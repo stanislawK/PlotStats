@@ -3,6 +3,7 @@ import json
 import fakeredis
 import httpx
 import pytest
+from freezegun import freeze_time
 from pytest_mock import MockerFixture
 from sqlalchemy.orm import selectinload
 from sqlmodel import select
@@ -20,23 +21,61 @@ from api.utils.jwt import get_jwt_payload
 from .conftest import MockAioJSONResponse, MockAioTextResponse, examples
 
 # mypy: ignore-errors
+CATEGORIES_QUERY = """
+    query categories {
+        categories {
+            name
+        }
+    }
+"""
+
+LOGIN_MUTATION: str = """
+    mutation login {{
+        login(input: {{
+                email: "{email}", password: "{password}"
+            }}) {{
+            __typename
+            ... on JWTPair {{
+                accessToken
+                refreshToken
+            }}
+            ... on LoginUserError {{
+                __typename
+                message
+            }}
+            ... on InputValidationError {{
+                __typename
+                message
+            }}
+        }}
+    }}
+"""
+
+REFRESH_TOKEN_MUTATUON: str = """
+    mutation refreshToken {
+    refreshToken {
+        ... on AccessToken {
+        __typename
+        accessToken
+        }
+        ... on RefreshTokenError {
+        __typename
+        message
+        }
+    }
+    }
+"""
 
 
 @pytest.mark.asyncio
 async def test_categories_query(
-    authenticated_client: httpx.AsyncClient, _db_session: AsyncSession
+    authenticated_client: httpx.AsyncClient,
+    _db_session: AsyncSession,
+    add_category: Category,
 ) -> None:
-    category = Category(**examples["category"])
-    _db_session.add(category)
-    await _db_session.commit()
-    query = """
-        query MyQuery {
-            categories {
-                name
-            }
-        }
-    """
-    response = await authenticated_client.get("/graphql", params={"query": query})
+    response = await authenticated_client.get(
+        "/graphql", params={"query": CATEGORIES_QUERY}
+    )
     assert response.status_code == 200
     result = response.json()
     assert len(result["data"]["categories"]) == 1
@@ -45,19 +84,9 @@ async def test_categories_query(
 
 @pytest.mark.asyncio
 async def test_categories_unauthenticated(
-    client: httpx.AsyncClient, _db_session: AsyncSession
+    client: httpx.AsyncClient, _db_session: AsyncSession, add_category: Category
 ) -> None:
-    category = Category(**examples["category"])
-    _db_session.add(category)
-    await _db_session.commit()
-    query = """
-        query MyQuery {
-            categories {
-                name
-            }
-        }
-    """
-    response = await client.get("/graphql", params={"query": query})
+    response = await client.get("/graphql", params={"query": CATEGORIES_QUERY})
     result = response.json()
     assert result["data"] is None
     assert result["errors"][0]["message"] == "User is not authenticated"
@@ -65,19 +94,9 @@ async def test_categories_unauthenticated(
 
 @pytest.mark.asyncio
 async def test_categories_query_fetch_id_should_fail(
-    client: httpx.AsyncClient, _db_session: AsyncSession
+    client: httpx.AsyncClient, _db_session: AsyncSession, add_category: Category
 ) -> None:
-    category = Category(**examples["category"])
-    _db_session.add(category)
-    await _db_session.commit()
-    query = """
-        query MyQuery {
-            categories {
-                id
-            }
-        }
-    """
-    response = await client.get("/graphql", params={"query": query})
+    response = await client.get("/graphql", params={"query": CATEGORIES_QUERY})
     assert response.status_code == 200
     result = response.json()
     assert result["data"] is None
@@ -859,20 +878,10 @@ async def test_login_correct_credentials(
     SETUP
     """
     email, password = examples["user"]["email"], examples["user"]["password"]
-    mutation = f"""
-        mutation login {{
-            login(input: {{
-                    email: "{email}", password: "{password}"
-                }}) {{
-                __typename
-                ... on JWTPair {{
-                    accessToken
-                    refreshToken
-                }}
-            }}
-        }}
-    """
-    response = await client.post("/graphql", json={"query": mutation})
+    response = await client.post(
+        "/graphql",
+        json={"query": LOGIN_MUTATION.format(email=email, password=password)},
+    )
     result = response.json()["data"]["login"]
     assert result["__typename"] == "JWTPair"
     access_token, refresh_token = result["accessToken"], result["refreshToken"]
@@ -895,55 +904,190 @@ async def test_login_wrong_credentials(
     SETUP
     """
     email, password = "invalid_email", examples["user"]["password"]
-    mutation = f"""
-        mutation login {{
-            login(input: {{
-                    email: "{email}", password: "{password}"
-                }}) {{
-                __typename
-                ... on JWTPair {{
-                    accessToken
-                    refreshToken
-                }}
-                ... on LoginUserError {{
-                    __typename
-                    message
-                }}
-                ... on InputValidationError {{
-                    __typename
-                    message
-                }}
-            }}
-        }}
-    """
-    response = await client.post("/graphql", json={"query": mutation})
+    response = await client.post(
+        "/graphql",
+        json={"query": LOGIN_MUTATION.format(email=email, password=password)},
+    )
     result = response.json()["data"]["login"]
     assert result["__typename"] == "LoginUserError"
     assert result["message"] == "Login user error"
 
     email, password = examples["user"]["email"], "invalid_password"
-    mutation = f"""
-        mutation login {{
-            login(input: {{
-                    email: "{email}", password: "{password}"
-                }}) {{
-                __typename
-                ... on JWTPair {{
-                    accessToken
-                    refreshToken
-                }}
-                ... on LoginUserError {{
-                    __typename
-                    message
-                }}
-                ... on InputValidationError {{
-                    __typename
-                    message
-                }}
-            }}
-        }}
-    """
-    response = await client.post("/graphql", json={"query": mutation})
+    response = await client.post(
+        "/graphql",
+        json={"query": LOGIN_MUTATION.format(email=email, password=password)},
+    )
     result = response.json()["data"]["login"]
     assert result["__typename"] == "LoginUserError"
     assert result["message"] == "Login user error"
+
+
+@pytest.mark.asyncio
+async def test_access_resource_with_refresh_token_should_fail(
+    client: httpx.AsyncClient,
+    _db_session: AsyncSession,
+    add_user: User,
+    add_category: Category,
+) -> None:
+    email, password = examples["user"]["email"], examples["user"]["password"]
+    response = await client.post(
+        "/graphql",
+        json={"query": LOGIN_MUTATION.format(email=email, password=password)},
+    )
+    result = response.json()["data"]["login"]
+    assert result["__typename"] == "JWTPair"
+    access_token, refresh_token = result["accessToken"], result["refreshToken"]
+
+    response = await client.get(
+        "/graphql",
+        params={"query": CATEGORIES_QUERY},
+        headers={"Authorization": f"Bearer {access_token}"},
+    )
+    result = response.json()
+    assert len(result["data"]["categories"]) == 1
+
+    response = await client.get(
+        "/graphql",
+        params={"query": CATEGORIES_QUERY},
+        headers={"Authorization": f"Bearer {refresh_token}"},
+    )
+    result = response.json()
+    assert result["data"] is None
+    assert result["errors"][0]["message"] == "User is not authenticated"
+
+
+@pytest.mark.asyncio
+async def test_access_resource_with_stale_access_token(
+    client: httpx.AsyncClient,
+    _db_session: AsyncSession,
+    add_user: User,
+    add_category: Category,
+) -> None:
+    with freeze_time("2022-01-01 00:00:00") as frozen_time:
+        email, password = examples["user"]["email"], examples["user"]["password"]
+        response = await client.post(
+            "/graphql",
+            json={"query": LOGIN_MUTATION.format(email=email, password=password)},
+        )
+        result = response.json()["data"]["login"]
+        assert result["__typename"] == "JWTPair"
+        access_token, _ = result["accessToken"], result["refreshToken"]
+
+        frozen_time.move_to("2022-01-01 00:31:00")
+        response = await client.get(
+            "/graphql",
+            params={"query": CATEGORIES_QUERY},
+            headers={"Authorization": f"Bearer {access_token}"},
+        )
+    result = response.json()
+    assert result["data"] is None
+    assert result["errors"][0]["message"] == "User is not authenticated"
+
+
+@pytest.mark.asyncio
+async def test_refresh_access_token_correct(
+    client: httpx.AsyncClient,
+    _db_session: AsyncSession,
+    add_user: User,
+    add_category: Category,
+) -> None:
+    with freeze_time("2022-01-01 00:00:00") as frozen_time:
+        email, password = examples["user"]["email"], examples["user"]["password"]
+        login_response = await client.post(
+            "/graphql",
+            json={"query": LOGIN_MUTATION.format(email=email, password=password)},
+        )
+        login_result = login_response.json()["data"]["login"]
+        access_token, refresh_token = (
+            login_result["accessToken"],
+            login_result["refreshToken"],
+        )
+        frozen_time.move_to("2022-01-01 00:31:00")
+        response = await client.post(
+            "/graphql",
+            json={"query": REFRESH_TOKEN_MUTATUON},
+            headers={"Authorization": f"Bearer {refresh_token}"},
+        )
+        refresh_result = response.json()["data"]["refreshToken"]
+        new_token = refresh_result["accessToken"]
+        assert new_token != access_token
+        token_payload = get_jwt_payload(new_token)
+        assert token_payload["fresh"] is False
+        assert token_payload["type"] == "access"
+        categories_response = await client.get(
+            "/graphql",
+            params={"query": CATEGORIES_QUERY},
+            headers={"Authorization": f"Bearer {new_token}"},
+        )
+        categories_result = categories_response.json()
+        assert len(categories_result["data"]["categories"]) == 1
+
+
+@pytest.mark.asyncio
+async def test_refresh_access_token_with_access_token_should_fail(
+    client: httpx.AsyncClient,
+    _db_session: AsyncSession,
+    add_user: User,
+    add_category: Category,
+) -> None:
+    email, password = examples["user"]["email"], examples["user"]["password"]
+    login_response = await client.post(
+        "/graphql",
+        json={"query": LOGIN_MUTATION.format(email=email, password=password)},
+    )
+    login_result = login_response.json()["data"]["login"]
+    access_token, _ = (
+        login_result["accessToken"],
+        login_result["refreshToken"],
+    )
+
+    response = await client.post(
+        "/graphql",
+        json={"query": REFRESH_TOKEN_MUTATUON},
+        headers={"Authorization": f"Bearer {access_token}"},
+    )
+    result = response.json()
+    assert result["data"] is None
+    assert result["errors"][0]["message"] == "User is not authenticated"
+
+
+@pytest.mark.asyncio
+async def test_refresh_access_token_without_token_should_fail(
+    client: httpx.AsyncClient,
+    _db_session: AsyncSession,
+    add_user: User,
+    add_category: Category,
+) -> None:
+    response = await client.post("/graphql", json={"query": REFRESH_TOKEN_MUTATUON})
+    result = response.json()
+    assert result["data"] is None
+    assert result["errors"][0]["message"] == "User is not authenticated"
+
+
+@pytest.mark.asyncio
+async def test_refresh_access_token_stale_refresh_token(
+    client: httpx.AsyncClient,
+    _db_session: AsyncSession,
+    add_user: User,
+    add_category: Category,
+) -> None:
+    with freeze_time("2022-01-01 00:00:00") as frozen_time:
+        email, password = examples["user"]["email"], examples["user"]["password"]
+        login_response = await client.post(
+            "/graphql",
+            json={"query": LOGIN_MUTATION.format(email=email, password=password)},
+        )
+        login_result = login_response.json()["data"]["login"]
+        _, refresh_token = (
+            login_result["accessToken"],
+            login_result["refreshToken"],
+        )
+        frozen_time.move_to("2022-01-03 00:31:00")
+        response = await client.post(
+            "/graphql",
+            json={"query": REFRESH_TOKEN_MUTATUON},
+            headers={"Authorization": f"Bearer {refresh_token}"},
+        )
+        result = response.json()
+        assert result["data"] is None
+        assert result["errors"][0]["message"] == "User is not authenticated"
