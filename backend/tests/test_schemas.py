@@ -17,6 +17,7 @@ from api.models.search_event import SearchEvent
 from api.models.user import User
 from api.types.category import CategoryExistsError
 from api.utils.jwt import get_jwt_payload
+from api.utils.user import get_user_by_email, verify_password
 
 from .conftest import MockAioJSONResponse, MockAioTextResponse, examples
 
@@ -64,6 +65,25 @@ REFRESH_TOKEN_MUTATUON: str = """
         }
     }
     }
+"""
+
+REGISTER_USER_MUTATION: str = """
+    mutation registerUser {{
+    registerUser(input: {{email: "{email}"}}) {{
+        ... on RegisterResponse {{
+        __typename
+        temporaryPassword
+        }}
+        ... on UserExistsError {{
+        __typename
+        message
+        }}
+        ... on InputValidationError {{
+        __typename
+        message
+        }}
+    }}
+    }}
 """
 
 
@@ -1091,3 +1111,108 @@ async def test_refresh_access_token_stale_refresh_token(
         result = response.json()
         assert result["data"] is None
         assert result["errors"][0]["message"] == "User is not authenticated"
+
+
+@pytest.mark.asyncio
+async def test_create_user_mutation(
+    admin_client: httpx.AsyncClient, _db_session: AsyncSession
+) -> None:
+    email = "new_user@test.com"
+    response = await admin_client.post(
+        "/graphql", json={"query": REGISTER_USER_MUTATION.format(email=email)}
+    )
+    assert response.status_code == 200
+    result = response.json()
+    assert result["data"]["registerUser"]["__typename"] == "RegisterResponse"
+    temp_pass = result["data"]["registerUser"]["temporaryPassword"]
+    assert len(temp_pass) > 1
+    new_user = await get_user_by_email(email=email, session=_db_session)
+    assert new_user is not None
+    assert new_user.is_active is False
+    assert verify_password(temp_pass, new_user.password)
+
+
+@pytest.mark.asyncio
+async def test_create_user_mutation_non_admin_should_fail(
+    authenticated_client: httpx.AsyncClient, _db_session: AsyncSession
+) -> None:
+    email = "new_user@test.com"
+    response = await authenticated_client.post(
+        "/graphql", json={"query": REGISTER_USER_MUTATION.format(email=email)}
+    )
+    result = response.json()
+    assert result["data"] is None
+    assert result["errors"][0]["message"] == "User is not authenticated"
+
+
+@pytest.mark.asyncio
+async def test_create_user_mutation_without_fresh_token(
+    admin_client: httpx.AsyncClient,
+    _db_session: AsyncSession,
+    add_admin: User,
+    add_category: Category,
+) -> None:
+    email, password = examples["user"]["email"], examples["user"]["password"]
+    login_response = await admin_client.post(
+        "/graphql",
+        json={"query": LOGIN_MUTATION.format(email=email, password=password)},
+    )
+    login_result = login_response.json()["data"]["login"]
+    _, refresh_token = (
+        login_result["accessToken"],
+        login_result["refreshToken"],
+    )
+    response = await admin_client.post(
+        "/graphql",
+        json={"query": REFRESH_TOKEN_MUTATUON},
+        headers={"Authorization": f"Bearer {refresh_token}"},
+    )
+    refresh_result = response.json()["data"]["refreshToken"]
+    new_token = refresh_result["accessToken"]
+    new_user_email = "new_user@test.com"
+    response = await admin_client.post(
+        "/graphql",
+        headers={"Authorization": f"Bearer {new_token}"},
+        json={"query": REGISTER_USER_MUTATION.format(email=new_user_email)},
+    )
+    result = response.json()
+    assert result["data"] is None
+    assert result["errors"][0]["message"] == "Please login again"
+
+
+@pytest.mark.asyncio
+async def test_create_user_mutation_invalid_email(
+    admin_client: httpx.AsyncClient, _db_session: AsyncSession
+) -> None:
+    email = "new_user_test.com"
+    response = await admin_client.post(
+        "/graphql", json={"query": REGISTER_USER_MUTATION.format(email=email)}
+    )
+    result = response.json()
+    assert result["data"]["registerUser"]["__typename"] == "InputValidationError"
+    assert "validation error for UserEmail" in result["data"]["registerUser"]["message"]
+
+
+@pytest.mark.asyncio
+async def test_create_user_twice_mutation(
+    admin_client: httpx.AsyncClient, _db_session: AsyncSession
+) -> None:
+    email = "new_user@test.com"
+    await admin_client.post(
+        "/graphql", json={"query": REGISTER_USER_MUTATION.format(email=email)}
+    )
+    response = await admin_client.post(
+        "/graphql", json={"query": REGISTER_USER_MUTATION.format(email=email)}
+    )
+    result = response.json()
+    assert result["data"]["registerUser"]["__typename"] == "UserExistsError"
+    assert (
+        "User with that email already exists"
+        in result["data"]["registerUser"]["message"]
+    )
+
+
+"""
+register user exists
+
+"""

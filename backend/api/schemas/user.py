@@ -2,24 +2,29 @@ from typing import Any
 
 import strawberry
 from loguru import logger
+from passlib import pwd
 from pydantic import ValidationError
 from sqlmodel.ext.asyncio.session import AsyncSession
 from strawberry.types import Info
 
 from api.models.user import User
-from api.permissions import HasValidRefreshToken
+from api.permissions import HasValidRefreshToken, IsAdminUser, IsFreshToken
 from api.types.auth import (
     AccessToken,
     JWTPair,
     LoginUserData,
     LoginUserError,
     LoginUserResponse,
+    NewUserInput,
     RefreshTokenError,
     RefreshTokenResponse,
+    RegisterResponse,
+    RegisterUserResponse,
+    UserExistsError,
 )
 from api.types.general import InputValidationError
 from api.utils.jwt import create_jwt_token
-from api.utils.user import authenticate_user
+from api.utils.user import authenticate_user, get_password_hash, get_user_by_email
 
 
 @strawberry.type
@@ -56,3 +61,25 @@ class Mutation:
             subject=str(user.id), fresh=False, token_type="access"
         )
         return AccessToken(access_token=access_token)
+
+    @strawberry.mutation(permission_classes=[IsAdminUser, IsFreshToken])  # type: ignore
+    async def register_user(
+        self, info: Info[Any, Any], input: NewUserInput
+    ) -> RegisterUserResponse:
+        try:
+            data = input.to_pydantic()
+        except ValidationError as error:
+            return InputValidationError(message=str(error))
+        email = data.email
+        session = info.context["session"]
+        if await get_user_by_email(session, email):
+            return UserExistsError()
+        temporary_password = pwd.genword(entropy=56)
+        new_user = User(
+            email=email,
+            password=get_password_hash(temporary_password),
+            is_active=False,
+        )
+        session.add(new_user)
+        await session.commit()
+        return RegisterResponse(temporary_password=temporary_password)
