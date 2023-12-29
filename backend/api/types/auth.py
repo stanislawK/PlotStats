@@ -1,7 +1,8 @@
+import re
 from typing import Annotated, Union
 
 import strawberry
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, constr, field_validator, model_validator
 
 from api.models.user import User
 from api.types.general import Error, InputValidationError
@@ -48,9 +49,51 @@ class RegisterResponse:
     temporary_password: str
 
 
+class ActivateAccount(BaseModel):
+    email: EmailStr
+    temp_password: str
+    new_password: constr(min_length=8, max_length=50)  # type: ignore
+
+    @field_validator("new_password")
+    @classmethod
+    def regex_match(cls, password: str) -> str:
+        re_for_new_password: re.Pattern[str] = re.compile(
+            r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)"
+            r"(?=.*[@$!%*?&#\.\^/<>\?])"
+            r"[A-Za-z\d@$!%*?&#\.\^/<>\?]+$"
+        )
+        if not re_for_new_password.match(password):
+            raise ValueError(
+                "Password must contain at least one uppercase letter, "
+                "one lowercase letter, one digit, and one special character"
+            )
+        return password
+
+    @model_validator(mode="after")
+    def check_password_not_the_same(self) -> "ActivateAccount":
+        if self.temp_password == self.new_password:
+            raise ValueError("New password cannot be the same as temporary password")
+        return self
+
+
+@strawberry.experimental.pydantic.input(model=ActivateAccount, all_fields=True)
+class ActivateAccountInput:
+    pass
+
+
 @strawberry.type
 class UserExistsError(Error):
     message: str = "User with that email already exists"
+
+
+@strawberry.type
+class ActivateAccountError(Error):
+    message: str = "Activation error"
+
+
+@strawberry.type
+class ActivateAccountSuccess:
+    message: str = "Activated account successfully"
 
 
 LoginUserResponse = Annotated[
@@ -66,4 +109,9 @@ RefreshTokenResponse = Annotated[
 RegisterUserResponse = Annotated[
     Union[RegisterResponse, UserExistsError, InputValidationError],
     strawberry.union("RegisterUserResponse"),
+]
+
+ActivateAccountResponse = Annotated[
+    Union[ActivateAccountSuccess, ActivateAccountError, InputValidationError],
+    strawberry.union("ActivateAccountResponse"),
 ]
