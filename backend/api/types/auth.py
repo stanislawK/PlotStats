@@ -44,6 +44,16 @@ class NewUserInput:
     pass
 
 
+@strawberry.experimental.pydantic.input(model=UserEmail, all_fields=True)
+class DeactivateUserInput:
+    pass
+
+
+@strawberry.type
+class DeactivateAccountSuccess:
+    message: str = "Deactivated account successfully"
+
+
 @strawberry.type
 class RegisterResponse:
     temporary_password: str
@@ -92,6 +102,11 @@ class ActivateAccountError(Error):
 
 
 @strawberry.type
+class DeactivateAccountError(Error):
+    message: str = "Deactivation error"
+
+
+@strawberry.type
 class ActivateAccountSuccess:
     message: str = "Activated account successfully"
 
@@ -109,6 +124,11 @@ RefreshTokenResponse = Annotated[
 RegisterUserResponse = Annotated[
     Union[RegisterResponse, UserExistsError, InputValidationError],
     strawberry.union("RegisterUserResponse"),
+]
+
+DeactivateUserResponse = Annotated[
+    Union[DeactivateAccountSuccess, DeactivateAccountError, InputValidationError],
+    strawberry.union("DeactivateUserResponse"),
 ]
 
 ActivateAccountResponse = Annotated[

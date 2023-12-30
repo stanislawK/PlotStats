@@ -109,6 +109,25 @@ mutation activateAccount {{
 }}
 """
 
+DEACTIVATE_USER_MUTATION: str = """
+mutation deactivateUser {{
+    deactivateUser(input: {{email: "{email}"}}) {{
+        ... on DeactivateAccountSuccess {{
+        __typename
+        message
+        }}
+        ... on DeactivateAccountError {{
+        __typename
+        message
+        }}
+        ... on InputValidationError {{
+        __typename
+        message
+        }}
+    }}
+    }}
+"""
+
 
 @pytest.mark.asyncio
 async def test_categories_query(
@@ -1393,3 +1412,42 @@ async def test_activate_account_deactivated_should_fail(
         == "ActivateAccountError"
     )
     assert "Activation error" in activate_result["data"]["activateAccount"]["message"]
+
+
+@pytest.mark.asyncio
+async def test_deactivate_user_mutation(
+    admin_client: httpx.AsyncClient, _db_session: AsyncSession
+) -> None:
+    email = "new_user@test.com"
+    await admin_client.post(
+        "/graphql", json={"query": REGISTER_USER_MUTATION.format(email=email)}
+    )
+    new_user = await get_user_by_email(email=email, session=_db_session)
+    new_user.is_active = True
+    _db_session.add(new_user)
+    await _db_session.commit()
+    response = await admin_client.post(
+        "/graphql", json={"query": DEACTIVATE_USER_MUTATION.format(email=email)}
+    )
+    result = response.json()
+    assert result["data"]["deactivateUser"]["__typename"] == "DeactivateAccountSuccess"
+    assert (
+        result["data"]["deactivateUser"]["message"]
+        == "Deactivated account successfully"
+    )
+    deactivated_user = await get_user_by_email(email=email, session=_db_session)
+    assert deactivated_user.is_active is False
+    assert deactivated_user.roles == ["deactivated"]
+
+
+@pytest.mark.asyncio
+async def test_deactivate_user_mutation_user_does_not_exist(
+    admin_client: httpx.AsyncClient, _db_session: AsyncSession
+) -> None:
+    email = "new_user@test.com"
+    response = await admin_client.post(
+        "/graphql", json={"query": DEACTIVATE_USER_MUTATION.format(email=email)}
+    )
+    result = response.json()
+    assert result["data"]["deactivateUser"]["__typename"] == "DeactivateAccountError"
+    assert result["data"]["deactivateUser"]["message"] == "Deactivation error"

@@ -15,6 +15,10 @@ from api.types.auth import (
     ActivateAccountInput,
     ActivateAccountResponse,
     ActivateAccountSuccess,
+    DeactivateAccountError,
+    DeactivateAccountSuccess,
+    DeactivateUserInput,
+    DeactivateUserResponse,
     JWTPair,
     LoginUserData,
     LoginUserError,
@@ -87,6 +91,25 @@ class Mutation:
         session.add(new_user)
         await session.commit()
         return RegisterResponse(temporary_password=temporary_password)
+
+    @strawberry.mutation(permission_classes=[IsAdminUser, IsFreshToken])  # type: ignore
+    async def deactivate_user(
+        self, info: Info[Any, Any], input: DeactivateUserInput
+    ) -> DeactivateUserResponse:
+        try:
+            data = input.to_pydantic()
+        except ValidationError as error:
+            return InputValidationError(message=str(error))
+        email = data.email
+        session = info.context["session"]
+        user = await get_user_by_email(session, email)
+        if not user:
+            return DeactivateAccountError()
+        user.roles = ["deactivated"]
+        user.is_active = False
+        session.add(user)
+        await session.commit()
+        return DeactivateAccountSuccess()
 
     @strawberry.mutation
     async def activate_account(
