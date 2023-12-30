@@ -11,6 +11,14 @@ from api.models.user import User
 from api.permissions import HasValidRefreshToken, IsAdminUser, IsFreshToken
 from api.types.auth import (
     AccessToken,
+    ActivateAccountError,
+    ActivateAccountInput,
+    ActivateAccountResponse,
+    ActivateAccountSuccess,
+    DeactivateAccountError,
+    DeactivateAccountSuccess,
+    DeactivateUserInput,
+    DeactivateUserResponse,
     JWTPair,
     LoginUserData,
     LoginUserError,
@@ -74,7 +82,7 @@ class Mutation:
         session = info.context["session"]
         if await get_user_by_email(session, email):
             return UserExistsError()
-        temporary_password = pwd.genword(entropy=56)
+        temporary_password = pwd.genword(entropy=68, charset="ascii_72")
         new_user = User(
             email=email,
             password=get_password_hash(temporary_password),
@@ -83,3 +91,44 @@ class Mutation:
         session.add(new_user)
         await session.commit()
         return RegisterResponse(temporary_password=temporary_password)
+
+    @strawberry.mutation(permission_classes=[IsAdminUser, IsFreshToken])  # type: ignore
+    async def deactivate_user(
+        self, info: Info[Any, Any], input: DeactivateUserInput
+    ) -> DeactivateUserResponse:
+        try:
+            data = input.to_pydantic()
+        except ValidationError as error:
+            return InputValidationError(message=str(error))
+        email = data.email
+        session = info.context["session"]
+        user = await get_user_by_email(session, email)
+        if not user:
+            return DeactivateAccountError()
+        user.roles = ["deactivated"]
+        user.is_active = False
+        session.add(user)
+        await session.commit()
+        return DeactivateAccountSuccess()
+
+    @strawberry.mutation
+    async def activate_account(
+        self, info: Info[Any, Any], input: ActivateAccountInput
+    ) -> ActivateAccountResponse:
+        # This will run pydantic's validation
+        try:
+            data = input.to_pydantic()
+        except ValidationError as error:
+            return InputValidationError(message=str(error))
+        session: AsyncSession = info.context["session"]
+        user = await authenticate_user(session, data.email, data.temp_password)
+        if not isinstance(user, User):
+            logger.error(f"{data.email} activate account failed attempt")
+            return ActivateAccountError()
+        if user.is_active or "user" not in user.roles or "deactivated" in user.roles:
+            return ActivateAccountError()
+        user.password = get_password_hash(data.new_password)
+        user.is_active = True
+        session.add(user)
+        await session.commit()
+        return ActivateAccountSuccess()

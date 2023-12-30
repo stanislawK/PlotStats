@@ -86,6 +86,48 @@ REGISTER_USER_MUTATION: str = """
     }}
 """
 
+ACTIVATE_ACCOUNT_MUTATION: str = """
+mutation activateAccount {{
+  activateAccount(input: {{
+        email: "{email}",
+        tempPassword: "{temp_password}",
+        newPassword: "{new_password}"
+    }}) {{
+    ... on ActivateAccountSuccess {{
+      __typename
+      message
+    }}
+    ... on ActivateAccountError {{
+      __typename
+      message
+    }}
+    ... on InputValidationError {{
+      __typename
+      message
+    }}
+  }}
+}}
+"""
+
+DEACTIVATE_USER_MUTATION: str = """
+mutation deactivateUser {{
+    deactivateUser(input: {{email: "{email}"}}) {{
+        ... on DeactivateAccountSuccess {{
+        __typename
+        message
+        }}
+        ... on DeactivateAccountError {{
+        __typename
+        message
+        }}
+        ... on InputValidationError {{
+        __typename
+        message
+        }}
+    }}
+    }}
+"""
+
 
 @pytest.mark.asyncio
 async def test_categories_query(
@@ -1212,7 +1254,200 @@ async def test_create_user_twice_mutation(
     )
 
 
-"""
-register user exists
+@pytest.mark.asyncio
+async def test_activate_account_mutation(
+    admin_client: httpx.AsyncClient,
+    client: httpx.AsyncClient,
+    _db_session: AsyncSession,
+) -> None:
+    email = "new_user@test.com"
+    response = await admin_client.post(
+        "/graphql", json={"query": REGISTER_USER_MUTATION.format(email=email)}
+    )
+    result = response.json()
+    temp_pass = result["data"]["registerUser"]["temporaryPassword"]
+    new_pass = "1BrandNewP@ssword"
+    activate_response = await admin_client.post(
+        "/graphql",
+        json={
+            "query": ACTIVATE_ACCOUNT_MUTATION.format(
+                email=email, temp_password=temp_pass, new_password=new_pass
+            )
+        },
+    )
+    activate_result = activate_response.json()
+    assert (
+        activate_result["data"]["activateAccount"]["__typename"]
+        == "ActivateAccountSuccess"
+    )
+    assert (
+        activate_result["data"]["activateAccount"]["message"]
+        == "Activated account successfully"
+    )
+    activated_user = await get_user_by_email(email=email, session=_db_session)
+    assert activated_user is not None
+    assert activated_user.is_active is True
+    assert not verify_password(temp_pass, activated_user.password)
+    assert verify_password(new_pass, activated_user.password)
 
-"""
+
+@pytest.mark.asyncio
+async def test_activate_account_invalid_input(
+    admin_client: httpx.AsyncClient,
+    client: httpx.AsyncClient,
+    _db_session: AsyncSession,
+) -> None:
+    email = "new_user@test.com"
+    response = await admin_client.post(
+        "/graphql", json={"query": REGISTER_USER_MUTATION.format(email=email)}
+    )
+    result = response.json()
+    temp_pass = result["data"]["registerUser"]["temporaryPassword"]
+    new_pass_weak = "newpassword"
+    activate_response = await admin_client.post(
+        "/graphql",
+        json={
+            "query": ACTIVATE_ACCOUNT_MUTATION.format(
+                email=email, temp_password=temp_pass, new_password=new_pass_weak
+            )
+        },
+    )
+    activate_result = activate_response.json()
+    weak_psd_msg = (
+        "Password must contain at least one uppercase letter, "
+        "one lowercase letter, one digit, and one special character"
+    )
+    assert (
+        activate_result["data"]["activateAccount"]["__typename"]
+        == "InputValidationError"
+    )
+    assert weak_psd_msg in activate_result["data"]["activateAccount"]["message"]
+
+    activate_response = await admin_client.post(
+        "/graphql",
+        json={
+            "query": ACTIVATE_ACCOUNT_MUTATION.format(
+                email=email, temp_password=temp_pass, new_password=temp_pass
+            )
+        },
+    )
+    activate_result = activate_response.json()
+    assert (
+        activate_result["data"]["activateAccount"]["__typename"]
+        == "InputValidationError"
+    )
+    assert (
+        weak_psd_msg in activate_result["data"]["activateAccount"]["message"]
+        or "New password cannot be the same as temporary password"
+        in activate_result["data"]["activateAccount"]["message"]
+    )
+    new_user = await get_user_by_email(email=email, session=_db_session)
+    assert new_user is not None
+    assert new_user.is_active is False
+    assert verify_password(temp_pass, new_user.password)
+    assert not verify_password(new_pass_weak, new_user.password)
+
+
+@pytest.mark.asyncio
+async def test_activate_account_user_already_active(
+    admin_client: httpx.AsyncClient,
+    client: httpx.AsyncClient,
+    _db_session: AsyncSession,
+) -> None:
+    email = "new_user@test.com"
+    response = await admin_client.post(
+        "/graphql", json={"query": REGISTER_USER_MUTATION.format(email=email)}
+    )
+    result = response.json()
+    temp_pass = result["data"]["registerUser"]["temporaryPassword"]
+    new_pass = "1BrandNewP@ssword"
+    new_user = await get_user_by_email(email=email, session=_db_session)
+    new_user.is_active = True
+    _db_session.add(new_user)
+    await _db_session.commit()
+    activate_response = await admin_client.post(
+        "/graphql",
+        json={
+            "query": ACTIVATE_ACCOUNT_MUTATION.format(
+                email=email, temp_password=temp_pass, new_password=new_pass
+            )
+        },
+    )
+    activate_result = activate_response.json()
+    assert (
+        activate_result["data"]["activateAccount"]["__typename"]
+        == "ActivateAccountError"
+    )
+    assert "Activation error" in activate_result["data"]["activateAccount"]["message"]
+
+
+@pytest.mark.asyncio
+async def test_activate_account_deactivated_should_fail(
+    admin_client: httpx.AsyncClient,
+    client: httpx.AsyncClient,
+    _db_session: AsyncSession,
+) -> None:
+    email = "new_user@test.com"
+    response = await admin_client.post(
+        "/graphql", json={"query": REGISTER_USER_MUTATION.format(email=email)}
+    )
+    result = response.json()
+    temp_pass = result["data"]["registerUser"]["temporaryPassword"]
+    new_pass = "1BrandNewP@ssword"
+    new_user = await get_user_by_email(email=email, session=_db_session)
+    new_user.roles = ["deactivated"]
+    _db_session.add(new_user)
+    await _db_session.commit()
+    activate_response = await admin_client.post(
+        "/graphql",
+        json={
+            "query": ACTIVATE_ACCOUNT_MUTATION.format(
+                email=email, temp_password=temp_pass, new_password=new_pass
+            )
+        },
+    )
+    activate_result = activate_response.json()
+    assert (
+        activate_result["data"]["activateAccount"]["__typename"]
+        == "ActivateAccountError"
+    )
+    assert "Activation error" in activate_result["data"]["activateAccount"]["message"]
+
+
+@pytest.mark.asyncio
+async def test_deactivate_user_mutation(
+    admin_client: httpx.AsyncClient, _db_session: AsyncSession
+) -> None:
+    email = "new_user@test.com"
+    await admin_client.post(
+        "/graphql", json={"query": REGISTER_USER_MUTATION.format(email=email)}
+    )
+    new_user = await get_user_by_email(email=email, session=_db_session)
+    new_user.is_active = True
+    _db_session.add(new_user)
+    await _db_session.commit()
+    response = await admin_client.post(
+        "/graphql", json={"query": DEACTIVATE_USER_MUTATION.format(email=email)}
+    )
+    result = response.json()
+    assert result["data"]["deactivateUser"]["__typename"] == "DeactivateAccountSuccess"
+    assert (
+        result["data"]["deactivateUser"]["message"]
+        == "Deactivated account successfully"
+    )
+    deactivated_user = await get_user_by_email(email=email, session=_db_session)
+    assert deactivated_user.is_active is False
+    assert deactivated_user.roles == ["deactivated"]
+
+
+@pytest.mark.asyncio
+async def test_deactivate_user_mutation_user_does_not_exist(
+    admin_client: httpx.AsyncClient, _db_session: AsyncSession
+) -> None:
+    email = "new_user@test.com"
+    response = await admin_client.post(
+        "/graphql", json={"query": DEACTIVATE_USER_MUTATION.format(email=email)}
+    )
+    result = response.json()
+    assert result["data"]["deactivateUser"]["__typename"] == "DeactivateAccountError"
+    assert result["data"]["deactivateUser"]["message"] == "Deactivation error"
