@@ -26,6 +26,15 @@ async def get_search_by_id(session: AsyncSession, id: int) -> Optional["Search"]
     ).first()
 
 
+async def get_searches(
+    session: AsyncSession, user_id: Optional[int] = None
+) -> list["Search"]:
+    query = select(Search).options(selectinload(Search.category))  # type: ignore
+    if user_id:
+        query = query.where(Search.users.any(id=user_id))  # type: ignore
+    return [search for search in (await session.exec(query)).all()]
+
+
 async def get_search_events_for_search(
     session: AsyncSession,
     search: Search,

@@ -8,6 +8,7 @@ from api.models.search import Search
 from api.types.category import CategoryType, convert_category_from_db
 from api.types.event_stats import EventStatsType
 from api.types.general import Error
+from api.types.scan import PydanticScanSchedule
 from api.utils.search import get_search_events_for_search, get_search_stats
 
 
@@ -34,6 +35,31 @@ class SearchStatsType:
     avg_area_total: Optional[float] = strawberry.UNSET
     avg_terrain_total: Optional[float] = strawberry.UNSET
     events: List[EventStatsType]
+
+
+@strawberry.experimental.pydantic.type(PydanticScanSchedule, all_fields=True)
+class ScheduleType:
+    pass
+
+
+@strawberry.experimental.pydantic.type(Search)
+class SearchType:
+    id: strawberry.auto
+    category: CategoryType
+    location: strawberry.auto
+    distance_radius: strawberry.auto
+    coordinates: strawberry.auto
+    from_price: strawberry.auto
+    to_price: strawberry.auto
+    from_surface: strawberry.auto
+    to_surface: strawberry.auto
+    url: strawberry.auto
+    schedule: Optional[ScheduleType] = None
+
+
+@strawberry.type
+class SearchesType:
+    searches: List[SearchType]
 
 
 async def convert_search_stats_from_db(
@@ -66,12 +92,49 @@ async def convert_search_stats_from_db(
     )
 
 
+def convert_searches_from_db(
+    searches: list[Search],
+) -> SearchesType:
+    converted = []
+    for search in searches:
+        if isinstance(search.schedule, dict):
+            schedule = ScheduleType(**search.schedule)
+        else:
+            schedule = None
+        converted.append(
+            SearchType(
+                id=search.id,
+                category=convert_category_from_db(search.category),  # type: ignore
+                location=search.location,
+                distance_radius=search.distance_radius,
+                coordinates=search.coordinates,
+                from_price=search.from_price,
+                to_price=search.to_price,
+                from_surface=search.from_surface,
+                to_surface=search.to_surface,
+                url=search.url,
+                schedule=schedule,
+            )
+        )
+    return SearchesType(searches=converted)
+
+
 @strawberry.type
 class SearchDoesntExistError(Error):
     message: str = "Search with provided id doesn't exist"
 
 
+@strawberry.type
+class NoSearchesAvailableError(Error):
+    message: str = "No searches available"
+
+
 GetSearchStatsResponse = Annotated[
     Union[SearchStatsType, SearchDoesntExistError],
     strawberry.union("GetSearchStatsResponse"),
+]
+
+GetSearchesResponse = Annotated[
+    Union[SearchesType, NoSearchesAvailableError],
+    strawberry.union("GetSearchesResponse"),
 ]
