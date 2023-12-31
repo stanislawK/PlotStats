@@ -6,12 +6,15 @@ from strawberry.types import Info
 
 from api.permissions import IsAuthenticated
 from api.types.search_stats import (
+    GetSearchesResponse,
     GetSearchStatsResponse,
+    NoSearchesAvailableError,
     SearchDoesntExistError,
     SearchStatsInput,
     convert_search_stats_from_db,
+    convert_searches_from_db,
 )
-from api.utils.search import get_search_by_id
+from api.utils.search import get_search_by_id, get_searches
 
 
 @strawberry.type
@@ -27,3 +30,11 @@ class Query:
         date_from = input.date_from or datetime.utcnow() - timedelta(days=365)
         date_to = input.date_to or datetime.utcnow()
         return await convert_search_stats_from_db(session, search, date_from, date_to)
+
+    @strawberry.field(permission_classes=[IsAuthenticated])  # type: ignore
+    async def all_searches(self, info: Info[Any, Any]) -> GetSearchesResponse:
+        session = info.context["session"]
+        searches_db = await get_searches(session=session)
+        if len(searches_db) == 0:
+            return NoSearchesAvailableError()
+        return convert_searches_from_db(searches_db)

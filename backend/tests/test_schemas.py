@@ -128,6 +128,38 @@ mutation deactivateUser {{
     }}
 """
 
+ALL_SEARCHES_QUERY: str = """
+    query allSearches {
+    allSearches {
+        ... on NoSearchesAvailableError {
+        __typename
+        message
+        }
+        ... on SearchesType {
+        searches {
+            category {
+            name
+            }
+            coordinates
+            distanceRadius
+            fromPrice
+            fromSurface
+            id
+            location
+            schedule {
+            dayOfWeek
+            hour
+            minute
+            }
+            toPrice
+            toSurface
+            url
+        }
+        }
+    }
+    }
+"""
+
 
 @pytest.mark.asyncio
 async def test_categories_query(
@@ -1451,3 +1483,45 @@ async def test_deactivate_user_mutation_user_does_not_exist(
     result = response.json()
     assert result["data"]["deactivateUser"]["__typename"] == "DeactivateAccountError"
     assert result["data"]["deactivateUser"]["message"] == "Deactivation error"
+
+
+@pytest.mark.asyncio
+async def test_searches_query_no_searches_error(
+    authenticated_client: httpx.AsyncClient,
+    _db_session: AsyncSession,
+) -> None:
+    response = await authenticated_client.get(
+        "/graphql", params={"query": ALL_SEARCHES_QUERY}
+    )
+    result = response.json()
+    assert result["data"]["allSearches"]["__typename"] == "NoSearchesAvailableError"
+    assert result["data"]["allSearches"]["message"] == "No searches available"
+
+
+@pytest.mark.asyncio
+async def test_searches_query(
+    authenticated_client: httpx.AsyncClient,
+    _db_session: AsyncSession,
+    add_category: Category,
+) -> None:
+    search = Search(**examples["search"])
+    search.category = add_category
+    _db_session.add(search)
+    await _db_session.commit()
+    response = await authenticated_client.get(
+        "/graphql", params={"query": ALL_SEARCHES_QUERY}
+    )
+    result = response.json()
+    searches = result["data"]["allSearches"]["searches"]
+    assert len(searches) == 1
+    search_res = searches[0]
+    assert search_res["id"] == search.id
+    assert search_res["category"]["name"] == add_category.name
+    assert search_res["distanceRadius"] == search.distance_radius
+    assert search_res["fromPrice"] == search.from_price
+    assert search_res["toPrice"] == search.to_price
+    assert search_res["location"] == search.location
+    assert search_res["fromSurface"] == search.from_surface
+    assert search_res["toSurface"] == search.to_surface
+    assert search_res["schedule"] is None
+    assert search_res["url"] == search.url
