@@ -160,6 +160,39 @@ ALL_SEARCHES_QUERY: str = """
     }
 """
 
+USER_SEARCHES_QUERY: str = """
+query usersSearches {
+  usersSearches {
+    ... on SearchesType {
+      __typename
+      searches {
+        category {
+          name
+        }
+        coordinates
+        distanceRadius
+        fromPrice
+        fromSurface
+        id
+        location
+        schedule {
+          dayOfWeek
+          hour
+          minute
+        }
+        toPrice
+        toSurface
+        url
+      }
+    }
+    ... on NoSearchesAvailableError {
+      __typename
+      message
+    }
+  }
+}
+"""
+
 
 @pytest.mark.asyncio
 async def test_categories_query(
@@ -1525,3 +1558,59 @@ async def test_searches_query(
     assert search_res["toSurface"] == search.to_surface
     assert search_res["schedule"] is None
     assert search_res["url"] == search.url
+
+
+@pytest.mark.asyncio
+async def test_user_searches_query_no_searches(
+    authenticated_client: httpx.AsyncClient,
+    _db_session: AsyncSession,
+    add_category: Category,
+) -> None:
+    search = Search(**examples["search"])
+    search.category = add_category
+    _db_session.add(search)
+    await _db_session.commit()
+    response = await authenticated_client.get(
+        "/graphql", params={"query": USER_SEARCHES_QUERY}
+    )
+    result = response.json()
+    assert result["data"]["usersSearches"]["__typename"] == "NoSearchesAvailableError"
+    assert result["data"]["usersSearches"]["message"] == "No searches available"
+
+
+@pytest.mark.asyncio
+async def test_user_searches_query(
+    authenticated_client: httpx.AsyncClient,
+    _db_session: AsyncSession,
+    add_category: Category,
+    add_user: User,
+) -> None:
+    search = Search(**examples["search"])
+    users_search = Search(
+        users=[add_user],
+        category=add_category,
+        **{**examples["search"], "url": "https://www.test.io/test2"},
+    )
+    search.category = add_category
+    _db_session.add(search)
+    _db_session.add(users_search)
+    await _db_session.commit()
+    response = await authenticated_client.get(
+        "/graphql", params={"query": USER_SEARCHES_QUERY}
+    )
+    result = response.json()
+    assert result["data"]["usersSearches"]["__typename"] == "SearchesType"
+    searches = result["data"]["usersSearches"]["searches"]
+    assert len(searches) == 1
+    search_res = searches[0]
+    assert search_res["id"] != search.id
+    assert search_res["id"] == users_search.id
+    assert search_res["category"]["name"] == add_category.name
+    assert search_res["distanceRadius"] == users_search.distance_radius
+    assert search_res["fromPrice"] == users_search.from_price
+    assert search_res["toPrice"] == users_search.to_price
+    assert search_res["location"] == users_search.location
+    assert search_res["fromSurface"] == users_search.from_surface
+    assert search_res["toSurface"] == users_search.to_surface
+    assert search_res["schedule"] is None
+    assert search_res["url"] == users_search.url

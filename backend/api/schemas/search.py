@@ -38,3 +38,12 @@ class Query:
         if len(searches_db) == 0:
             return NoSearchesAvailableError()
         return convert_searches_from_db(searches_db)
+
+    @strawberry.field(permission_classes=[IsAuthenticated])  # type: ignore
+    async def users_searches(self, info: Info[Any, Any]) -> GetSearchesResponse:
+        session = info.context["session"]
+        user = info.context["request"].state.user
+        searches_db = await get_searches(session=session, user_id=user.id)
+        if len(searches_db) == 0:
+            return NoSearchesAvailableError()
+        return convert_searches_from_db(searches_db)
