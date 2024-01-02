@@ -41,9 +41,10 @@ class Mutation:
                 message=f"Scan has failed with {status_code} status code."
             )
         session: AsyncSession = info.context["session"]
+        user = info.context["request"].state.user
         try:
             search_event = await parse_search_info(
-                str(data.url), data.schedule, body, session
+                str(data.url), data.schedule, body, session, user
             )
             await parse_scan_data(str(data.url), body, session, search_event)
         except CategoryNotFoundError:
