@@ -6,6 +6,7 @@ from sqlmodel import select
 
 from api.models import Category, Estate, Price, Search, SearchEvent
 from api.models.search import encode_url
+from api.models.user import User
 from api.schedulers import setup_scan_periodic_task
 from api.types.scan import PydanticScanSchedule
 
@@ -52,6 +53,7 @@ async def parse_search_info(
     schedule: Optional[PydanticScanSchedule],
     body: dict[str, Any],
     session: AsyncSession,
+    user: User | None = None,
 ) -> SearchEvent:
     coordinates_org = jmespath.search("pageProps.mapBoundingBox.boundingBox", body)
     coordinates_alt = jmespath.search("pageProps.data.searchMapPins.boundingBox", body)
@@ -74,6 +76,7 @@ async def parse_search_info(
         schedule_dict = schedule.__dict__
         setup_scan_periodic_task(url, schedule_dict)
 
+    search_modified = False
     if not search:
         search = Search.model_validate(
             Search(
@@ -89,10 +92,15 @@ async def parse_search_info(
                 schedule=schedule_dict,
             )
         )
-        session.add(search)
-        await session.commit()
+        search_modified = True
     elif search and schedule_dict and search.schedule != schedule_dict:
         search.schedule = schedule_dict
+        search_modified = True
+
+    if user is not None and user not in search.users:
+        search.users.append(user)
+        search_modified = True
+    if search_modified:
         session.add(search)
         await session.commit()
 
@@ -108,9 +116,10 @@ async def parse_scan_data(
     session: AsyncSession,
     search_event: SearchEvent | None = None,
     schedule: Optional[PydanticScanSchedule] = None,
+    user: User | None = None,
 ) -> None:
     if not search_event:
-        search_event = await parse_search_info(url, schedule, body, session)
+        search_event = await parse_search_info(url, schedule, body, session, user)
     ads = jmespath.search("pageProps.data.searchAds.items", body)
     estates = [
         Estate.model_validate(

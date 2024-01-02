@@ -31,6 +31,10 @@ class Search(SQLModel, table=True):
     from_surface: Optional[int]
     to_surface: Optional[int]
     search_events: List["SearchEvent"] = Relationship(back_populates="search")
-    users: List[User] = Relationship(back_populates="searches", link_model=SearchUser)
+    users: List[User] = Relationship(
+        back_populates="searches",
+        link_model=SearchUser,
+        sa_relationship_kwargs={"lazy": "selectin"},
+    )
     url: str = Field(index=True, unique=True)
     schedule: Optional[dict[str, int]] = Field(sa_column=Column(JSON), default=None)

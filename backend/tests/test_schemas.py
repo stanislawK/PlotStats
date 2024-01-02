@@ -516,6 +516,7 @@ async def test_adhoc_scan_correct_response(
     assert len(estates_parsed) == 36
     assert len(prices_parsed) == 36
     assert search_parsed.schedule == schedule
+    assert len(search_parsed.users) == 1
     assert estates_parsed[0].prices[0] in prices_parsed
     assert decode_url(search_parsed.url) == url  # type: ignore
     result = response.json()
@@ -877,6 +878,7 @@ async def test_search_stats_query(
     await authenticated_client.post("/graphql", json={"query": mutation})
     await authenticated_client.post("/graphql", json={"query": mutation})
     search = (await _db_session.exec(select(Search))).first()
+    assert len(search.users) == 1
     query = f"""
         query searchStats {{
             searchStats(input: {{
