@@ -16,7 +16,10 @@ class Query(
 
 @strawberry.type
 class Mutation(
-    api.schemas.category.Mutation, api.schemas.scan.Mutation, api.schemas.user.Mutation
+    api.schemas.category.Mutation,
+    api.schemas.scan.Mutation,
+    api.schemas.user.Mutation,
+    api.schemas.search.Mutation,
 ):
     pass
 

@@ -6,9 +6,12 @@ from strawberry.types import Info
 
 from api.permissions import IsAuthenticated
 from api.types.search_stats import (
+    AssignSearchInput,
+    AssignSearchResponse,
     GetSearchesResponse,
     GetSearchStatsResponse,
     NoSearchesAvailableError,
+    SearchAssignSuccessfully,
     SearchDoesntExistError,
     SearchStatsInput,
     convert_search_stats_from_db,
@@ -47,3 +50,21 @@ class Query:
         if len(searches_db) == 0:
             return NoSearchesAvailableError()
         return convert_searches_from_db(searches_db)
+
+
+@strawberry.type
+class Mutation:
+    @strawberry.mutation(permission_classes=[IsAuthenticated])  # type: ignore
+    async def assign_search_to_user(
+        self, info: Info[Any, Any], input: AssignSearchInput
+    ) -> AssignSearchResponse:
+        session = info.context["session"]
+        search = await get_search_by_id(session, input.id)
+        if not search:
+            return SearchDoesntExistError()
+        user = info.context["request"].state.user
+        if user not in search.users:
+            search.users.append(user)
+            session.add(search)
+            await session.commit()
+        return SearchAssignSuccessfully()

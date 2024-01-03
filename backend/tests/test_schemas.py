@@ -193,6 +193,21 @@ query usersSearches {
 }
 """
 
+ASSIGN_SEARCH_MUTATION: str = """
+mutation assignSearch {{
+  assignSearchToUser(input: {{id: {id}}}) {{
+    ... on SearchAssignSuccessfully {{
+      __typename
+      message
+    }}
+    ... on SearchDoesntExistError {{
+      __typename
+      message
+    }}
+  }}
+}}
+"""
+
 
 @pytest.mark.asyncio
 async def test_categories_query(
@@ -1616,3 +1631,77 @@ async def test_user_searches_query(
     assert search_res["toSurface"] == users_search.to_surface
     assert search_res["schedule"] is None
     assert search_res["url"] == users_search.url
+
+
+@pytest.mark.asyncio
+async def test_assign_search_to_user(
+    authenticated_client: httpx.AsyncClient,
+    _db_session: AsyncSession,
+    add_category: Category,
+    add_user: User,
+) -> None:
+    search = Search(**examples["search"])
+    search.category = add_category
+    _db_session.add(search)
+    await _db_session.commit()
+    response = await authenticated_client.post(
+        "/graphql", json={"query": ASSIGN_SEARCH_MUTATION.format(id=search.id)}
+    )
+    result = response.json()
+    search = (await _db_session.exec(select(Search))).first()
+    assert (
+        result["data"]["assignSearchToUser"]["__typename"] == "SearchAssignSuccessfully"
+    )
+    assert (
+        result["data"]["assignSearchToUser"]["message"]
+        == "Search assigned successfully"
+    )
+    assert search.users[0].id == add_user.id
+
+
+@pytest.mark.asyncio
+async def test_assign_search_to_user_twice(
+    authenticated_client: httpx.AsyncClient,
+    _db_session: AsyncSession,
+    add_category: Category,
+    add_user: User,
+) -> None:
+    search = Search(**examples["search"])
+    search.category = add_category
+    search.users.append(add_user)
+    _db_session.add(search)
+    await _db_session.commit()
+    response = await authenticated_client.post(
+        "/graphql", json={"query": ASSIGN_SEARCH_MUTATION.format(id=search.id)}
+    )
+    result = response.json()
+    search = (await _db_session.exec(select(Search))).first()
+    assert (
+        result["data"]["assignSearchToUser"]["__typename"] == "SearchAssignSuccessfully"
+    )
+    assert search.users[0].id == add_user.id
+    assert len(search.users) == 1
+
+
+@pytest.mark.asyncio
+async def test_assign_search_doesnt_exist(
+    authenticated_client: httpx.AsyncClient,
+    _db_session: AsyncSession,
+    add_category: Category,
+    add_user: User,
+) -> None:
+    search = Search(**examples["search"])
+    search.category = add_category
+    _db_session.add(search)
+    await _db_session.commit()
+    response = await authenticated_client.post(
+        "/graphql", json={"query": ASSIGN_SEARCH_MUTATION.format(id=search.id + 1)}
+    )
+    result = response.json()
+    assert (
+        result["data"]["assignSearchToUser"]["__typename"] == "SearchDoesntExistError"
+    )
+    assert (
+        result["data"]["assignSearchToUser"]["message"]
+        == "Search with provided id doesn't exist"
+    )

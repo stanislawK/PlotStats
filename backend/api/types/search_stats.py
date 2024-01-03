@@ -19,6 +19,11 @@ class SearchStatsInput:
     date_to: Optional[datetime] = strawberry.UNSET
 
 
+@strawberry.input
+class AssignSearchInput:
+    id: int
+
+
 @strawberry.experimental.pydantic.type(Search)
 class SearchStatsType:
     date_from: datetime
@@ -129,6 +134,11 @@ class NoSearchesAvailableError(Error):
     message: str = "No searches available"
 
 
+@strawberry.type
+class SearchAssignSuccessfully:
+    message: str = "Search assigned successfully"
+
+
 GetSearchStatsResponse = Annotated[
     Union[SearchStatsType, SearchDoesntExistError],
     strawberry.union("GetSearchStatsResponse"),
@@ -137,4 +147,9 @@ GetSearchStatsResponse = Annotated[
 GetSearchesResponse = Annotated[
     Union[SearchesType, NoSearchesAvailableError],
     strawberry.union("GetSearchesResponse"),
+]
+
+AssignSearchResponse = Annotated[
+    Union[SearchAssignSuccessfully, SearchDoesntExistError],
+    strawberry.union("AssignSearchResponse"),
 ]
