@@ -1,4 +1,5 @@
 import Image from "next/image";
+import LoginModal from "./components/loginModal";
 
 export default function Home() {
   return (
@@ -26,6 +27,8 @@ export default function Home() {
               priority
             />
        </div>
+       {/* Login modal */}
+       <LoginModal />
     </main>
   );
 }
