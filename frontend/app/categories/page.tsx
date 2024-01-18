@@ -26,18 +26,22 @@ async function getCategories() {
 }
 
 export default async function Test() {
-  const data = await getCategories();
-  const categories = data.categories;
-  return (
-    <div className="flex">
-      <div className="fixed top-5 ml-5 border rounded-md shadow-md p-5">
-      <h1 className="text-2xl font-bold">Available categories:</h1>
-        {categories?.map((category) => {
-          return <Category key={category.name} category={category} />;
-        })}
+  try {
+    const data = await getCategories();
+    const categories = data.categories;
+    return (
+      <div className="flex">
+        <div className="fixed top-5 ml-5 border rounded-md shadow-md p-5">
+        <h1 className="text-2xl font-bold">Available categories:</h1>
+          {categories?.map((category) => {
+            return <Category key={category.name} category={category} />;
+          })}
+        </div>
       </div>
-    </div>
-  );
+    );
+  } catch(error){
+    console.error(error);
+  }
 }
 
 function Category({ category }: any) {
