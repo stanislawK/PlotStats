@@ -2,30 +2,19 @@
 
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function LoginModal() {
   let [isOpen, setIsOpen] = useState(true);
+  const router = useRouter();
 
   function closeModal() {
+    router.back();
     setIsOpen(false);
-  }
-
-  function openModal() {
-    setIsOpen(true);
   }
 
   return (
     <>
-      <div className="fixed inset-0 flex items-center justify-center">
-        <button
-          type="button"
-          onClick={openModal}
-          className="rounded-md bg-black/20 px-4 py-2 text-sm font-medium text-white hover:bg-black/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
-        >
-          Open dialog
-        </button>
-      </div>
-
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={closeModal}>
           <Transition.Child
@@ -54,7 +43,7 @@ export default function LoginModal() {
                 <Dialog.Panel className="relative w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
                   <button
                     className="absolute top-3 right-5 font-bold text-gray-500"
-                    onClick={() => setIsOpen(false)}
+                    onClick={closeModal}
                   >
                     X
                   </button>
