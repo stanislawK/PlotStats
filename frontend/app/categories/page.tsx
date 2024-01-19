@@ -1,5 +1,6 @@
 async function getCategories() {
   const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
   try {
     const res = await fetch("http://backend:8000/graphql", {
       method: "POST",
@@ -7,6 +8,7 @@ async function getCategories() {
         "Content-Type": "application/json",
         "Sec-Fetch-Mode": "cors",
         "Sec-Fetch-Site": "same-origin",
+        Authorization: "Bearer ",
       },
       body: JSON.stringify({
         query: `
@@ -16,7 +18,8 @@ async function getCategories() {
               `,
       }),
     });
-    await sleep(1000);
+    console.log(res);
+    // await sleep(1000);
     const res_parsed = await res.json();
     const data = res_parsed.data;
     return data;
@@ -32,14 +35,14 @@ export default async function Test() {
     return (
       <div className="flex">
         <div className="fixed top-5 ml-5 border rounded-md shadow-md p-5">
-        <h1 className="text-2xl font-bold">Available categories:</h1>
+          <h1 className="text-2xl font-bold">Available categories:</h1>
           {categories?.map((category) => {
             return <Category key={category.name} category={category} />;
           })}
         </div>
       </div>
     );
-  } catch(error){
+  } catch (error) {
     console.error(error);
   }
 }

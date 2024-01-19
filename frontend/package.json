@@ -11,17 +11,17 @@
   "dependencies": {
     "@headlessui/react": "^1.7.18",
     "@tailwindcss/forms": "^0.5.7",
-    "next": "13.5.4",
-    "react": "^18",
-    "react-dom": "^18"
+    "next": "^14.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
+    "@types/react": "^18.2.48",
+    "@types/react-dom": "^18.2.18",
     "autoprefixer": "^10",
     "eslint": "^8",
-    "eslint-config-next": "13.5.4",
+    "eslint-config-next": "^14.1.0",
     "postcss": "^8",
     "prettier-plugin-tailwindcss": "^0.5.6",
     "tailwindcss": "^3",

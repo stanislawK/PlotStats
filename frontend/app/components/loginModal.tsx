@@ -3,14 +3,29 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
 import { useRouter } from "next/navigation";
+import { FormEvent } from "react";
 
-export default function LoginModal() {
+type Props = {
+  auth: any;
+};
+
+export default function LoginModal({ auth }: Props) {
   let [isOpen, setIsOpen] = useState(true);
   const router = useRouter();
 
   function closeModal() {
     router.back();
     setIsOpen(false);
+  }
+
+  function loginUser(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+    const email = formData.get("email");
+    const password = formData.get("password");
+    auth(email, password);
+    closeModal();
   }
 
   return (
@@ -54,7 +69,7 @@ export default function LoginModal() {
                     Sign in to your account
                   </Dialog.Title>
                   <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-                    <form className="space-y-6" action="#" method="POST">
+                    <form className="space-y-6" onSubmit={loginUser}>
                       <div>
                         <label
                           htmlFor="email"

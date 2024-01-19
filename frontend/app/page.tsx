@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import LoginModal from "./components/loginModal";
+import { login } from "./utils/auth";
 
 type Props = {
   searchParams: Record<string, string> | null | undefined;
@@ -39,7 +40,7 @@ export default function Home({ searchParams }: Props) {
         />
       </div>
       {/* Login modal */}
-      {showModal && <LoginModal />}
+      {showModal && <LoginModal auth={login} />}
     </main>
   );
 }
