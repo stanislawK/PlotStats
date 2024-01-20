@@ -2,12 +2,15 @@ import Image from "next/image";
 import Link from "next/link";
 import LoginModal from "./components/loginModal";
 import { login } from "./utils/auth";
+import { useCookies } from "react-cookie";
+import { useEffect } from "react";
 
 type Props = {
   searchParams: Record<string, string> | null | undefined;
 };
 export default function Home({ searchParams }: Props) {
   const showModal = searchParams?.loginModal;
+
   return (
     <main className="flex flex-col-reverse mb-10 mx-auto space-y-5 md:flex-row md:space-y-0 items-center md:mx-28 md:mt-10">
       {/* Content container */}
