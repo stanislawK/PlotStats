@@ -1,12 +1,18 @@
+import { cookies } from "next/headers";
+
 async function getCategories() {
   const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
   try {
+    const accessToken = cookies().get("accessToken")?.value;
+    console.log(`access token in categories ${accessToken}`);
     const res = await fetch("http://backend:8000/graphql", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "Sec-Fetch-Mode": "cors",
         "Sec-Fetch-Site": "same-origin",
+        Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({
         query: `
@@ -16,9 +22,10 @@ async function getCategories() {
               `,
       }),
     });
-    await sleep(1000);
+    // await sleep(1000);
     const res_parsed = await res.json();
     const data = res_parsed.data;
+    console.log(res);
     return data;
   } catch (error) {
     console.error(error);
@@ -32,14 +39,14 @@ export default async function Test() {
     return (
       <div className="flex">
         <div className="fixed top-5 ml-5 border rounded-md shadow-md p-5">
-        <h1 className="text-2xl font-bold">Available categories:</h1>
+          <h1 className="text-2xl font-bold">Available categories:</h1>
           {categories?.map((category) => {
             return <Category key={category.name} category={category} />;
           })}
         </div>
       </div>
     );
-  } catch(error){
+  } catch (error) {
     console.error(error);
   }
 }
