@@ -6,25 +6,23 @@ import { useRouter } from "next/navigation";
 import { FormEvent } from "react";
 
 type Props = {
-  auth: any;
+  authenticate: any;
 };
 
-export default function LoginModal({ auth }: Props) {
+export default async function LoginModal({ authenticate }: Props) {
   let [isOpen, setIsOpen] = useState(true);
   const router = useRouter();
-
   function closeModal() {
-    router.back();
     setIsOpen(false);
+    router.push("/");
   }
 
   function loginUser(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-
     const formData = new FormData(event.currentTarget);
     const email = formData.get("email");
     const password = formData.get("password");
-    auth(email, password);
+    authenticate({ password: password, email: email });
     closeModal();
   }
 

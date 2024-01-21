@@ -1,12 +1,10 @@
-import type { NextRequest } from "next/server";
+import { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
+import { getCookie } from "cookies-next";
 import * as jose from "jose";
 
 function tokenIsValid(token: string, type: string) {
   const tokenParams = jose.decodeJwt(token);
-  console.log(tokenParams);
-  console.log(new Date().getTime());
   if (
     tokenParams.type === type &&
     !!tokenParams.exp &&
@@ -19,18 +17,17 @@ function tokenIsValid(token: string, type: string) {
 }
 
 export async function middleware(req: NextRequest) {
-  const parsedUrl = req.nextUrl;
-  if (parsedUrl.pathname === "/") {
-    return;
-  }
-  const accessToken = cookies().get("accessToken")?.value;
+  const res = NextResponse.next();
+  const accessToken = getCookie("accessToken", { res, req });
   if (!accessToken || !tokenIsValid(accessToken, "access")) {
-    return NextResponse.rewrite(new URL("/?loginModal=true", req.url));
+    const loginUrl = new URL("/", req.url);
+    loginUrl.searchParams.set("loginModal", "true");
+    return NextResponse.redirect(loginUrl);
   } else {
-    return;
+    return res;
   }
 }
 
 export const config = {
-  matcher: ["/((?!_next|fonts|[\\w-]+\\.\\w+).*)"],
+  matcher: ["/dashboard"],
 };
