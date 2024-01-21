@@ -1,11 +1,11 @@
 import { cookies } from "next/headers";
+import { getCookie } from "cookies-next";
 
 async function getCategories() {
   const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
   try {
-    const accessToken = cookies().get("accessToken")?.value;
-    console.log(`access token in categories ${accessToken}`);
+    const accessToken = getCookie("accessToken", { cookies });
     const res = await fetch("http://backend:8000/graphql", {
       method: "POST",
       headers: {
@@ -22,10 +22,8 @@ async function getCategories() {
               `,
       }),
     });
-    // await sleep(1000);
     const res_parsed = await res.json();
     const data = res_parsed.data;
-    console.log(res);
     return data;
   } catch (error) {
     console.error(error);

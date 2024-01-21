@@ -11,10 +11,10 @@
   "dependencies": {
     "@headlessui/react": "^1.7.18",
     "@tailwindcss/forms": "^0.5.7",
+    "cookies-next": "^4.1.0",
     "jose": "^5.2.0",
     "next": "^14.1.0",
     "react": "^18.2.0",
-    "react-cookie": "^7.0.1",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {

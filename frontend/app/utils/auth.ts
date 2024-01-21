@@ -1,9 +1,23 @@
 "use server";
 
 import { cookies } from "next/headers";
+import { setCookie, getCookie } from "cookies-next";
+import * as jose from "jose";
+
+function getTimeToExpire(token: string) {
+  const tokenParams = jose.decodeJwt(token);
+  if (!!tokenParams.exp) {
+    const currTimestampSec = Math.floor(new Date().getTime() / 1000);
+    const toExp = tokenParams.exp - currTimestampSec;
+    if (toExp < 0) {
+      return 0;
+    }
+    return toExp;
+  }
+  return 0;
+}
 
 export async function login(email: string, password: string) {
-  console.log("login...");
   const mutation = JSON.stringify({
     query: `
                 mutation login {
@@ -28,7 +42,6 @@ export async function login(email: string, password: string) {
             `,
   });
   try {
-    console.log("fetching...");
     const res = await fetch("http://backend:8000/graphql", {
       method: "POST",
       headers: {
@@ -49,18 +62,18 @@ export async function login(email: string, password: string) {
     } else {
       const accessToken = data.login.accessToken;
       const refreshToken = data.login.refreshToken;
-      console.log(accessToken);
-      console.log(refreshToken);
-      cookies().set("accessToken", accessToken);
-      cookies().set("refreshToken", refreshToken);
+      setCookie("accessToken", accessToken, {
+        cookies,
+        maxAge: getTimeToExpire(accessToken),
+        httpOnly: true,
+      });
+      setCookie("refreshToken", refreshToken, {
+        cookies,
+        maxAge: getTimeToExpire(refreshToken),
+        httpOnly: true,
+      });
     }
-    console.log(data);
   } catch (error) {
     console.log(error);
   }
 }
-
-export const verifyAuth = async (token: string) => {
-  try {
-  } catch (err) {}
-};

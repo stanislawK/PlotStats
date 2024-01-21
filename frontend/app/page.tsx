@@ -2,15 +2,50 @@ import Image from "next/image";
 import Link from "next/link";
 import LoginModal from "./components/loginModal";
 import { login } from "./utils/auth";
-import { useCookies } from "react-cookie";
-import { useEffect } from "react";
+import { hasCookie } from "cookies-next";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 type Props = {
   searchParams: Record<string, string> | null | undefined;
 };
+
+type TokenProps = {
+  hasToken: boolean;
+};
+
+type LoginData = {
+  email: string;
+  password: string;
+};
+
+function LinkBtn({ hasToken }: TokenProps) {
+  let msg;
+  let link;
+  if (!!hasToken) {
+    msg = "Dashboard";
+    link = "/dashboard";
+  } else {
+    msg = "Get Started";
+    link = "/?loginModal=true";
+  }
+  return (
+    <Link
+      href={link}
+      className="bg-cyan-400 px-10 py-5 text-2xl font-bold text-white hover:opacity-70 md:py-4 rounded-full"
+    >
+      {msg}
+    </Link>
+  );
+}
+
 export default function Home({ searchParams }: Props) {
   const showModal = searchParams?.loginModal;
-
+  const hasToken = hasCookie("accessToken", { cookies });
+  const loginFunc = async (data: LoginData) => {
+    "use server";
+    await login(data.email, data.password);
+  };
   return (
     <main className="flex flex-col-reverse mb-10 mx-auto space-y-5 md:flex-row md:space-y-0 items-center md:mx-28 md:mt-10">
       {/* Content container */}
@@ -25,12 +60,7 @@ export default function Home({ searchParams }: Props) {
           market.
         </p>
         <div className="mx-auto md:mx-0">
-          <Link
-            href="/?loginModal=true"
-            className="bg-cyan-400 px-10 py-5 text-2xl font-bold text-white hover:opacity-70 md:py-4 rounded-full"
-          >
-            Get Started
-          </Link>
+          <LinkBtn hasToken={hasToken}></LinkBtn>
         </div>
       </div>
       <div className="mx-auto mb-24 md:w-1/2">
@@ -43,7 +73,7 @@ export default function Home({ searchParams }: Props) {
         />
       </div>
       {/* Login modal */}
-      {showModal && <LoginModal auth={login} />}
+      {showModal && <LoginModal authenticate={loginFunc} />}
     </main>
   );
 }
