@@ -2,10 +2,13 @@ import { cookies } from "next/headers";
 import { getCookie } from "cookies-next";
 
 async function getCategories() {
-  const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+  "use server";
 
   try {
-    const accessToken = getCookie("accessToken", { cookies });
+    let accessToken = getCookie("accessToken", { cookies });
+    if (!accessToken) {
+      return {};
+    }
     const res = await fetch("http://backend:8000/graphql", {
       method: "POST",
       headers: {
@@ -30,10 +33,10 @@ async function getCategories() {
   }
 }
 
-export default async function Test() {
+export default async function Categories() {
   try {
     const data = await getCategories();
-    const categories = data.categories;
+    const categories = data?.categories;
     return (
       <div className="flex">
         <div className="fixed top-5 ml-5 border rounded-md shadow-md p-5">

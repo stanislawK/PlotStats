@@ -1,8 +1,9 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { setCookie, getCookie } from "cookies-next";
+import { setCookie } from "cookies-next";
 import * as jose from "jose";
+import type { NextRequest, NextResponse } from "next/server";
 
 function getTimeToExpire(token: string) {
   const tokenParams = jose.decodeJwt(token);
@@ -55,7 +56,8 @@ export async function login(email: string, password: string) {
     const data = res_parsed.data;
     if (
       data === undefined ||
-      data.login.__typename === "LoginUserError" ||
+      !data.login ||
+      data.login.__typename != "JWTPair" ||
       !data.login.accessToken
     ) {
       console.log("Can't login");
@@ -72,6 +74,62 @@ export async function login(email: string, password: string) {
         maxAge: getTimeToExpire(refreshToken),
         httpOnly: true,
       });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function refresh(
+  refreshToken: string,
+  req?: NextRequest,
+  res?: NextResponse
+) {
+  const mutation = JSON.stringify({
+    query: `
+      mutation refreshToken {
+        refreshToken {
+            ... on AccessToken {
+            __typename
+            accessToken
+            }
+            ... on RefreshTokenError {
+            __typename
+            message
+            }
+        }
+        }
+            `,
+  });
+  try {
+    const api_res = await fetch("http://backend:8000/graphql", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "same-origin",
+        Authorization: `Bearer ${refreshToken}`,
+      },
+      body: mutation,
+    });
+    const res_parsed = await api_res.json();
+    const data = res_parsed.data;
+    if (
+      data === undefined ||
+      !data.refreshToken ||
+      data.refreshToken.__typename != "AccessToken" ||
+      !data.refreshToken.accessToken
+    ) {
+      console.log("Can't refresh");
+    } else {
+      const accessToken = data.refreshToken.accessToken;
+      setCookie("accessToken", accessToken, {
+        req,
+        res,
+        maxAge: getTimeToExpire(accessToken),
+        httpOnly: true,
+      });
+      return;
     }
   } catch (error) {
     console.log(error);
