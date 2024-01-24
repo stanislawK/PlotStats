@@ -4,7 +4,6 @@ import LoginModal from "./components/loginModal";
 import { login } from "./utils/auth";
 import { hasCookie } from "cookies-next";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 type Props = {
   searchParams: Record<string, string> | null | undefined;
