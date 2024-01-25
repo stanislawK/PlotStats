@@ -1,62 +1,246 @@
-import { cookies } from "next/headers";
-import { getCookie } from "cookies-next";
-
-async function getCategories() {
-  "use server";
-
-  try {
-    let accessToken = getCookie("accessToken", { cookies });
-    if (!accessToken) {
-      return {};
-    }
-    const res = await fetch("http://backend:8000/graphql", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Sec-Fetch-Mode": "cors",
-        "Sec-Fetch-Site": "same-origin",
-        Authorization: `Bearer ${accessToken}`,
-      },
-      body: JSON.stringify({
-        query: `
-                query GetCategories {
-                    categories {  name  }
-                },
-              `,
-      }),
-    });
-    const res_parsed = await res.json();
-    const data = res_parsed.data;
-    return data;
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-export default async function Categories() {
-  try {
-    const data = await getCategories();
-    const categories = data?.categories;
+import {FlowbiteDemo} from "../components/testChart"
+export default async function Dashboard() {
     return (
-      <div className="flex">
-        <div className="fixed top-5 ml-5 border rounded-md shadow-md p-5">
-          <h1 className="text-2xl font-bold">Available categories:</h1>
-          {categories?.map((category) => {
-            return <Category key={category.name} category={category} />;
-          })}
-        </div>
-      </div>
+<div className="p-4 sm:ml-64">
+<div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
+  <div className="grid grid-cols-3 gap-4 mb-4 h-48">
+    <div className="flex items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800">
+      <p className="text-2xl text-gray-400 dark:text-gray-500">
+        <svg
+          className="w-3.5 h-3.5"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 18 18"
+        >
+          <path
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M9 1v16M1 9h16"
+          />
+        </svg>
+      </p>
+    </div>
+    <div className="flex items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800">
+      <p className="text-2xl text-gray-400 dark:text-gray-500">
+        <svg
+          className="w-3.5 h-3.5"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 18 18"
+        >
+          <path
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M9 1v16M1 9h16"
+          />
+        </svg>
+      </p>
+    </div>
+    <div className="flex items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800">
+      <p className="text-2xl text-gray-400 dark:text-gray-500">
+        <svg
+          className="w-3.5 h-3.5"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 18 18"
+        >
+          <path
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M9 1v16M1 9h16"
+          />
+        </svg>
+      </p>
+    </div>
+  </div>
+  <div className="flex items-center justify-center mb-4 rounded bg-gray-50 dark:bg-gray-800">
+  <FlowbiteDemo></FlowbiteDemo>
+  </div>
+  <div className="grid grid-cols-2 gap-4 mb-4">
+    <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
+      <p className="text-2xl text-gray-400 dark:text-gray-500">
+        <svg
+          className="w-3.5 h-3.5"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 18 18"
+        >
+          <path
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M9 1v16M1 9h16"
+          />
+        </svg>
+      </p>
+    </div>
+    <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
+      <p className="text-2xl text-gray-400 dark:text-gray-500">
+        <svg
+          className="w-3.5 h-3.5"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 18 18"
+        >
+          <path
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M9 1v16M1 9h16"
+          />
+        </svg>
+      </p>
+    </div>
+    <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
+      <p className="text-2xl text-gray-400 dark:text-gray-500">
+        <svg
+          className="w-3.5 h-3.5"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 18 18"
+        >
+          <path
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M9 1v16M1 9h16"
+          />
+        </svg>
+      </p>
+    </div>
+    <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
+      <p className="text-2xl text-gray-400 dark:text-gray-500">
+        <svg
+          className="w-3.5 h-3.5"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 18 18"
+        >
+          <path
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M9 1v16M1 9h16"
+          />
+        </svg>
+      </p>
+    </div>
+  </div>
+  <div className="flex items-center justify-center h-48 mb-4 rounded bg-gray-50 dark:bg-gray-800">
+    <p className="text-2xl text-gray-400 dark:text-gray-500">
+      <svg
+        className="w-3.5 h-3.5"
+        aria-hidden="true"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 18 18"
+      >
+        <path
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="M9 1v16M1 9h16"
+        />
+      </svg>
+    </p>
+  </div>
+  <div className="grid grid-cols-2 gap-4">
+    <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
+      <p className="text-2xl text-gray-400 dark:text-gray-500">
+        <svg
+          className="w-3.5 h-3.5"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 18 18"
+        >
+          <path
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M9 1v16M1 9h16"
+          />
+        </svg>
+      </p>
+    </div>
+    <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
+      <p className="text-2xl text-gray-400 dark:text-gray-500">
+        <svg
+          className="w-3.5 h-3.5"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 18 18"
+        >
+          <path
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M9 1v16M1 9h16"
+          />
+        </svg>
+      </p>
+    </div>
+    <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
+      <p className="text-2xl text-gray-400 dark:text-gray-500">
+        <svg
+          className="w-3.5 h-3.5"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 18 18"
+        >
+          <path
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M9 1v16M1 9h16"
+          />
+        </svg>
+      </p>
+    </div>
+    <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
+      <p className="text-2xl text-gray-400 dark:text-gray-500">
+        <svg
+          className="w-3.5 h-3.5"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 18 18"
+        >
+          <path
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M9 1v16M1 9h16"
+          />
+        </svg>
+      </p>
+    </div>
+  </div>
+</div>
+</div>
     );
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-function Category({ category }: any) {
-  const { name } = category || {};
-  return (
-    <ul className="list-none hover:bg-blue-300">
-      <li className="text-xl/loose">{name}</li>
-    </ul>
-  );
-}
+        }
