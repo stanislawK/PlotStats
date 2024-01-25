@@ -3,6 +3,7 @@ import {
   FlowbiteChart,
   FlowbiteDemo,
 } from "../components/testChart";
+import Sidebar from "../components/sidebar";
 
 export default async function Charts() {
   return (
