@@ -36,3 +36,11 @@ async def authenticate_user(
     if not verify_password(password, user.password):
         return False
     return user
+
+
+async def add_favorite_search(
+    session: AsyncSession, user: User, search_id: int
+) -> None:
+    user.favorite_search_id = search_id
+    session.add(user)
+    await session.commit()

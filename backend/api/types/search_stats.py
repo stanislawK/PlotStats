@@ -6,7 +6,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 
 from api.models.search import Search
 from api.types.category import CategoryType, convert_category_from_db
-from api.types.event_stats import EventStatsType
+from api.types.event_stats import EventStatsType, NoPricesFoundError
 from api.types.general import Error
 from api.types.scan import PydanticScanSchedule
 from api.utils.search import get_search_events_for_search, get_search_stats
@@ -67,6 +67,11 @@ class SearchesType:
     searches: List[SearchType]
 
 
+@strawberry.type
+class SearchEventsStatsType:
+    search_events: List[EventStatsType]
+
+
 async def convert_search_stats_from_db(
     session: AsyncSession,
     search: Search,
@@ -125,6 +130,16 @@ def convert_searches_from_db(
 
 
 @strawberry.type
+class FavoriteSearchDoesntExistError(Error):
+    message: str = "Select your favorite search first"
+
+
+@strawberry.type
+class NoSearchEventError(Error):
+    message: str = "There are no events for search"
+
+
+@strawberry.type
 class SearchDoesntExistError(Error):
     message: str = "Search with provided id doesn't exist"
 
@@ -152,4 +167,14 @@ GetSearchesResponse = Annotated[
 AssignSearchResponse = Annotated[
     Union[SearchAssignSuccessfully, SearchDoesntExistError],
     strawberry.union("AssignSearchResponse"),
+]
+
+GetSearchEventsStatsResponse = Annotated[
+    Union[
+        SearchEventsStatsType,
+        FavoriteSearchDoesntExistError,
+        NoSearchEventError,
+        NoPricesFoundError,
+    ],
+    strawberry.union("GetSearchEventsStatsResponse"),
 ]

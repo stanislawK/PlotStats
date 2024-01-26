@@ -41,7 +41,7 @@ populate-db:
 	$(COMPOSE_DEV) run --rm backend python api/utils/factories.py
 
 create-migration:
-	$(COMPOSE_DEV) run --rm backend alembic revision --autogenerate -m "modify user model"
+	$(COMPOSE_DEV) run --rm backend alembic revision --autogenerate -m "add favorite search"
 
 migrate:
 	$(COMPOSE_DEV) run --rm backend alembic upgrade head
