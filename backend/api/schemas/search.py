@@ -70,7 +70,9 @@ class Query:
         user = info.context["request"].state.user
         if not user.favorite_search_id:
             return FavoriteSearchDoesntExistError()
-        search = await get_search_by_id(session, user.favorite_search_id)
+        search = await get_search_by_id(
+            session, user.favorite_search_id, with_events=True
+        )
         if not search or len(search.search_events) == 0:
             return NoSearchEventError()
         search_event_stats = []
@@ -79,9 +81,10 @@ class Query:
             if len(prices) == 0:
                 continue
             stats = get_search_event_avg_stats(prices)
-            stats.update(get_search_event_min_prices(prices, input.top_prices))
-            search_event_stats.append(EventStatsType(**stats))
-        return SearchEventsStatsType(search_events=search_event_stats)  # type: ignore
+            stats.update(get_search_event_min_prices(prices))
+            stats.update({"date": search_event.date})  # type: ignore
+            search_event_stats.append(EventStatsType(**stats))  # type: ignore
+        return SearchEventsStatsType(search_events=search_event_stats)
 
 
 @strawberry.type
@@ -101,6 +104,7 @@ class Mutation:
             await session.commit()
         return SearchAssignSuccessfully()
 
+    @strawberry.mutation(permission_classes=[IsAuthenticated])  # type: ignore
     async def assign_favorite_search_to_user(
         self, info: Info[Any, Any], input: AssignSearchInput
     ) -> AssignSearchResponse:
@@ -109,6 +113,6 @@ class Mutation:
         if not search:
             return SearchDoesntExistError()
         user = info.context["request"].state.user
-        if user.favorite_search_id != search.id:
+        if isinstance(search.id, int) and user.favorite_search_id != search.id:
             await add_favorite_search(session, user, search.id)
         return SearchAssignSuccessfully()
