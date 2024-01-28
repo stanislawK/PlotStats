@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Annotated, Optional, Union
 
 import strawberry
@@ -14,6 +15,7 @@ class EventStatsInput:
 
 @strawberry.type
 class EventStatsType:
+    date: Optional[datetime] = None
     avg_price: float
     avg_price_per_square_meter: float
     avg_area_in_square_meters: Optional[float] = strawberry.UNSET

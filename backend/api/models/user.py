@@ -21,6 +21,7 @@ class User(SQLModel, table=True):
     password: str
     roles: List[str] = Field(default=["user"], sa_column=Column(JSON))
     is_active: bool = Field(default=False)
+    favorite_search_id: Optional[int] = Field(default=None, foreign_key="search.id")
     searches: List["Search"] = Relationship(
         back_populates="users", link_model=SearchUser
     )

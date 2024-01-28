@@ -208,6 +208,59 @@ mutation assignSearch {{
 }}
 """
 
+ASSIGN_FAVORITE_MUTATION: str = """
+mutation assignFavoriteSearchToUser {{
+  assignFavoriteSearchToUser(input: {{id: {id}}}) {{
+    ... on SearchAssignSuccessfully {{
+      __typename
+      message
+    }}
+    ... on SearchDoesntExistError {{
+      __typename
+      message
+    }}
+  }}
+}}
+"""
+
+FAV_SEARCH_EVENTS_STATS: str = """
+query searchEventsStats {
+  searchEventsStats {
+    ... on SearchEventsStatsType {
+      __typename
+      searchEvents {
+        avgAreaInSquareMeters
+        avgPrice
+        avgPricePerSquareMeter
+        avgTerrainAreaInSquareMeters
+        date
+        minPrice {
+          price
+          pricePerSquareMeter
+        }
+        minPricePerSquareMeter {
+          areaInSquareMeters
+          price
+          pricePerSquareMeter
+        }
+      }
+    }
+    ... on FavoriteSearchDoesntExistError {
+      __typename
+      message
+    }
+    ... on NoSearchEventError {
+      __typename
+      message
+    }
+    ... on NoPricesFoundError {
+      __typename
+      message
+    }
+  }
+}
+"""
+
 
 @pytest.mark.asyncio
 async def test_categories_query(
@@ -1705,3 +1758,116 @@ async def test_assign_search_doesnt_exist(
         result["data"]["assignSearchToUser"]["message"]
         == "Search with provided id doesn't exist"
     )
+
+
+@pytest.mark.asyncio
+async def test_assign_favorite_search_to_user(
+    authenticated_client: httpx.AsyncClient,
+    _db_session: AsyncSession,
+    add_category: Category,
+    add_user: User,
+) -> None:
+    search = Search(**examples["search"])
+    search.category = add_category
+    _db_session.add(search)
+    await _db_session.commit()
+    response = await authenticated_client.post(
+        "/graphql", json={"query": ASSIGN_FAVORITE_MUTATION.format(id=search.id)}
+    )
+    result = response.json()
+    user = (await _db_session.exec(select(User))).first()
+    assert (
+        result["data"]["assignFavoriteSearchToUser"]["__typename"]
+        == "SearchAssignSuccessfully"
+    )
+    assert (
+        result["data"]["assignFavoriteSearchToUser"]["message"]
+        == "Search assigned successfully"
+    )
+    assert user.favorite_search_id == search.id
+
+
+@pytest.mark.asyncio
+async def test_assign_favorite_search_doesnt_exist(
+    authenticated_client: httpx.AsyncClient,
+    _db_session: AsyncSession,
+    add_category: Category,
+    add_user: User,
+) -> None:
+    search = Search(**examples["search"])
+    search.category = add_category
+    _db_session.add(search)
+    await _db_session.commit()
+    response = await authenticated_client.post(
+        "/graphql", json={"query": ASSIGN_FAVORITE_MUTATION.format(id=search.id + 1)}
+    )
+    result = response.json()
+    assert (
+        result["data"]["assignFavoriteSearchToUser"]["__typename"]
+        == "SearchDoesntExistError"
+    )
+    assert (
+        result["data"]["assignFavoriteSearchToUser"]["message"]
+        == "Search with provided id doesn't exist"
+    )
+
+
+@pytest.mark.asyncio
+async def test_fav_search_event_stats(
+    authenticated_client: httpx.AsyncClient,
+    _db_session: AsyncSession,
+    mocker: MockerFixture,
+) -> None:
+    category = Category(name="Plot")
+    _db_session.add(category)
+    await _db_session.commit()
+    url = "https://www.test.io/test"
+    with open("tests/example_files/body_plot.json", "r") as f:
+        body = json.load(f)
+    resp = MockAioJSONResponse(body, 200)
+    mocker.patch("aiohttp.ClientSession.get", return_value=resp)
+    mutation = f"""
+        mutation adhocScan {{
+            adhocScan(input: {{
+                    url: "{url}"
+                }}) {{
+                __typename
+                ... on ScanSucceeded {{
+                    message
+                }}
+            }}
+        }}
+    """
+    await authenticated_client.post("/graphql", json={"query": mutation})
+    search = (await _db_session.exec(select(Search))).first()
+    await authenticated_client.post(
+        "/graphql", json={"query": ASSIGN_FAVORITE_MUTATION.format(id=search.id)}
+    )
+
+    response = await authenticated_client.post(
+        "/graphql", json={"query": FAV_SEARCH_EVENTS_STATS}
+    )
+    result = response.json()["data"]["searchEventsStats"]
+    expected_result = {
+        "__typename": "SearchEventsStatsType",
+        "searchEvents": [
+            {
+                "avgAreaInSquareMeters": 1075.25,
+                "avgPrice": 132315.72,
+                "avgPricePerSquareMeter": 158.67,
+                "avgTerrainAreaInSquareMeters": None,
+                "minPrice": {
+                    "pricePerSquareMeter": 81,
+                    "price": 100000,
+                },
+                "minPricePerSquareMeter": {
+                    "areaInSquareMeters": 4900,
+                    "price": 129000,
+                    "pricePerSquareMeter": 26,
+                },
+            }
+        ],
+    }
+    date = result["searchEvents"][0].pop("date")
+    assert date is not None
+    assert result == expected_result

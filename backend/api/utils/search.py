@@ -16,7 +16,20 @@ from api.utils.search_event import (
 )
 
 
-async def get_search_by_id(session: AsyncSession, id: int) -> Optional["Search"]:
+async def get_search_by_id(
+    session: AsyncSession, id: int, with_events: bool = False
+) -> Optional["Search"]:
+    if with_events:
+        return (
+            await session.exec(
+                select(Search)
+                .where(Search.id == id)
+                .options(
+                    selectinload(Search.category),  # type: ignore
+                    selectinload(Search.search_events),  # type: ignore
+                )
+            )
+        ).first()
     return (
         await session.exec(
             select(Search)
