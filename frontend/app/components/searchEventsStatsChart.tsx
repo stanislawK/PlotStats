@@ -7,11 +7,11 @@ type Props = {
   events: Array<Object>;
 };
 
-function getPriceChange(allAvgPrices: Array<Number>) {
+function getPriceChange(allAvgPrices: number[]) {
   if (allAvgPrices.length < 2) {
     return 0;
   }
-  const thisWeekPrice = allAvgPrices[allAvgPrices.length - 1];
+  const thisWeekPrice: number = allAvgPrices[allAvgPrices.length - 1];
   const avgTotal =
     allAvgPrices.reduce((a, b) => a + b, 0) / allAvgPrices.length;
   if (thisWeekPrice == avgTotal) {
@@ -20,7 +20,11 @@ function getPriceChange(allAvgPrices: Array<Number>) {
   return +(Math.round((thisWeekPrice / avgTotal - 1) * 100 + "e+2") + "e-2");
 }
 
-function PriceChange({ percentage }: Number) {
+type PriceChangeProps = {
+  percentage: number;
+};
+
+function PriceChange({ percentage }: PriceChangeProps) {
   if (percentage > 0) {
     return (
       <div className="flex items-center justify-end flex-1 text-base font-medium text-red-500 dark:text-red-400">

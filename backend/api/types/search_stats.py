@@ -14,7 +14,7 @@ from api.utils.search import get_search_events_for_search, get_search_stats
 
 @strawberry.input
 class SearchStatsInput:
-    id: int
+    id: Optional[int] = strawberry.UNSET
     date_from: Optional[datetime] = strawberry.UNSET
     date_to: Optional[datetime] = strawberry.UNSET
 
