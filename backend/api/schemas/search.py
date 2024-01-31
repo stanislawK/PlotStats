@@ -38,7 +38,14 @@ class Query:
         self, info: Info[Any, Any], input: SearchStatsInput
     ) -> GetSearchStatsResponse:
         session = info.context["session"]
-        search = await get_search_by_id(session, input.id)
+        user = info.context["request"].state.user
+        print("----------------")
+        print(input)
+        print(bool(input.date_from))
+        search_id = input.id or user.favorite_search_id
+        if not search_id:
+            return SearchDoesntExistError()
+        search = await get_search_by_id(session, search_id)
         if not search:
             return SearchDoesntExistError()
         date_from = input.date_from or datetime.utcnow() - timedelta(days=365)
