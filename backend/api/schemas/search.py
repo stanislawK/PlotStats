@@ -39,9 +39,6 @@ class Query:
     ) -> GetSearchStatsResponse:
         session = info.context["session"]
         user = info.context["request"].state.user
-        print("----------------")
-        print(input)
-        print(bool(input.date_from))
         search_id = input.id or user.favorite_search_id
         if not search_id:
             return SearchDoesntExistError()

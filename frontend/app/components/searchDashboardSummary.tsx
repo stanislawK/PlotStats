@@ -18,10 +18,126 @@ type Props = {
     toPrice?: number;
     toSurface?: number;
   };
+  searches: {
+    category: {
+      name: string;
+    };
+    distanceRadius: number;
+    fromPrice?: number;
+    fromSurface?: number;
+    id: number;
+    location: string;
+    toPrice?: number;
+    toSurface?: number;
+  }[];
 };
 
-export default async function SearchSummary({ allStats }: Props) {
-  console.log(allStats);
+type CategoryProps = {
+  category: string;
+};
+
+type UserSearchProps = {
+  search: {
+    category: {
+      name: string;
+    };
+    distanceRadius: number;
+    fromPrice?: number;
+    fromSurface?: number;
+    id: number;
+    location: string;
+    toPrice?: number;
+    toSurface?: number;
+  };
+};
+
+function CategoryIcon({ category }: CategoryProps) {
+  if (category.toLowerCase() === "apartment") {
+    return (
+      <svg
+        className="w-6 h-6 text-gray-800 dark:text-white"
+        aria-hidden="true"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="M6 4h12M6 4v16M6 4H5m13 0v16m0-16h1m-1 16H6m12 0h1M6 20H5M9 7h1v1H9V7Zm5 0h1v1h-1V7Zm-5 4h1v1H9v-1Zm5 0h1v1h-1v-1Zm-3 4h2a1 1 0 0 1 1 1v4h-4v-4a1 1 0 0 1 1-1Z"
+        />
+      </svg>
+    );
+  } else if (category.toLowerCase() === "house") {
+    return (
+      <svg
+        className="w-6 h-6 text-gray-800 dark:text-white"
+        aria-hidden="true"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="m4 12 8-8 8 8M6 10.5V19c0 .6.4 1 1 1h3v-3c0-.6.4-1 1-1h2c.6 0 1 .4 1 1v3h3c.6 0 1-.4 1-1v-8.5"
+        />
+      </svg>
+    );
+  } else {
+    return (
+      <svg
+        className="w-6 h-6 text-gray-800 dark:text-white"
+        aria-hidden="true"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="m3 16 5-7 6 6.5m6.5 2.5L16 13l-4.3 6m2.3-9h0M4 19h16c.6 0 1-.4 1-1V6c0-.6-.4-1-1-1H4a1 1 0 0 0-1 1v12c0 .6.4 1 1 1Z"
+        />
+      </svg>
+    );
+  }
+}
+
+function UserSearch({ search }: UserSearchProps) {
+  return (
+    <li className="py-3 sm:py-4">
+      <div className="flex items-center space-x-4">
+        <div className="flex-shrink-0">
+          <CategoryIcon category={search.category.name}></CategoryIcon>
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="font-medium text-gray-900 truncate dark:text-white">
+            {search.location}
+          </p>
+          <p className="text-sm text-gray-500 truncate dark:text-gray-400 inline mr-3">
+            <strong>Price:</strong> {search.fromPrice || "n/a"} PLN -{" "}
+            {search.toPrice || "n/a"} PLN;
+          </p>
+          <p className="text-sm text-gray-500 truncate dark:text-gray-400 inline">
+            <strong>Size:</strong> {search.fromSurface || "n/a"} sqm -{" "}
+            {search.toSurface || "n/a"} sqm
+          </p>
+        </div>
+        <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+          {search.distanceRadius} km
+        </div>
+      </div>
+    </li>
+  );
+}
+
+export default async function SearchSummary({ allStats, searches }: Props) {
   return (
     <>
       <div className="grid w-full grid-cols-1 gap-4 mt-4 xl:grid-cols-2 2xl:grid-cols-3 mb-4">
@@ -99,57 +215,21 @@ export default async function SearchSummary({ allStats }: Props) {
             </ol>
           </div>
         </div>
+        {/* Users searches */}
         <div className="p-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:border-gray-700 sm:p-6 dark:bg-gray-800">
-          <div className="w-full">
-            <h3 className="mb-2 text-base font-normal text-gray-500 dark:text-gray-400">
-              Audience by age
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+              All your searches
             </h3>
-            <div className="flex items-center mb-2">
-              <div className="w-16 text-sm font-medium dark:text-white">
-                50+
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                <div
-                  className="bg-primary-600 h-2.5 rounded-full dark:bg-primary-500"
-                  style={{ width: "18%" }}
-                ></div>
-              </div>
-            </div>
-            <div className="flex items-center mb-2">
-              <div className="w-16 text-sm font-medium dark:text-white">
-                40+
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                <div
-                  className="bg-primary-600 h-2.5 rounded-full dark:bg-primary-500"
-                  style={{ width: "15%" }}
-                ></div>
-              </div>
-            </div>
-            <div className="flex items-center mb-2">
-              <div className="w-16 text-sm font-medium dark:text-white">
-                30+
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                <div
-                  className="bg-primary-600 h-2.5 rounded-full dark:bg-primary-500"
-                  style={{ width: "60%" }}
-                ></div>
-              </div>
-            </div>
-            <div className="flex items-center mb-2">
-              <div className="w-16 text-sm font-medium dark:text-white">
-                20+
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                <div
-                  className="bg-primary-600 h-2.5 rounded-full dark:bg-primary-500"
-                  style={{ width: "30%" }}
-                ></div>
-              </div>
-            </div>
           </div>
-          <div id="traffic-channels-chart" className="w-full"></div>
+          <ul
+            role="list"
+            className="divide-y divide-gray-200 dark:divide-gray-700"
+          >
+            {searches.map((search) => {
+              return <UserSearch search={search} key={search.id}></UserSearch>;
+            })}
+          </ul>
         </div>
       </div>
     </>
