@@ -8,6 +8,7 @@ export async function getFavSearchEventsStats(accessToken: string) {
           ... on SearchEventsStatsType {
             __typename
             searchEvents {
+              id
               avgAreaInSquareMeters
               avgPrice
               avgPricePerSquareMeter
@@ -147,6 +148,72 @@ export async function getUserSearches(accessToken: string) {
     });
     const res_parsed = await api_res.json();
     const data = res_parsed.data["usersSearches"];
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getLastEvent(id: number, accessToken: string) {
+  const query = JSON.stringify({
+    query: `
+    query searchEventStats {
+      searchEventStats(input: {id: ${id}, topPrices: 6}) {
+        ... on EventStatsType {
+          id
+          minPrices {
+            estate {
+              city
+              location
+              province
+              street
+              title
+              url
+            }
+            areaInSquareMeters
+            price
+            pricePerSquareMeter
+            terrainAreaInSquareMeters
+          }
+          minPricesPerSquareMeter {
+            areaInSquareMeters
+            estate {
+              city
+              location
+              province
+              street
+              title
+              url
+            }
+            price
+            pricePerSquareMeter
+            terrainAreaInSquareMeters
+          }
+        }
+        ... on SearchEventDoesntExistError {
+          __typename
+          message
+        }
+        ... on NoPricesFoundError {
+          __typename
+          message
+        }
+      }
+    }`,
+  });
+  try {
+    const api_res = await fetch("http://backend:8000/graphql", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "same-origin",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: query,
+    });
+    const res_parsed = await api_res.json();
+    const data = res_parsed.data["searchEventStats"];
     return data;
   } catch (error) {
     console.log(error);

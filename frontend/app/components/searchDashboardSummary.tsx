@@ -161,7 +161,7 @@ export default async function SearchSummary({ allStats, searches }: Props) {
               </li>
               <li>
                 Date range: {allStats.dateFrom.substring(0, 10)} -{" "}
-                {allStats.dateFrom.substring(0, 10)}
+                {allStats.dateTo.substring(0, 10)}
               </li>
             </ul>
           </div>

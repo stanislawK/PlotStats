@@ -72,6 +72,7 @@ async def get_search_events_for_search(
             continue
         stats = get_search_event_avg_stats(prices)
         stats.update(get_search_event_min_prices(prices))
+        stats["id"] = event.id
         events.append(EventStatsType(**stats))  # type: ignore
     return events
 

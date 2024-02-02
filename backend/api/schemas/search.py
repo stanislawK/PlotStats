@@ -86,7 +86,8 @@ class Query:
                 continue
             stats = get_search_event_avg_stats(prices)
             stats.update(get_search_event_min_prices(prices))
-            stats.update({"date": search_event.date})  # type: ignore
+            stats["date"] = search_event.date  # type: ignore
+            stats["id"] = search_event.id
             search_event_stats.append(EventStatsType(**stats))  # type: ignore
         return SearchEventsStatsType(search_events=search_event_stats)
 

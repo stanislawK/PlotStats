@@ -105,6 +105,7 @@ async def test_event_stats_type(
 
     price = prices[0]
     event_stats = EventStatsType(
+        id=1,
         avg_price=55.55,
         avg_price_per_square_meter=55.55,
         avg_terrain_area_in_square_meters=999.99,
@@ -120,6 +121,12 @@ async def test_event_stats_type(
         assert getattr(price, key) == value
 
     for estate_key, estate_value in event_stats.min_price.estate.__dict__.items():
+        if estate_key == "url":
+            assert (
+                "https://www.test.io/pl/oferta/" + getattr(price.estate, estate_key)
+                == estate_value
+            )
+            continue
         assert getattr(price.estate, estate_key) == estate_value
 
 
