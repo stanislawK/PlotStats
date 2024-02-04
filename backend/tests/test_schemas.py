@@ -225,7 +225,7 @@ mutation assignFavoriteSearchToUser {{
 
 FAV_SEARCH_EVENTS_STATS: str = """
 query searchEventsStats {
-  searchEventsStats {
+  searchEventsStats(input: {}) {
     ... on SearchEventsStatsType {
       __typename
       searchEvents {
@@ -259,6 +259,44 @@ query searchEventsStats {
     }
   }
 }
+"""
+
+SEARCH_EVENTS_STATS: str = """
+query searchEventsStats {{
+  searchEventsStats(input: {{id: {id}}}) {{
+    ... on SearchEventsStatsType {{
+      __typename
+      searchEvents {{
+        avgAreaInSquareMeters
+        avgPrice
+        avgPricePerSquareMeter
+        avgTerrainAreaInSquareMeters
+        date
+        minPrice {{
+          price
+          pricePerSquareMeter
+        }}
+        minPricePerSquareMeter {{
+          areaInSquareMeters
+          price
+          pricePerSquareMeter
+        }}
+      }}
+    }}
+    ... on FavoriteSearchDoesntExistError {{
+      __typename
+      message
+    }}
+    ... on NoSearchEventError {{
+      __typename
+      message
+    }}
+    ... on NoPricesFoundError {{
+      __typename
+      message
+    }}
+  }}
+}}
 """
 
 
@@ -1846,6 +1884,64 @@ async def test_fav_search_event_stats(
 
     response = await authenticated_client.post(
         "/graphql", json={"query": FAV_SEARCH_EVENTS_STATS}
+    )
+    result = response.json()["data"]["searchEventsStats"]
+    expected_result = {
+        "__typename": "SearchEventsStatsType",
+        "searchEvents": [
+            {
+                "avgAreaInSquareMeters": 1075.25,
+                "avgPrice": 132315.72,
+                "avgPricePerSquareMeter": 158.67,
+                "avgTerrainAreaInSquareMeters": None,
+                "minPrice": {
+                    "pricePerSquareMeter": 81,
+                    "price": 100000,
+                },
+                "minPricePerSquareMeter": {
+                    "areaInSquareMeters": 4900,
+                    "price": 129000,
+                    "pricePerSquareMeter": 26,
+                },
+            }
+        ],
+    }
+    date = result["searchEvents"][0].pop("date")
+    assert date is not None
+    assert result == expected_result
+
+
+@pytest.mark.asyncio
+async def test_search_events_stats(
+    authenticated_client: httpx.AsyncClient,
+    _db_session: AsyncSession,
+    mocker: MockerFixture,
+) -> None:
+    category = Category(name="Plot")
+    _db_session.add(category)
+    await _db_session.commit()
+    url = "https://www.test.io/test"
+    with open("tests/example_files/body_plot.json", "r") as f:
+        body = json.load(f)
+    resp = MockAioJSONResponse(body, 200)
+    mocker.patch("aiohttp.ClientSession.get", return_value=resp)
+    mutation = f"""
+        mutation adhocScan {{
+            adhocScan(input: {{
+                    url: "{url}"
+                }}) {{
+                __typename
+                ... on ScanSucceeded {{
+                    message
+                }}
+            }}
+        }}
+    """
+    await authenticated_client.post("/graphql", json={"query": mutation})
+    search = (await _db_session.exec(select(Search))).first()
+
+    response = await authenticated_client.post(
+        "/graphql", json={"query": SEARCH_EVENTS_STATS.format(id=search.id)}
     )
     result = response.json()["data"]["searchEventsStats"]
     expected_result = {

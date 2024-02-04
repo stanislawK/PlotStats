@@ -17,6 +17,7 @@ from api.types.search_stats import (
     NoSearchEventError,
     SearchAssignSuccessfully,
     SearchDoesntExistError,
+    SearchEventsStatsInput,
     SearchEventsStatsType,
     SearchStatsInput,
     convert_search_stats_from_db,
@@ -68,15 +69,15 @@ class Query:
 
     @strawberry.field(permission_classes=[IsAuthenticated])  # type: ignore
     async def search_events_stats(
-        self, info: Info[Any, Any]
+        self, info: Info[Any, Any], input: SearchEventsStatsInput
     ) -> GetSearchEventsStatsResponse:
         session = info.context["session"]
-        user = info.context["request"].state.user
-        if not user.favorite_search_id:
-            return FavoriteSearchDoesntExistError()
-        search = await get_search_by_id(
-            session, user.favorite_search_id, with_events=True
-        )
+        if not (search_id := input.id):
+            user = info.context["request"].state.user
+            if not isinstance(user.favorite_search_id, int):
+                return FavoriteSearchDoesntExistError()
+            search_id = user.favorite_search_id
+        search = await get_search_by_id(session, search_id, with_events=True)
         if not search or len(search.search_events) == 0:
             return NoSearchEventError()
         search_event_stats = []

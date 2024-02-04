@@ -64,6 +64,8 @@ function PriceRow({ price, index, isTotal }: PriceRowProps) {
         <a
           href={price.estate.url}
           className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+          rel="noopener noreferrer"
+          target="_blank"
         >
           Go To Offer
         </a>

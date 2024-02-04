@@ -1,10 +1,15 @@
 "use server";
 
-export async function getFavSearchEventsStats(accessToken: string) {
+export async function getSearchEventsStats(
+  accessToken: string,
+  searchId?: number
+) {
+  const queryInput = searchId ? `input: {id: ${searchId}}` : "input: {}";
+
   const query = JSON.stringify({
     query: `
       query searchEventsStats {
-        searchEventsStats {
+        searchEventsStats(${queryInput}) {
           ... on SearchEventsStatsType {
             __typename
             searchEvents {
@@ -41,6 +46,7 @@ export async function getFavSearchEventsStats(accessToken: string) {
       }
               `,
   });
+
   try {
     const api_res = await fetch("http://backend:8000/graphql", {
       method: "POST",
@@ -60,12 +66,15 @@ export async function getFavSearchEventsStats(accessToken: string) {
   }
 }
 
-export async function getSearchStats(accessToken: string) {
+export async function getSearchStats(accessToken: string, searchId?: number) {
+  const queryInput = searchId ? `input: {id: ${searchId}}` : "input: {}";
+
   const query = JSON.stringify({
     query: `
     query searchStats {
-      searchStats(input: {}) {
+      searchStats(${queryInput}) {
         ... on SearchStatsType {
+          id
           avgAreaTotal
           avgPricePerSquareMeterTotal
           avgPriceTotal
@@ -88,6 +97,7 @@ export async function getSearchStats(accessToken: string) {
     }
     `,
   });
+
   try {
     const api_res = await fetch("http://backend:8000/graphql", {
       method: "POST",
