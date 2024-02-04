@@ -15,6 +15,7 @@ class EventStatsInput:
 
 @strawberry.type
 class EventStatsType:
+    id: int
     date: Optional[datetime] = None
     avg_price: float
     avg_price_per_square_meter: float

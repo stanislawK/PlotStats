@@ -34,4 +34,5 @@ class Query:
             return NoPricesFoundError()
         stats = get_search_event_avg_stats(prices)
         stats.update(get_search_event_min_prices(prices, input.top_prices))
+        stats["id"] = search_event.id
         return EventStatsType(**stats)  # type: ignore

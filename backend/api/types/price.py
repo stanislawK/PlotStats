@@ -2,6 +2,7 @@ import strawberry
 
 from api.models.estate import Estate
 from api.models.price import Price
+from api.settings import settings
 from api.types.estate import EstateType
 
 
@@ -16,6 +17,7 @@ class PriceType:
 
 def convert_price_from_db(price: Price) -> PriceType:
     estate_db: Estate = price.estate
+    offer_url = f"{settings.base_url}pl/oferta/{estate_db.url}"
     estate = EstateType(
         title=estate_db.title,
         street=estate_db.street,
@@ -23,7 +25,7 @@ def convert_price_from_db(price: Price) -> PriceType:
         province=estate_db.province,
         location=estate_db.location,
         date_created=estate_db.date_created,
-        url=estate_db.url,
+        url=offer_url,
     )
     return PriceType(
         price=price.price,

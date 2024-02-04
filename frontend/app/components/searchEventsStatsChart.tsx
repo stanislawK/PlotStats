@@ -4,7 +4,22 @@ import dynamic from "next/dynamic";
 const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 type Props = {
-  events: Array<Object>;
+  events: Event[];
+};
+
+type Event = {
+  id: number;
+  avgAreaInSquareMeters: number;
+  avgPrice: number;
+  avgPricePerSquareMeter: number;
+  avgTerrainAreaInSquareMeters?: number;
+  date: string;
+  minPrice: { price: number; pricePerSquareMeter: number };
+  minPricePerSquareMeter: {
+    areaInSquareMeters: number;
+    price: number;
+    pricePerSquareMeter: number;
+  };
 };
 
 function getPriceChange(allAvgPrices: number[]) {
