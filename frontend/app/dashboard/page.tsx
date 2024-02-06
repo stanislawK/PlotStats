@@ -5,7 +5,7 @@ import SearchEventsStatsChart from "../components/searchEventsStatsChart";
 import SearchSummary from "../components/searchDashboardSummary";
 import PriceList from "../components/priceList";
 import {
-  getFavSearchEventsStats,
+  getSearchEventsStats,
   getSearchStats,
   getUserSearches,
   getLastEvent,
@@ -26,12 +26,17 @@ type Events = {
   };
 }[];
 
-export default async function Dashboard() {
+type Props = {
+  searchParams: Record<string, string> | null | undefined;
+};
+
+export default async function Dashboard({ searchParams }: Props) {
   const accessToken = getCookie("accessToken", { cookies });
-  const favSearchEventsStats = await getFavSearchEventsStats(accessToken);
+  const searchId = searchParams?.searchId;
+  const searchEventsStats = await getSearchEventsStats(accessToken, searchId);
   const events: Events =
-    favSearchEventsStats["searchEventsStats"]["searchEvents"] || [];
-  const searchSummary = await getSearchStats(accessToken);
+    searchEventsStats["searchEventsStats"]["searchEvents"] || [];
+  const searchSummary = await getSearchStats(accessToken, searchId);
   const userSearches = await getUserSearches(accessToken);
   const lastEventId = Math.max(...Array.from(events, (event) => event.id));
   const lastEventPrices = await getLastEvent(lastEventId, accessToken);
@@ -46,10 +51,16 @@ export default async function Dashboard() {
           <SearchEventsStatsChart events={events}></SearchEventsStatsChart>
         </div>
         <div className="flex items-center justify-center mb-4 rounded bg-gray-50 dark:bg-gray-800">
-          <PriceList prices={lastEventPrices.minPrices} type={"total"}></PriceList>
+          <PriceList
+            prices={lastEventPrices.minPrices}
+            type={"total"}
+          ></PriceList>
         </div>
         <div className="flex items-center justify-center mb-4 rounded bg-gray-50 dark:bg-gray-800">
-          <PriceList prices={lastEventPrices.minPricesPerSquareMeter} type={"persqmeter"}></PriceList>
+          <PriceList
+            prices={lastEventPrices.minPricesPerSquareMeter}
+            type={"persqmeter"}
+          ></PriceList>
         </div>
       </div>
     </div>

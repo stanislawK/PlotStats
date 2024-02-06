@@ -24,8 +24,14 @@ class AssignSearchInput:
     id: int
 
 
+@strawberry.input
+class SearchEventsStatsInput:
+    id: Optional[int] = strawberry.UNSET
+
+
 @strawberry.experimental.pydantic.type(Search)
 class SearchStatsType:
+    id: strawberry.auto
     date_from: datetime
     date_to: datetime
     category: CategoryType
@@ -83,6 +89,7 @@ async def convert_search_stats_from_db(
     )
     search_stats = get_search_stats(search_events)
     return SearchStatsType(
+        id=search.id,
         date_from=date_from,
         date_to=date_to,
         category=convert_category_from_db(search.category),  # type: ignore
