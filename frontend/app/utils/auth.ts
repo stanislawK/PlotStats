@@ -21,26 +21,26 @@ function getTimeToExpire(token: string) {
 export async function login(email: string, password: string) {
   const mutation = JSON.stringify({
     query: `
-                mutation login {
-                    login(input: {
-                            email: "${email}", password: "${password}"
-                        }) {
-                        __typename
-                        ... on JWTPair {
-                            accessToken
-                            refreshToken
-                        }
-                        ... on LoginUserError {
-                            __typename
-                            message
-                        }
-                        ... on InputValidationError {
-                            __typename
-                            message
-                        }
-                    }
-                }
-            `,
+          mutation login {
+              login(input: {
+                      email: "${email}", password: "${password}"
+                  }) {
+                  __typename
+                  ... on JWTPair {
+                      accessToken
+                      refreshToken
+                  }
+                  ... on LoginUserError {
+                      __typename
+                      message
+                  }
+                  ... on InputValidationError {
+                      __typename
+                      message
+                  }
+              }
+          }
+      `,
   });
   try {
     const res = await fetch("http://backend:8000/graphql", {
