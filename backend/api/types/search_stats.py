@@ -4,7 +4,7 @@ from typing import Annotated, List, Optional, Union
 import strawberry
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from api.models.search import Search
+from api.models.search import Search, decode_url
 from api.types.category import CategoryType, convert_category_from_db
 from api.types.event_stats import EventStatsType, NoPricesFoundError
 from api.types.general import Error
@@ -71,6 +71,7 @@ class SearchType:
 @strawberry.type
 class SearchesType:
     searches: List[SearchType]
+    favorite_id: Optional[int] = None
 
 
 @strawberry.type
@@ -129,7 +130,7 @@ def convert_searches_from_db(
                 to_price=search.to_price,
                 from_surface=search.from_surface,
                 to_surface=search.to_surface,
-                url=search.url,
+                url=decode_url(search.url),  # type: ignore
                 schedule=schedule,
             )
         )

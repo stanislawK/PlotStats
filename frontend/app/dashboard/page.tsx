@@ -1,9 +1,9 @@
 import { cookies } from "next/headers";
 import { getCookie } from "cookies-next";
 
-import SearchEventsStatsChart from "../components/searchEventsStatsChart";
-import SearchSummary from "../components/searchDashboardSummary";
-import PriceList from "../components/priceList";
+import SearchEventsStatsChart from "../components/dashboard/searchEventsStatsChart";
+import SearchSummary from "../components/dashboard/searchDashboardSummary";
+import PriceList from "../components/dashboard/priceList";
 import {
   getSearchEventsStats,
   getSearchStats,

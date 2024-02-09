@@ -65,7 +65,9 @@ class Query:
         searches_db = await get_searches(session=session, user_id=user.id)
         if len(searches_db) == 0:
             return NoSearchesAvailableError()
-        return convert_searches_from_db(searches_db)
+        parsed_searches = convert_searches_from_db(searches_db)
+        parsed_searches.favorite_id = user.favorite_search_id
+        return parsed_searches
 
     @strawberry.field(permission_classes=[IsAuthenticated])  # type: ignore
     async def search_events_stats(
