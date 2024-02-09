@@ -12,7 +12,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from api.models import Category
 from api.models.estate import Estate
 from api.models.price import Price
-from api.models.search import Search, decode_url
+from api.models.search import Search, decode_url, encode_url
 from api.models.search_event import SearchEvent
 from api.models.user import User
 from api.types.category import CategoryExistsError
@@ -184,6 +184,7 @@ query usersSearches {
         toSurface
         url
       }
+      favoriteId
     }
     ... on NoSearchesAvailableError {
       __typename
@@ -1647,6 +1648,7 @@ async def test_searches_query(
 ) -> None:
     search = Search(**examples["search"])
     search.category = add_category
+    search.url = encode_url(examples["search"]["url"])
     _db_session.add(search)
     await _db_session.commit()
     response = await authenticated_client.get(
@@ -1665,7 +1667,7 @@ async def test_searches_query(
     assert search_res["fromSurface"] == search.from_surface
     assert search_res["toSurface"] == search.to_surface
     assert search_res["schedule"] is None
-    assert search_res["url"] == search.url
+    assert search_res["url"] == decode_url(search.url)
 
 
 @pytest.mark.asyncio
@@ -1697,11 +1699,15 @@ async def test_user_searches_query(
     users_search = Search(
         users=[add_user],
         category=add_category,
-        **{**examples["search"], "url": "https://www.test.io/test2"},
+        **{**examples["search"], "url": encode_url("https://www.test.io/test2")},
     )
     search.category = add_category
+    search.url = encode_url(examples["search"]["url"])
     _db_session.add(search)
     _db_session.add(users_search)
+    await _db_session.flush()
+    add_user.favorite_search_id = search.id
+    _db_session.add(add_user)
     await _db_session.commit()
     response = await authenticated_client.get(
         "/graphql", params={"query": USER_SEARCHES_QUERY}
@@ -1721,7 +1727,8 @@ async def test_user_searches_query(
     assert search_res["fromSurface"] == users_search.from_surface
     assert search_res["toSurface"] == users_search.to_surface
     assert search_res["schedule"] is None
-    assert search_res["url"] == users_search.url
+    assert search_res["url"] == decode_url(users_search.url)
+    assert result["data"]["usersSearches"]["favoriteId"] == search.id
 
 
 @pytest.mark.asyncio

@@ -117,7 +117,7 @@ export async function getSearchStats(accessToken: string, searchId?: number) {
   }
 }
 
-export async function getUserSearches(accessToken: string) {
+export async function getUserSearches(accessToken: string, withFavorite?: boolean) {
   const query = JSON.stringify({
     query: `
     query usersSearches {
@@ -135,7 +135,9 @@ export async function getUserSearches(accessToken: string) {
             location
             toPrice
             toSurface
+            ${withFavorite ? "url" : ""}
           }
+          ${withFavorite ? "favoriteId" : ""}
         }
         ... on NoSearchesAvailableError {
           __typename
@@ -158,6 +160,54 @@ export async function getUserSearches(accessToken: string) {
     });
     const res_parsed = await api_res.json();
     const data = res_parsed.data["usersSearches"];
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getAllSearches(accessToken: string) {
+  const query = JSON.stringify({
+    query: `
+    query allSearches {
+      allSearches {
+        ... on SearchesType {
+          __typename
+          searches {
+            category {
+              name
+            }
+            distanceRadius
+            fromPrice
+            fromSurface
+            id
+            location
+            toPrice
+            toSurface
+            url
+          }
+        }
+        ... on NoSearchesAvailableError {
+          __typename
+          message
+        }
+      }
+    }
+    `,
+  });
+  try {
+    const api_res = await fetch("http://backend:8000/graphql", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "same-origin",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: query,
+    });
+    const res_parsed = await api_res.json();
+    const data = res_parsed.data["allSearches"];
     return data;
   } catch (error) {
     console.log(error);
