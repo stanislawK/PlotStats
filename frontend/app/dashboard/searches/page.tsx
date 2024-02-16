@@ -1,6 +1,6 @@
 import NewSearch from "../../components/searches/newSearch";
 import SearchesLists from "../../components/searches/searches";
-import { adhocScan, addFavorite } from "../../utils/scan";
+import { adhocScan, addFavorite, addToUsers } from "../../utils/scan";
 import { getCookie } from "cookies-next";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
@@ -19,11 +19,17 @@ type Props = {
 
 export default async function Searches({ searchParams }: Props) {
   const addFavoriteId = searchParams?.favorite;
+  const newUsersSearchId = searchParams?.users;
   
   const accessToken = getCookie("accessToken", { cookies });
   if (addFavoriteId !== undefined && !isNaN(parseInt(addFavoriteId))) {
     "use server";
     await addFavorite(addFavoriteId, accessToken)
+    revalidatePath("/dashboard/searches")
+  }
+  if (newUsersSearchId !== undefined && !isNaN(parseInt(newUsersSearchId))) {
+    "use server";
+    await addToUsers(newUsersSearchId, accessToken)
     revalidatePath("/dashboard/searches")
   }
   const userSearches = await getUserSearches(accessToken, true);
