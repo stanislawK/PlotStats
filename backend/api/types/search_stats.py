@@ -2,13 +2,15 @@ from datetime import datetime, timedelta
 from typing import Annotated, List, Optional, Union
 
 import strawberry
+from pydantic import BaseModel
 from sqlmodel.ext.asyncio.session import AsyncSession
+from strawberry import LazyType
 
 from api.models.search import Search, decode_url
 from api.types.category import CategoryType, convert_category_from_db
 from api.types.event_stats import EventStatsType, NoPricesFoundError
-from api.types.general import Error
-from api.types.scan import PydanticScanSchedule
+from api.types.general import Error, InputValidationError
+from api.types.scan import PydanticScanSchedule, ScanSchedule
 from api.utils.search import get_search_events_for_search, get_search_stats
 
 
@@ -19,9 +21,20 @@ class SearchStatsInput:
     date_to: Optional[datetime] = strawberry.UNSET
 
 
+class PydanticEditScheduleInput(BaseModel):
+    id: int
+    schedule: Optional[PydanticScanSchedule] = None
+
+
 @strawberry.input
 class AssignSearchInput:
     id: int
+
+
+@strawberry.experimental.pydantic.input(model=PydanticEditScheduleInput)
+class EditScheduleInput:
+    id: strawberry.auto
+    schedule: Optional[LazyType["ScanSchedule", __name__]]
 
 
 @strawberry.input
@@ -162,6 +175,11 @@ class SearchAssignSuccessfully:
     message: str = "Search assigned successfully"
 
 
+@strawberry.type
+class ScheduleEditedSuccessfully:
+    message: str = "Schedule edited successfully"
+
+
 GetSearchStatsResponse = Annotated[
     Union[SearchStatsType, SearchDoesntExistError],
     strawberry.union("GetSearchStatsResponse"),
@@ -185,4 +203,9 @@ GetSearchEventsStatsResponse = Annotated[
         NoPricesFoundError,
     ],
     strawberry.union("GetSearchEventsStatsResponse"),
+]
+
+EditScheduleResponse = Annotated[
+    Union[ScheduleEditedSuccessfully, SearchDoesntExistError, InputValidationError],
+    strawberry.union("EditScheduleResponse"),
 ]

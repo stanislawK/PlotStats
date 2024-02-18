@@ -1,12 +1,29 @@
 import Accordion from "../../components/schedules/accordion";
+import EditSchedule from "@/app/components/schedules/editSchedule";
 
-import { getUserSchedules } from "@/app/utils/schedules";
+import { getUserSchedules, parseSchedules, findSearchById, editSchedule } from "@/app/utils/schedules";
 import { getCookie } from "cookies-next";
+import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
-export default async function Schedules() {
+type Props = {
+  searchParams: Record<string, string> | null | undefined;
+};
+
+export default async function Schedules({ searchParams }: Props) {
   const accessToken = getCookie("accessToken", { cookies });
-  const userSchedules = await getUserSchedules(accessToken);
+  const userSearches = await getUserSchedules(accessToken);
+  const userSchedules = await parseSchedules(userSearches)
+  const searchId = searchParams?.search;
+  let searchToEdit
+  if (searchId !== undefined && !isNaN(parseInt(searchId))) {
+    searchToEdit = await findSearchById(userSearches, searchId)
+  }
+  const editScheduleFunc = async (id: number, day: number, hour: number, minute: number) => {
+    "use server";
+    await editSchedule(accessToken, id, day, hour, minute);
+    revalidatePath("/dashboard/schedules");
+  };
   return (
     <div className="p-4 sm:ml-64">
       <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
@@ -20,12 +37,7 @@ export default async function Schedules() {
                 Edit schedule
               </h3>
             </div>
-            <ul
-              role="list"
-              className="divide-y divide-gray-200 dark:divide-gray-700"
-            >
-              <li></li>
-            </ul>
+            {!!searchToEdit && <EditSchedule search={searchToEdit} editScheduleFunc={editScheduleFunc}/>}
           </div>
         </div>
       </div>

@@ -300,6 +300,47 @@ query searchEventsStats {{
 }}
 """
 
+EDIT_SCHEDULE: str = """
+mutation editSchedule {{
+  editSchedule(input: {{
+        id: {id},
+        schedule: {{dayOfWeek: {day}, hour: {hour}, minute: {minute}}}
+    }}) {{
+    ... on ScheduleEditedSuccessfully {{
+      __typename
+      message
+    }}
+    ... on SearchDoesntExistError {{
+      __typename
+      message
+    }}
+    ... on InputValidationError {{
+      __typename
+      message
+    }}
+  }}
+}}
+"""
+
+DELETE_SCHEDULE: str = """
+mutation editSchedule {{
+  editSchedule(input: {{id: {id}}}) {{
+    ... on ScheduleEditedSuccessfully {{
+      __typename
+      message
+    }}
+    ... on SearchDoesntExistError {{
+      __typename
+      message
+    }}
+    ... on InputValidationError {{
+      __typename
+      message
+    }}
+  }}
+}}
+"""
+
 
 @pytest.mark.asyncio
 async def test_categories_query(
@@ -1974,3 +2015,95 @@ async def test_search_events_stats(
     date = result["searchEvents"][0].pop("date")
     assert date is not None
     assert result == expected_result
+
+
+@pytest.mark.asyncio
+async def test_edit_schedule(
+    authenticated_client: httpx.AsyncClient,
+    _db_session: AsyncSession,
+    mocker: MockerFixture,
+) -> None:
+    category = Category(name="Plot")
+    _db_session.add(category)
+    await _db_session.commit()
+    url = "https://www.test.io/test"
+    with open("tests/example_files/body_plot.json", "r") as f:
+        body = json.load(f)
+    resp = MockAioJSONResponse(body, 200)
+    mocker.patch("aiohttp.ClientSession.get", return_value=resp)
+    mutation = f"""
+        mutation adhocScan {{
+            adhocScan(input: {{
+                    url: "{url}"
+                }}) {{
+                __typename
+                ... on ScanSucceeded {{
+                    message
+                }}
+            }}
+        }}
+    """
+    await authenticated_client.post("/graphql", json={"query": mutation})
+    search = (await _db_session.exec(select(Search))).first()
+    assert search.schedule is None
+    schedule = {"day_of_week": 0, "hour": 1, "minute": 2}
+    response = await authenticated_client.post(
+        "/graphql",
+        json={
+            "query": EDIT_SCHEDULE.format(
+                id=search.id,
+                day=schedule["day_of_week"],
+                minute=schedule["minute"],
+                hour=schedule["hour"],
+            )
+        },
+    )
+    assert (
+        response.json()["data"]["editSchedule"]["__typename"]
+        == "ScheduleEditedSuccessfully"
+    )
+    await _db_session.flush()
+    assert search.schedule == schedule
+
+
+@pytest.mark.asyncio
+async def test_delete_schedule(
+    authenticated_client: httpx.AsyncClient,
+    _db_session: AsyncSession,
+    mocker: MockerFixture,
+) -> None:
+    category = Category(name="Plot")
+    _db_session.add(category)
+    await _db_session.commit()
+    url = "https://www.test.io/test"
+    with open("tests/example_files/body_plot.json", "r") as f:
+        body = json.load(f)
+    resp = MockAioJSONResponse(body, 200)
+    mocker.patch("aiohttp.ClientSession.get", return_value=resp)
+    mutation = f"""
+        mutation adhocScan {{
+            adhocScan(input: {{
+                    url: "{url}"
+                }}) {{
+                __typename
+                ... on ScanSucceeded {{
+                    message
+                }}
+            }}
+        }}
+    """
+    await authenticated_client.post("/graphql", json={"query": mutation})
+    search = (await _db_session.exec(select(Search))).first()
+    schedule = {"day_of_week": 0, "hour": 1, "minute": 2}
+    search.schedule = schedule
+    _db_session.add(search)
+    await _db_session.commit()
+    response = await authenticated_client.post(
+        "/graphql", json={"query": DELETE_SCHEDULE.format(id=search.id)}
+    )
+    assert (
+        response.json()["data"]["editSchedule"]["__typename"]
+        == "ScheduleEditedSuccessfully"
+    )
+    await _db_session.flush()
+    assert search.schedule is None

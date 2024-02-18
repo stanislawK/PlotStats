@@ -24,7 +24,20 @@ const DaysMap = {
   0: "Sunday",
 };
 
-function parseSchedules(userSchedules: RawUserSchedules) {
+export async function findSearchById(
+  userSchedules: RawUserSchedules,
+  searchId: number
+) {
+  let search;
+  try {
+    search = userSchedules.find(schedule => schedule.id == searchId)
+  } catch (error) {
+    console.log(error)
+  }
+  return search
+}
+
+export async function parseSchedules(userSchedules: RawUserSchedules) {
   let sortedSchedules = {
     Monday: {},
     Tuesday: {},
@@ -96,7 +109,47 @@ export async function getUserSchedules(accessToken: string) {
     });
     const res_parsed = await api_res.json();
     const data = res_parsed.data["usersSearches"]["searches"];
-    return parseSchedules(data);
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function editSchedule(accessToken: string, id: number, day: number, hour: number, minute: number) {
+  const query = JSON.stringify({
+    query: `
+      mutation editSchedule {
+        editSchedule(input: {id: ${id}, schedule: {dayOfWeek: ${day}, hour: ${hour}, minute: ${minute}}}) {
+          ... on ScheduleEditedSuccessfully {
+            __typename
+            message
+          }
+          ... on SearchDoesntExistError {
+            __typename
+            message
+          }
+          ... on InputValidationError {
+            __typename
+            message
+          }
+        }
+      }
+      `,
+  });
+  try {
+    const api_res = await fetch("http://backend:8000/graphql", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "same-origin",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: query,
+    });
+    const res_parsed = await api_res.json();
+    const data = res_parsed.data["editSchedule"]["ScheduleEditedSuccessfully"];
+    return data;
   } catch (error) {
     console.log(error);
   }
