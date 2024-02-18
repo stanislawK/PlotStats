@@ -1,11 +1,11 @@
-"use client"
+"use client";
 import Link from "next/link";
-import { initFlowbite } from 'flowbite'
+import { initFlowbite } from "flowbite";
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 
 export default function Sidebar() {
-  const pathname = usePathname()
+  const pathname = usePathname();
   useEffect(() => {
     initFlowbite();
   }, []);
@@ -60,7 +60,7 @@ export default function Sidebar() {
               </Link>
             </li>
             <li>
-            <Link
+              <Link
                 href="/dashboard/searches"
                 className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${pathname === "/dashboard/searches" ? "bg-gray-200" : ""}`}
               >
@@ -77,9 +77,9 @@ export default function Sidebar() {
               </Link>
             </li>
             <li>
-              <a
-                href="#"
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+              <Link
+                href="/dashboard/schedules"
+                className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${pathname === "/dashboard/schedules" ? "bg-gray-200" : ""}`}
               >
                 <svg
                   className="w-6 h-6 text-gray-800 dark:text-white"
@@ -97,10 +97,7 @@ export default function Sidebar() {
                   />
                 </svg>
                 <span className="flex-1 ms-3 whitespace-nowrap">Schedule</span>
-                <span className="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">
-                  3
-                </span>
-              </a>
+              </Link>
             </li>
             <li>
               <a
