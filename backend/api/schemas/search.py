@@ -2,19 +2,26 @@ from datetime import datetime, timedelta
 from typing import Any
 
 import strawberry
+from pydantic import ValidationError
 from strawberry.types import Info
 
+from api.models.search import decode_url
 from api.permissions import IsAuthenticated
+from api.schedulers import remove_scan_periodic_task, setup_scan_periodic_task
 from api.types.event_stats import EventStatsType
+from api.types.general import InputValidationError
 from api.types.search_stats import (
     AssignSearchInput,
     AssignSearchResponse,
+    EditScheduleInput,
+    EditScheduleResponse,
     FavoriteSearchDoesntExistError,
     GetSearchesResponse,
     GetSearchEventsStatsResponse,
     GetSearchStatsResponse,
     NoSearchesAvailableError,
     NoSearchEventError,
+    ScheduleEditedSuccessfully,
     SearchAssignSuccessfully,
     SearchDoesntExistError,
     SearchEventsStatsInput,
@@ -124,3 +131,27 @@ class Mutation:
         if isinstance(search.id, int) and user.favorite_search_id != search.id:
             await add_favorite_search(session, user, search.id)
         return SearchAssignSuccessfully()
+
+    @strawberry.mutation(permission_classes=[IsAuthenticated])  # type: ignore
+    async def edit_schedule(
+        self, info: Info[Any, Any], input: EditScheduleInput
+    ) -> EditScheduleResponse:
+        try:
+            data = input.to_pydantic()
+        except ValidationError as error:
+            return InputValidationError(message=str(error))
+        session = info.context["session"]
+        search = await get_search_by_id(session, data.id)
+        if not search:
+            return SearchDoesntExistError()
+        decoded_url = decode_url(search.url)  # type: ignore
+        if schedule := data.schedule:
+            schedule_dict = schedule.__dict__
+            search.schedule = schedule_dict
+            setup_scan_periodic_task(decoded_url, schedule_dict)
+        else:
+            search.schedule = None
+            remove_scan_periodic_task(decoded_url)
+        session.add(search)
+        await session.commit()
+        return ScheduleEditedSuccessfully()

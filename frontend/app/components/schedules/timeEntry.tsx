@@ -30,7 +30,7 @@ export default function TimeEntry({ time, searches }: Props) {
               {time}
             </p>
             <div className="flex-shrink-0">
-              <CategoryIcon category={search.category.name}></CategoryIcon>
+              <CategoryIcon category={search.category.name} key={search.id}></CategoryIcon>
             </div>
             <h3 className="font-semibold text-gray-900 dark:text-white">
               {search.location}; {search.distanceRadius} km
