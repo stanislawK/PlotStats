@@ -2047,6 +2047,7 @@ async def test_edit_schedule(
     search = (await _db_session.exec(select(Search))).first()
     assert search.schedule is None
     schedule = {"day_of_week": 0, "hour": 1, "minute": 2}
+    schedule_mock = mocker.patch("api.schemas.search.setup_scan_periodic_task")
     response = await authenticated_client.post(
         "/graphql",
         json={
@@ -2062,6 +2063,7 @@ async def test_edit_schedule(
         response.json()["data"]["editSchedule"]["__typename"]
         == "ScheduleEditedSuccessfully"
     )
+    schedule_mock.assert_called_once()
     await _db_session.flush()
     assert search.schedule == schedule
 
@@ -2098,9 +2100,11 @@ async def test_delete_schedule(
     search.schedule = schedule
     _db_session.add(search)
     await _db_session.commit()
+    schedule_mock = mocker.patch("api.schemas.search.remove_scan_periodic_task")
     response = await authenticated_client.post(
         "/graphql", json={"query": DELETE_SCHEDULE.format(id=search.id)}
     )
+    schedule_mock.assert_called_once()
     assert (
         response.json()["data"]["editSchedule"]["__typename"]
         == "ScheduleEditedSuccessfully"
