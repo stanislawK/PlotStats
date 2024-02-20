@@ -1,5 +1,6 @@
 import Accordion from "../../components/schedules/accordion";
 import EditSchedule from "@/app/components/schedules/editSchedule";
+import EditSchedule from "@/app/components/schedules/editSchedule";
 
 import {
   getUserSchedules,
@@ -10,8 +11,14 @@ import {
 } from "@/app/utils/schedules";
 import { getCookie } from "cookies-next";
 import { revalidatePath } from "next/cache";
+import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
+type Props = {
+  searchParams: Record<string, string> | null | undefined;
+};
+
+export default async function Schedules({ searchParams }: Props) {
 type Props = {
   searchParams: Record<string, string> | null | undefined;
 };
