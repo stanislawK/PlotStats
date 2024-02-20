@@ -25,12 +25,18 @@ export default function TimeEntry({ time, searches }: Props) {
     <>
       {searches.map((search) => {
         return (
-          <div className="flex flex-col gap-2 py-4 sm:gap-6 sm:flex-row sm:items-center">
+          <div
+            className="flex flex-col gap-2 py-4 sm:gap-6 sm:flex-row sm:items-center"
+            key={search.id}
+          >
             <p className="w-32 font-normal text-gray-500 ml-2 lg:ml-4 dark:text-gray-400 shrink-0">
               {time}
             </p>
             <div className="flex-shrink-0">
-              <CategoryIcon category={search.category.name} key={search.id}></CategoryIcon>
+              <CategoryIcon
+                category={search.category.name}
+                key={search.id}
+              ></CategoryIcon>
             </div>
             <h3 className="font-semibold text-gray-900 dark:text-white">
               {search.location}; {search.distanceRadius} km

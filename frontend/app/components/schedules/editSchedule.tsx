@@ -1,6 +1,7 @@
 "use client";
 
-import { FormEvent } from "react";
+import Link from "next/link";
+import { FormEvent, useState } from "react";
 
 type Props = {
   search: {
@@ -10,18 +11,27 @@ type Props = {
     location: string;
     schedule?: { dayOfWeek: number; hour: number; minute: number };
   };
-  editScheduleFunc: any
+  editScheduleFunc: any;
+  disableScheduleFunc: any;
 };
 
-export default async function EditSchedule({ search, editScheduleFunc }: Props) {
-    function editSchedule(event: FormEvent<HTMLFormElement>) {
-        event.preventDefault();
-        const formData = new FormData(event.currentTarget);
-        const day = formData.get("day");
-        const hour = formData.get("hour");
-        const minute = formData.get("minute");
-        editScheduleFunc(search.id, day, hour, minute)
-    }
+export default function EditSchedule({
+  search,
+  editScheduleFunc,
+  disableScheduleFunc,
+}: Props) {
+  function editSchedule(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const day = formData.get("day");
+    const hour = formData.get("hour");
+    const minute = formData.get("minute");
+    editScheduleFunc(search.id, day, hour, minute);
+  }
+  function disableSchedule() {
+    disableScheduleFunc(search.id);
+  }
+
   return (
     <>
       <p className="mb-5 text-sm font-medium text-gray-500 dark:text-gray-300">
@@ -34,14 +44,30 @@ export default async function EditSchedule({ search, editScheduleFunc }: Props) 
               id="day"
               name="day"
               className="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+              defaultValue={search.schedule?.dayOfWeek}
+              key={search.schedule?.dayOfWeek}
             >
-              <option value="0">Sunday</option>
-              <option value="1" selected={search.schedule?.dayOfWeek == 1 ? true : false}>Monday</option>
-              <option value="2" selected={search.schedule?.dayOfWeek == 2 ? true : false}>Tuesday</option>
-              <option value="3" selected={search.schedule?.dayOfWeek == 3 ? true : false}>Wednesday</option>
-              <option value="4" selected={search.schedule?.dayOfWeek == 4 ? true : false}>Thursday</option>
-              <option value="5" selected={search.schedule?.dayOfWeek == 5 ? true : false}>Friday</option>
-              <option value="6" selected={search.schedule?.dayOfWeek == 6 ? true : false}>Saturday</option>
+              <option value="0" key="0">
+                Sunday
+              </option>
+              <option value="1" key="1">
+                Monday
+              </option>
+              <option value="2" key="2">
+                Tuesday
+              </option>
+              <option value="3" key="3">
+                Wednesday
+              </option>
+              <option value="4" key="4">
+                Thursday
+              </option>
+              <option value="5" key="5">
+                Friday
+              </option>
+              <option value="6" key="6">
+                Saturday
+              </option>
             </select>
             <label
               htmlFor="day"
@@ -54,12 +80,14 @@ export default async function EditSchedule({ search, editScheduleFunc }: Props) 
             <select
               id="hour"
               name="hour"
+              defaultValue={search.schedule?.hour}
+              key={search.schedule?.hour}
               className="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
             >
               {[...Array.from({ length: 24 }, (value, index) => index)].map(
                 (hour) => {
                   return (
-                    <option value={hour} key={hour} selected={search.schedule?.hour == hour ? true : false}>
+                    <option value={hour} key={hour}>
                       {hour}
                     </option>
                   );
@@ -77,12 +105,14 @@ export default async function EditSchedule({ search, editScheduleFunc }: Props) 
             <select
               id="minute"
               name="minute"
+              defaultValue={search.schedule?.minute}
+              key={search.schedule?.minute}
               className="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
             >
               {[...Array.from({ length: 60 }, (value, index) => index)].map(
                 (minute) => {
                   return (
-                    <option value={minute} key={minute} selected={search.schedule?.minute == minute ? true : false}>
+                    <option value={minute} key={minute}>
                       {minute}
                     </option>
                   );
@@ -97,12 +127,40 @@ export default async function EditSchedule({ search, editScheduleFunc }: Props) 
             </label>
           </div>
         </div>
-        <button
-          type="submit"
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-        >
-          Edit Schedule
-        </button>
+        <div className="flex flex-row space-x-3">
+          <button
+            type="submit"
+            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 inline-flex items-center"
+          >
+            {!!search.schedule ? "Edit" : "Add"} Schedule
+          </button>
+          {!!search.schedule && (
+            <Link href={`schedules`}>
+              <button
+                type="button"
+                onClick={disableSchedule}
+                className="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-300 dark:hover:bg-red-400 dark:focus:ring-red-700 inline-flex items-center"
+              >
+                <svg
+                  className="w-4 h-4 text-white me-2"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"
+                  />
+                </svg>
+                Disable Schedule
+              </button>
+            </Link>
+          )}
+        </div>
       </form>
     </>
   );
