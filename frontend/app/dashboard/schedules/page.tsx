@@ -1,8 +1,16 @@
 import Accordion from "../../components/schedules/accordion";
 import EditSchedule from "@/app/components/schedules/editSchedule";
+import EditSchedule from "@/app/components/schedules/editSchedule";
 
-import { getUserSchedules, parseSchedules, findSearchById, editSchedule } from "@/app/utils/schedules";
+import {
+  getUserSchedules,
+  parseSchedules,
+  findSearchById,
+  editSchedule,
+  disableSchedule,
+} from "@/app/utils/schedules";
 import { getCookie } from "cookies-next";
+import { revalidatePath } from "next/cache";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
@@ -11,18 +19,32 @@ type Props = {
 };
 
 export default async function Schedules({ searchParams }: Props) {
+type Props = {
+  searchParams: Record<string, string> | null | undefined;
+};
+
+export default async function Schedules({ searchParams }: Props) {
   const accessToken = getCookie("accessToken", { cookies });
   const userSearches = await getUserSchedules(accessToken);
-  const userSchedules = await parseSchedules(userSearches)
+  const userSchedules = await parseSchedules(userSearches);
   const searchId = searchParams?.search;
-  let searchToEdit
+  let searchToEdit;
   if (searchId !== undefined && !isNaN(parseInt(searchId))) {
-    searchToEdit = await findSearchById(userSearches, searchId)
+    searchToEdit = await findSearchById(userSearches, searchId);
   }
-  const editScheduleFunc = async (id: number, day: number, hour: number, minute: number) => {
+  const editScheduleFunc = async (
+    id: number,
+    day: number,
+    hour: number,
+    minute: number
+  ) => {
     "use server";
     await editSchedule(accessToken, id, day, hour, minute);
     revalidatePath("/dashboard/schedules");
+  };
+  const disableScheduleFunc = async (id: number) => {
+    "use server";
+    await disableSchedule(accessToken, id);
   };
   return (
     <div className="p-4 sm:ml-64">
@@ -37,7 +59,13 @@ export default async function Schedules({ searchParams }: Props) {
                 Edit schedule
               </h3>
             </div>
-            {!!searchToEdit && <EditSchedule search={searchToEdit} editScheduleFunc={editScheduleFunc}/>}
+            {!!searchToEdit && (
+              <EditSchedule
+                search={searchToEdit}
+                editScheduleFunc={editScheduleFunc}
+                disableScheduleFunc={disableScheduleFunc}
+              />
+            )}
           </div>
         </div>
       </div>
