@@ -11,12 +11,11 @@ type Props = {
     Friday: {};
     Saturday: {};
     Sunday: {};
-    disabled?: [];
+    disabled: [];
   };
 };
 
 export default async function SchedulesAccordion({ schedules }: Props) {
-  const disabled = schedules.disabled;
   delete schedules.disabled;
   return (
     <>
