@@ -1,6 +1,6 @@
 import Accordion from "../../components/schedules/accordion";
 import EditSchedule from "@/app/components/schedules/editSchedule";
-import EditSchedule from "@/app/components/schedules/editSchedule";
+import DisabledList from "@/app/components/schedules/disabledList";
 
 import {
   getUserSchedules,
@@ -11,14 +11,8 @@ import {
 } from "@/app/utils/schedules";
 import { getCookie } from "cookies-next";
 import { revalidatePath } from "next/cache";
-import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
-type Props = {
-  searchParams: Record<string, string> | null | undefined;
-};
-
-export default async function Schedules({ searchParams }: Props) {
 type Props = {
   searchParams: Record<string, string> | null | undefined;
 };
@@ -46,6 +40,7 @@ export default async function Schedules({ searchParams }: Props) {
     "use server";
     await disableSchedule(accessToken, id);
   };
+  const disabledExists = userSearches.some((search) => !search.schedule);
   return (
     <div className="p-4 sm:ml-64">
       <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
@@ -68,6 +63,11 @@ export default async function Schedules({ searchParams }: Props) {
             )}
           </div>
         </div>
+        {disabledExists && (
+          <div className="flex items-center justify-center mb-4 rounded bg-gray-50 dark:bg-gray-800">
+            <DisabledList searches={userSearches}></DisabledList>
+          </div>
+        )}
       </div>
     </div>
   );
