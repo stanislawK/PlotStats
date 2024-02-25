@@ -4,7 +4,7 @@ type RawUserSchedules = {
   category: {
     name: string;
   };
-  distanceRadius?: number;
+  distanceRadius: number;
   id: number;
   location: string;
   schedule?: {

@@ -24,7 +24,7 @@ export default async function Schedules({ searchParams }: Props) {
   const searchId = searchParams?.search;
   let searchToEdit;
   if (searchId !== undefined && !isNaN(parseInt(searchId))) {
-    searchToEdit = await findSearchById(userSearches, searchId);
+    searchToEdit = await findSearchById(userSearches, parseInt(searchId));
   }
   const editScheduleFunc = async (
     id: number,
