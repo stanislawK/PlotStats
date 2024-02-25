@@ -29,10 +29,26 @@ from api.types.auth import (
     RegisterResponse,
     RegisterUserResponse,
     UserExistsError,
+    UsersList,
+    convert_users_from_db,
 )
 from api.types.general import InputValidationError
 from api.utils.jwt import create_jwt_token
-from api.utils.user import authenticate_user, get_password_hash, get_user_by_email
+from api.utils.user import (
+    authenticate_user,
+    get_all_users,
+    get_password_hash,
+    get_user_by_email,
+)
+
+
+@strawberry.type
+class Query:
+    @strawberry.field(permission_classes=[IsAdminUser])  # type: ignore
+    async def all_users(self, info: Info[Any, Any]) -> UsersList:
+        session = info.context["session"]
+        users_db = await get_all_users(session=session)
+        return convert_users_from_db(users_db)
 
 
 @strawberry.type
@@ -52,10 +68,10 @@ class Mutation:
             logger.error(f"{data.email} logging failed attempt")
             return LoginUserError()
         access_token = create_jwt_token(
-            subject=str(user.id), fresh=True, token_type="access"
+            subject=str(user.id), fresh=True, token_type="access", roles=user.roles
         )
         refresh_token = create_jwt_token(
-            subject=str(user.id), fresh=False, token_type="refresh"
+            subject=str(user.id), fresh=False, token_type="refresh", roles=user.roles
         )
         return JWTPair(access_token=access_token, refresh_token=refresh_token)
 
@@ -66,7 +82,7 @@ class Mutation:
             logger.error("Refresh token failed attempt")
             return RefreshTokenError()
         access_token = create_jwt_token(
-            subject=str(user.id), fresh=False, token_type="access"
+            subject=str(user.id), fresh=False, token_type="access", roles=user.roles
         )
         return AccessToken(access_token=access_token)
 
