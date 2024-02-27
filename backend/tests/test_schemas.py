@@ -341,6 +341,19 @@ mutation editSchedule {{
 }}
 """
 
+USERS_LIST: str = """
+query allUsers {
+  allUsers {
+    users {
+      email
+      id
+      isActive
+      roles
+    }
+  }
+}
+"""
+
 
 @pytest.mark.asyncio
 async def test_categories_query(
@@ -2111,3 +2124,21 @@ async def test_delete_schedule(
     )
     await _db_session.flush()
     assert search.schedule is None
+
+
+@pytest.mark.asyncio
+async def test_get_user_list(
+    admin_client: httpx.AsyncClient, _db_session: AsyncSession
+) -> None:
+    email = "new_user@test.com"
+    await admin_client.post(
+        "/graphql", json={"query": REGISTER_USER_MUTATION.format(email=email)}
+    )
+    response = await admin_client.post("/graphql", json={"query": USERS_LIST})
+    assert response.status_code == 200
+    result = response.json()
+    users = result["data"]["allUsers"]["users"]
+    assert len(users) == 2
+    required_fields = {"email", "id", "isActive", "roles"}
+    assert required_fields == set(users[0].keys()) == set(users[1].keys())
+    assert email in (user["email"] for user in users)

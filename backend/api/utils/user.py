@@ -44,3 +44,12 @@ async def add_favorite_search(
     user.favorite_search_id = search_id
     session.add(user)
     await session.commit()
+
+
+async def get_all_users(
+    session: AsyncSession,
+) -> list[User]:
+    users = (
+        await session.exec(select(User.id, User.email, User.roles, User.is_active))
+    ).all()
+    return users  # type: ignore

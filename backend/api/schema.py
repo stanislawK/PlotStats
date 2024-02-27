@@ -9,7 +9,10 @@ import api.schemas.user
 
 @strawberry.type
 class Query(
-    api.schemas.category.Query, api.schemas.search_event.Query, api.schemas.search.Query
+    api.schemas.category.Query,
+    api.schemas.search_event.Query,
+    api.schemas.search.Query,
+    api.schemas.user.Query,
 ):
     pass
 

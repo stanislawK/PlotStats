@@ -20,7 +20,9 @@ class PermissionDeniedError(Exception):
         super().__init__(message)
 
 
-def create_jwt_token(subject: str, fresh: bool, token_type: str = "access") -> str:
+def create_jwt_token(
+    subject: str, fresh: bool, token_type: str = "access", roles: list[str] = []
+) -> str:
     now = datetime.now(timezone.utc)
     token_data = {
         "fresh": fresh,
@@ -28,6 +30,7 @@ def create_jwt_token(subject: str, fresh: bool, token_type: str = "access") -> s
         "jti": str(uuid.uuid4()),
         "type": token_type,
         "sub": subject,
+        "roles": roles,
     }
 
     expires_delta = (

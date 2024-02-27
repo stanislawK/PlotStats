@@ -19,6 +19,19 @@ class AccessToken:
     access_token: str
 
 
+@strawberry.experimental.pydantic.type(model=User)
+class UserInfo:
+    id: strawberry.auto
+    email: strawberry.auto
+    roles: strawberry.auto
+    is_active: strawberry.auto
+
+
+@strawberry.type
+class UsersList:
+    users: list[UserInfo]
+
+
 @strawberry.experimental.pydantic.input(model=User)
 class LoginUserData:
     email: strawberry.auto
@@ -135,3 +148,16 @@ ActivateAccountResponse = Annotated[
     Union[ActivateAccountSuccess, ActivateAccountError, InputValidationError],
     strawberry.union("ActivateAccountResponse"),
 ]
+
+
+def convert_users_from_db(
+    users: list[User],
+) -> UsersList:
+    return UsersList(
+        users=[
+            UserInfo(
+                id=user.id, email=user.email, roles=user.roles, is_active=user.is_active
+            )
+            for user in users
+        ]
+    )
