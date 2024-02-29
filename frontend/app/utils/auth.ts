@@ -1,9 +1,11 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { setCookie } from "cookies-next";
+import { setCookie, getCookie, deleteCookie } from "cookies-next";
 import * as jose from "jose";
 import type { NextRequest, NextResponse } from "next/server";
+
+import { redirect } from "next/navigation";
 
 function getTimeToExpire(token: string) {
   const tokenParams = jose.decodeJwt(token);
@@ -78,6 +80,27 @@ export async function login(email: string, password: string) {
   } catch (error) {
     console.log(error);
   }
+}
+
+export async function logout() {
+  try {
+    const accessToken = getCookie("accessToken", { cookies });
+    const refreshToken = getCookie("refreshToken", { cookies });
+
+    if (!!accessToken) {
+      deleteCookie("accessToken", {
+        cookies,
+      });
+    }
+    if (!!refreshToken) {
+      deleteCookie("refreshToken", {
+        cookies,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+  return redirect("/");
 }
 
 export async function refresh(

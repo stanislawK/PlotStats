@@ -139,8 +139,8 @@ export default function Sidebar() {
               </a>
             </li>
             <li>
-              <a
-                href="#"
+              <Link
+                href="/logout"
                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
               >
                 <svg
@@ -159,7 +159,7 @@ export default function Sidebar() {
                   />
                 </svg>
                 <span className="flex-1 ms-3 whitespace-nowrap">Log out</span>
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
