@@ -13,6 +13,14 @@ function isAdminUser(token: string) {
     return false;
   }
 
+export async function isTokenFresh(token: string) {
+  const tokenParams = jose.decodeJwt(token);
+  if (!tokenParams?.fresh) {
+    return false
+  }
+  return tokenParams.fresh == true
+}
+
 export async function getUsers(accessToken: string) {
   if (!isAdminUser(accessToken)) {
     return []
@@ -44,6 +52,48 @@ export async function getUsers(accessToken: string) {
     });
     const res_parsed = await res.json();
     const data = res_parsed.data.allUsers.users;
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function registerUsers(accessToken: string, email: string) {
+  if (!isAdminUser(accessToken)) {
+    return "Failed to register a new user"
+  }
+  try {
+    const res = await fetch("http://backend:8000/graphql", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "same-origin",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({
+        query: `
+        mutation registerUser {
+          registerUser(input: {email: "${email}"}) {
+            ... on RegisterResponse {
+              __typename
+              temporaryPassword
+            }
+            ... on UserExistsError {
+              __typename
+              message
+            }
+            ... on InputValidationError {
+              __typename
+              message
+            }
+          }
+        }
+        `,
+      }),
+    });
+    const res_parsed = await res.json();
+    const data = res_parsed.data.registerUser.temporaryPassword;
     return data;
   } catch (error) {
     console.error(error);
