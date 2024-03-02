@@ -7,10 +7,11 @@ import { FormEvent } from "react";
 import Link from "next/link";
 
 type Props = {
-  authenticate: any;
+  activateAccountFunc: any;
 };
-
-export default async function LoginModal({ authenticate }: Props) {
+export default async function ActivateAccountModal({
+  activateAccountFunc,
+}: Props) {
   let [isOpen, setIsOpen] = useState(true);
   const router = useRouter();
   function closeModal() {
@@ -18,12 +19,17 @@ export default async function LoginModal({ authenticate }: Props) {
     router.push("/");
   }
 
-  function loginUser(event: FormEvent<HTMLFormElement>) {
+  function activateAccount(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const email = formData.get("email");
-    const password = formData.get("password");
-    authenticate({ password: password, email: email });
+    const tempPassword = formData.get("tempPassword");
+    const newPassword = formData.get("newPassword");
+    activateAccountFunc({
+      tempPassword: tempPassword,
+      email: email,
+      newPassword: newPassword,
+    });
     closeModal();
   }
 
@@ -65,10 +71,10 @@ export default async function LoginModal({ authenticate }: Props) {
                     as="h3"
                     className="mt-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900"
                   >
-                    Sign in to your account
+                    Activate your account
                   </Dialog.Title>
                   <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-                    <form className="space-y-6" onSubmit={loginUser}>
+                    <form className="space-y-6" onSubmit={activateAccount}>
                       <div>
                         <label
                           htmlFor="email"
@@ -91,21 +97,49 @@ export default async function LoginModal({ authenticate }: Props) {
                       <div>
                         <div className="flex items-center justify-between">
                           <label
-                            htmlFor="password"
+                            htmlFor="tempPassword"
                             className="block text-sm font-medium leading-6 text-gray-900"
                           >
-                            Password
+                            Temporary Password
                           </label>
                         </div>
                         <div className="mt-2">
                           <input
-                            id="password"
-                            name="password"
+                            id="tempPassword"
+                            name="tempPassword"
                             type="password"
-                            autoComplete="current-password"
+                            autoComplete="current-tempPassword"
                             required
                             className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-cyan-400 sm:text-sm sm:leading-6"
                           />
+                        </div>
+                      </div>
+                      <div>
+                        <div className="flex items-center justify-between">
+                          <label
+                            htmlFor="newPassword"
+                            className="block text-sm font-medium leading-6 text-gray-900"
+                          >
+                            New Password
+                          </label>
+                        </div>
+                        <div className="mt-2">
+                          <input
+                            id="newPassword"
+                            name="newPassword"
+                            type="password"
+                            autoComplete="current-newPassword"
+                            required
+                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-cyan-400 sm:text-sm sm:leading-6"
+                          />
+                          <p
+                            id="helper-text-explanation"
+                            className="mt-2 text-sm text-gray-500 dark:text-gray-400"
+                          >
+                            Password must contain at least one uppercase letter,
+                            one lowercase letter, one digit, and one special
+                            character{" "}
+                          </p>
                         </div>
                       </div>
 
@@ -114,18 +148,18 @@ export default async function LoginModal({ authenticate }: Props) {
                           type="submit"
                           className="flex w-full justify-center rounded-md bg-cyan-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-cyan-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500"
                         >
-                          Sign in
+                          Activate Account
                         </button>
                       </div>
                     </form>
 
                     <p className="mt-10 text-center text-sm text-gray-500">
-                      Not a activate member?{" "}
+                      Have toy had activated your account already?{" "}
                       <Link
-                        href="/?activateModal=true"
+                        href="/?loginModal=true"
                         className="font-semibold leading-6 text-cyan-500 hover:text-cyan-300"
                       >
-                        Activate your account
+                        Login
                       </Link>
                     </p>
                   </div>
