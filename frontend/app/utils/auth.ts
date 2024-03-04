@@ -158,3 +158,55 @@ export async function refresh(
     console.log(error);
   }
 }
+
+export async function activateAccount(
+  email: string,
+  tempPassword: string,
+  newPassword: string
+) {
+  const mutation = JSON.stringify({
+    query: `
+    mutation activateAccount {
+      activateAccount(input: {email: "${email}", tempPassword: "${tempPassword}", newPassword: "${newPassword}"}) {
+        ... on ActivateAccountSuccess {
+          __typename
+          message
+        }
+        ... on ActivateAccountError {
+          __typename
+          message
+        }
+        ... on InputValidationError {
+          __typename
+          message
+        }
+      }
+    }
+      `,
+  });
+  try {
+    const res = await fetch("http://backend:8000/graphql", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "same-origin",
+      },
+      body: mutation,
+    });
+    const res_parsed = await res.json();
+    const data = res_parsed.data;
+    console.log(data);
+    if (
+      data === undefined ||
+      !data.activateAccount ||
+      data.activateAccount.__typename != "ActivateAccountSuccess"
+    ) {
+      console.log("Can't activate account");
+    } else {
+      return data.activateAccount["message"];
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}

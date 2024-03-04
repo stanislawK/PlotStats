@@ -1,9 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import LoginModal from "./components/loginModal";
-import { login } from "./utils/auth";
+import { login, activateAccount } from "./utils/auth";
 import { hasCookie } from "cookies-next";
 import { cookies } from "next/headers";
+import ActivateAccountModal from "./components/users/activateModal";
 
 type Props = {
   searchParams: Record<string, string> | null | undefined;
@@ -16,6 +17,12 @@ type TokenProps = {
 type LoginData = {
   email: string;
   password: string;
+};
+
+type ActivateAccountData = {
+  email: string;
+  tempPassword: string;
+  newPassword: string;
 };
 
 function LinkBtn({ hasToken }: TokenProps) {
@@ -39,11 +46,16 @@ function LinkBtn({ hasToken }: TokenProps) {
 }
 
 export default function Home({ searchParams }: Props) {
-  const showModal = searchParams?.loginModal;
+  const showLoginModal = searchParams?.loginModal;
+  const showActivateModal = searchParams?.activateModal;
   const hasToken = hasCookie("accessToken", { cookies });
   const loginFunc = async (data: LoginData) => {
     "use server";
     await login(data.email, data.password);
+  };
+  const activateUserFunc = async (data: ActivateAccountData) => {
+    "use server";
+    await activateAccount(data.email, data.tempPassword, data.newPassword);
   };
   return (
     <main className="flex flex-col-reverse mb-10 mx-auto space-y-5 md:flex-row md:space-y-0 items-center md:mx-28 md:mt-10">
@@ -72,7 +84,13 @@ export default function Home({ searchParams }: Props) {
         />
       </div>
       {/* Login modal */}
-      {showModal && <LoginModal authenticate={loginFunc} />}
+      {showLoginModal && <LoginModal authenticate={loginFunc} />}
+      {/* Activate Account Modal */}
+      {showActivateModal && (
+        <ActivateAccountModal
+          activateAccountFunc={activateUserFunc}
+        ></ActivateAccountModal>
+      )}
     </main>
   );
 }

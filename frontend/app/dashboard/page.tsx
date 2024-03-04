@@ -10,6 +10,7 @@ import {
   getUserSearches,
   getLastEvent,
 } from "../utils/searchStats";
+import { redirect } from "next/navigation";
 
 type Events = {
   id: number;
@@ -34,6 +35,12 @@ export default async function Dashboard({ searchParams }: Props) {
   const accessToken = getCookie("accessToken", { cookies });
   const searchId = searchParams?.searchId;
   const searchEventsStats = await getSearchEventsStats(accessToken, searchId);
+  if (
+    searchEventsStats["searchEventsStats"]["__typename"] !=
+    "SearchEventsStatsType"
+  ) {
+    redirect("/dashboard/searches");
+  }
   const events: Events =
     searchEventsStats["searchEventsStats"]["searchEvents"] || [];
   const searchSummary = await getSearchStats(accessToken, searchId);

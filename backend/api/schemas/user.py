@@ -64,7 +64,11 @@ class Mutation:
             return InputValidationError(message=str(error))
         session: AsyncSession = info.context["session"]
         user = await authenticate_user(session, data.email, data.password)
-        if not isinstance(user, User):
+        if (
+            not isinstance(user, User)
+            or not user.is_active
+            or "deactivated" in user.roles
+        ):
             logger.error(f"{data.email} logging failed attempt")
             return LoginUserError()
         access_token = create_jwt_token(
