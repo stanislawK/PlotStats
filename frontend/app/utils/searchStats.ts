@@ -117,7 +117,10 @@ export async function getSearchStats(accessToken: string, searchId?: number) {
   }
 }
 
-export async function getUserSearches(accessToken: string, withFavorite?: boolean) {
+export async function getUserSearches(
+  accessToken: string,
+  withFavorite?: boolean
+) {
   const query = JSON.stringify({
     query: `
     query usersSearches {
@@ -160,6 +163,9 @@ export async function getUserSearches(accessToken: string, withFavorite?: boolea
     });
     const res_parsed = await api_res.json();
     const data = res_parsed.data["usersSearches"];
+    if (data["__typename"] === "NoSearchesAvailableError") {
+      return {};
+    }
     return data;
   } catch (error) {
     console.log(error);

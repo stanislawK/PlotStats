@@ -16,9 +16,14 @@ type UserSearchProps = {
     url: string;
   };
   favSearchId?: number;
+  isUsers: boolean;
 };
 
-export default function UserSearch({ search, favSearchId }: UserSearchProps) {
+export default function UserSearch({
+  search,
+  favSearchId,
+  isUsers,
+}: UserSearchProps) {
   return (
     <li className={`py-3 sm:py-4`}>
       <div className={`flex items-center space-x-4`}>
@@ -63,7 +68,7 @@ export default function UserSearch({ search, favSearchId }: UserSearchProps) {
           </a>
         </div>
         <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-          {!!favSearchId && (
+          {!!isUsers && (
             <>
               <span className="group relative z-100">
                 <div
@@ -91,7 +96,7 @@ export default function UserSearch({ search, favSearchId }: UserSearchProps) {
               </span>
             </>
           )}
-          {!favSearchId && (
+          {!isUsers && (
             <>
               <span className="group relative z-100">
                 <div className="absolute bottom-[calc(100%+0.4rem)] left-[50%] -translate-x-[75%] hidden group-hover:block w-auto">
