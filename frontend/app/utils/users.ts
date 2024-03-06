@@ -1,29 +1,29 @@
 "use server";
 import * as jose from "jose";
 
-function isAdminUser(token: string) {
-    const tokenParams = jose.decodeJwt(token);
-    if (!tokenParams?.roles) {
-      return false
-    }
-    const roles = Array.from(tokenParams.roles)
-    if (roles.length > 0) {
-      return roles.includes("admin")
-    }
+export async function isAdminUser(token: string) {
+  const tokenParams = jose.decodeJwt(token);
+  if (!tokenParams?.roles) {
     return false;
   }
+  const roles = Array.from(tokenParams.roles);
+  if (roles.length > 0) {
+    return roles.includes("admin");
+  }
+  return false;
+}
 
 export async function isTokenFresh(token: string) {
   const tokenParams = jose.decodeJwt(token);
   if (!tokenParams?.fresh) {
-    return false
+    return false;
   }
-  return tokenParams.fresh == true
+  return tokenParams.fresh == true;
 }
 
 export async function getUsers(accessToken: string) {
-  if (!isAdminUser(accessToken)) {
-    return []
+  if (!(await isAdminUser(accessToken))) {
+    return [];
   }
   try {
     const res = await fetch("http://backend:8000/graphql", {
@@ -60,7 +60,7 @@ export async function getUsers(accessToken: string) {
 
 export async function registerUsers(accessToken: string, email: string) {
   if (!isAdminUser(accessToken)) {
-    return "Failed to register a new user"
+    return "Failed to register a new user";
   }
   try {
     const res = await fetch("http://backend:8000/graphql", {
