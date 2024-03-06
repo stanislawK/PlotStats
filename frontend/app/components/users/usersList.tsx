@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-type User = {
+export type User = {
   id: number;
   email: string;
   roles: string[];
@@ -85,7 +85,7 @@ export default async function UsersList({ users }: Props) {
                             Deactivate
                           </div>
                         </div>
-                        <Link href="">
+                        <Link href={`?deactivateUser=${user.id}`}>
                           <svg
                             className="w-6 h-6 text-gray-800 dark:text-white hover:text-red-600"
                             aria-hidden="true"

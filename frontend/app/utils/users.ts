@@ -99,3 +99,45 @@ export async function registerUsers(accessToken: string, email: string) {
     console.error(error);
   }
 }
+
+export async function deactivateUser(accessToken: string, email: string) {
+  if (!isAdminUser(accessToken)) {
+    return "Failed to deactivate user"
+  }
+  try {
+    const res = await fetch("http://backend:8000/graphql", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "same-origin",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({
+        query: `
+        mutation deactivateUser {
+          deactivateUser(input: {email: "${email}"}) {
+            ... on DeactivateAccountSuccess {
+              __typename
+              message
+            }
+            ... on DeactivateAccountError {
+              __typename
+              message
+            }
+            ... on InputValidationError {
+              __typename
+              message
+            }
+          }
+        }
+        `,
+      }),
+    });
+    const res_parsed = await res.json();
+    const data = res_parsed.data.deactivateUser;
+    return data["__typename"] == "DeactivateAccountSuccess";
+  } catch (error) {
+    console.error(error);
+  }
+}
