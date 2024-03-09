@@ -19,6 +19,7 @@ class Settings(BaseSettings):
     jwt_algorithm: str
     access_token_expire_minutes: int
     refresh_token_expire_minutes: int
+    dc1_url: str
     imports: tuple[str] = ("api.periodic_tasks",)
 
     @property
