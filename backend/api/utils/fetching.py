@@ -43,15 +43,26 @@ async def make_request(
     token = cache.get("token") or ""
     formatted_url = url.format(api_key=token)
     logger.info(f"Sending request to {formatted_url}")
+    retries = cache.get(f"retried_{url}") or 0
+    if not isinstance(retries, int):
+        retries = int(retries)  # type: ignore
     async with aiohttp.ClientSession() as session:
-        async with session.get(formatted_url, headers=HEADERS) as resp:
-            if resp.status == 404 and not cache.get(f"retried_{url}"):
-                logger.warning("404 status code - retrying...")
+        async with session.get(
+            formatted_url, headers=HEADERS, proxy=settings.dc1_url
+        ) as resp:
+            if resp.status in (404, 403) and retries < 3:
+                if resp.status == 403:
+                    with open("resp.html", "w") as f:
+                        content = await resp.text()
+                        f.write(content)
+                logger.warning(
+                    f"{resp.status} status code - retrying {retries + 1} time..."
+                )
                 body = await resp.text()
                 extract_token(body)
                 delay = random.randint(20, 40)
                 logger.info(f"waiting for {delay} seconds...")
-                cache.set(f"retried_{url}", 1)
+                cache.incr(f"retried_{url}", 1)
                 await asyncio.sleep(delay)
                 return await make_request(url)
             if cache.get(f"retried_{url}"):
