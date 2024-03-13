@@ -40,9 +40,10 @@ export default async function Searches({ searchParams }: Props) {
   if (onDemandSearchId !== undefined && !isNaN(parseInt(onDemandSearchId))) {
     "use server";
     const toFetch = userSearches.searches.find((search) => search.id == onDemandSearchId);
-    console.log(toFetch)
-    // await addToUsers(newUsersSearchId, accessToken)
-    redirect("/dashboard/searches")
+    if (!!toFetch?.url) {
+      await onDemandScan(toFetch.url, accessToken)
+      redirect("/dashboard/searches")
+    }    
   }
   const adhocScanFunc = async (data: ScanData) => {
     "use server";
