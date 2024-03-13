@@ -28,12 +28,14 @@ type Props = {
     url: string;
   }[];
   favSearchId?: number;
+  isAdmin: boolean;
 };
 
 export default async function SearchesLists({
   userSearches,
   allSearches,
   favSearchId,
+  isAdmin,
 }: Props) {
   let userSearchesIds: Array<number>;
   if (!!userSearches) {
@@ -101,6 +103,7 @@ export default async function SearchesLists({
                     key={search.id}
                     favSearchId={favSearchId}
                     isUsers={true}
+                    isAdmin={isAdmin}
                   ></UserSearch>
                 );
               })}
