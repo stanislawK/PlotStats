@@ -20,6 +20,7 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int
     refresh_token_expire_minutes: int
     dc1_url: str
+    redis_pass: str
     imports: tuple[str] = ("api.periodic_tasks",)
 
     @property

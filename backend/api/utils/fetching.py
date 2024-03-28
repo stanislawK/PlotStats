@@ -51,10 +51,6 @@ async def make_request(
             formatted_url, headers=HEADERS, proxy=settings.dc1_url
         ) as resp:
             if resp.status in (404, 403) and retries < 3:
-                if resp.status == 403:
-                    with open("resp.html", "w") as f:
-                        content = await resp.text()
-                        f.write(content)
                 logger.warning(
                     f"{resp.status} status code - retrying {retries + 1} time..."
                 )

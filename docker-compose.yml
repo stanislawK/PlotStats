@@ -18,8 +18,11 @@ services:
 
   redis:
     image: redis:7.2-alpine
+    command: redis-server --save 60 1 --loglevel warning --requirepass ${REDIS_PASS}
     ports:
       - "6379:6379"
+    volumes:
+      - ./redis-data:/data
 
   backend:
     build:
@@ -86,3 +89,4 @@ services:
 volumes:
   static_volume:
   postgres-data:
+  redis-data:
