@@ -28,4 +28,6 @@ async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
 
 
 def get_cache() -> redis.Redis:
-    return redis.Redis(host="redis", decode_responses=True)
+    return redis.Redis(
+        host="redis", decode_responses=True, password=settings.redis_pass
+    )
