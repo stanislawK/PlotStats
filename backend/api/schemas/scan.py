@@ -5,7 +5,7 @@ import jmespath
 import strawberry
 from loguru import logger
 from pydantic import ValidationError
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlmodel.ext.asyncio.session import AsyncSession
 from strawberry.types import Info
 
 from api.parsing import CategoryNotFoundError, parse_scan_data, parse_search_info
@@ -17,7 +17,8 @@ from api.types.scan import (
     ScanFailedError,
     ScanSucceeded,
 )
-from api.utils.fetching import make_request
+from api.utils.fetching import make_request, report_failure
+from api.utils.search import get_search_id_by_url
 from api.utils.url_parsing import parse_url
 
 TOTAL_PAGES_PATH = "pageProps.data.searchAds.pagination.totalPages"
@@ -35,12 +36,18 @@ class Mutation:
             return InputValidationError(message=str(error))
         url = parse_url(str(data.url))
         status_code, body = await make_request(url)
+        session: AsyncSession = info.context["session"]
         if status_code != 200:
             logger.critical(f"Scan has failed with {status_code} status code.")
+            search_id = await get_search_id_by_url(session, str(data.url))
+            if search_id:
+                await report_failure(
+                    session=session, status_code=status_code, search_id=search_id
+                )
             return ScanFailedError(
                 message=f"Scan has failed with {status_code} status code."
             )
-        session: AsyncSession = info.context["session"]
+
         user = info.context["request"].state.user
         try:
             search_event = await parse_search_info(

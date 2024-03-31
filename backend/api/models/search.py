@@ -5,6 +5,7 @@ from sqlalchemy import JSON, Column
 from sqlmodel import Field, Relationship, SQLModel
 
 from . import Category
+from .scan_failure import ScanFailure
 from .user import SearchUser, User
 
 if TYPE_CHECKING:
@@ -38,3 +39,4 @@ class Search(SQLModel, table=True):
     )
     url: str = Field(index=True, unique=True)
     schedule: Optional[dict[str, int]] = Field(sa_column=Column(JSON), default=None)
+    failures: list["ScanFailure"] = Relationship(back_populates="search")

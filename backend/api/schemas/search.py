@@ -24,11 +24,13 @@ from api.types.search_stats import (
     ScheduleEditedSuccessfully,
     SearchAssignSuccessfully,
     SearchDoesntExistError,
+    SearchesStatusType,
     SearchEventsStatsInput,
     SearchEventsStatsType,
     SearchStatsInput,
     convert_search_stats_from_db,
     convert_searches_from_db,
+    get_last_statuses,
 )
 from api.utils.search import get_search_by_id, get_searches
 from api.utils.search_event import (
@@ -101,6 +103,11 @@ class Query:
             search_event_stats.append(EventStatsType(**stats))  # type: ignore
         return SearchEventsStatsType(search_events=search_event_stats)
 
+    @strawberry.field(permission_classes=[IsAuthenticated])  # type: ignore
+    async def searches_last_status(self, info: Info[Any, Any]) -> SearchesStatusType:
+        session = info.context["session"]
+        return await get_last_statuses(session=session)
+
 
 @strawberry.type
 class Mutation:
@@ -148,7 +155,9 @@ class Mutation:
         if schedule := data.schedule:
             schedule_dict = schedule.__dict__
             search.schedule = schedule_dict
-            setup_scan_periodic_task(decoded_url, schedule_dict)
+            setup_scan_periodic_task(
+                decoded_url, schedule_dict, search.id  # type: ignore
+            )
         else:
             search.schedule = None
             remove_scan_periodic_task(decoded_url)

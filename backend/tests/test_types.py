@@ -10,16 +10,19 @@ from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from api.models.category import Category
+from api.models.estate import Estate
+from api.models.price import Price
+from api.models.scan_failure import ScanFailure
 from api.models.search import Search
 from api.models.search_event import SearchEvent
 from api.types.category import CategoryType
 from api.types.event_stats import EventStatsType
 from api.types.price import convert_price_from_db
 from api.types.scan import AdhocScanInput, PydanticAdhocScanInput
-from api.types.search_stats import convert_search_stats_from_db
+from api.types.search_stats import convert_search_stats_from_db, get_last_statuses
 from api.utils.search_event import get_search_event_prices
 
-from .conftest import MockAioJSONResponse
+from .conftest import MockAioJSONResponse, examples
 
 # mypy: ignore-errors
 
@@ -180,3 +183,71 @@ async def test_search_stats_type(
     ).all()
     assert len(search_stats.events) == len(search_events_db)
     assert search_stats.category.name == "Plot"
+
+
+@pytest.mark.asyncio
+async def test_get_last_statuses(
+    _db_session: AsyncSession, add_category: Category
+) -> None:
+    search_1 = Search(category=add_category, **examples["search"])
+    search_2 = Search(
+        **{
+            **examples["search"],
+            **{"category": add_category, "url": examples["search"]["url"] + "a"},
+        }
+    )
+    search_3 = Search(
+        **{
+            **examples["search"],
+            **{"category": add_category, "url": examples["search"]["url"] + "b"},
+        }
+    )
+    search_4 = Search(
+        **{
+            **examples["search"],
+            **{"category": add_category, "url": examples["search"]["url"] + "c"},
+        }
+    )
+    search_5 = Search(
+        **{
+            **examples["search"],
+            **{"category": add_category, "url": examples["search"]["url"] + "d"},
+        }
+    )
+    estate = Estate(**examples["estate"])
+    price = Price(**examples["price"], estate=estate)
+    failure_1 = ScanFailure(search=search_2, status_code=404)
+    success_1 = SearchEvent(estates=[estate], search=search_3, prices=[price])
+    failure_2 = ScanFailure(search=search_4, status_code=404)
+    success_2 = SearchEvent(estates=[estate], search=search_4, prices=[price])
+    success_3 = SearchEvent(estates=[estate], search=search_5, prices=[price])
+    failure_3 = ScanFailure(search=search_5, status_code=404)
+    _db_session.add_all(
+        [
+            search_1,
+            search_2,
+            search_3,
+            search_4,
+            search_5,
+            failure_1,
+            success_1,
+            failure_2,
+            success_2,
+            success_3,
+            failure_3,
+        ]
+    )
+    await _db_session.commit()
+    _db_session.flush()
+    last_statuses = await get_last_statuses(session=_db_session)
+    expected = {
+        search_1.id: "unknown",
+        search_2.id: "failed",
+        search_3.id: "success",
+        search_4.id: "success",
+        search_5.id: "failed",
+    }
+    statuses = last_statuses.statuses
+    assert len(statuses) == len(expected.keys())
+    for status in statuses:
+        assert expected.get(status.id) == status.status

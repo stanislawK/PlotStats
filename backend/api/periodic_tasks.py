@@ -10,20 +10,22 @@ from api.database import get_async_session
 from api.parsing import CategoryNotFoundError, parse_scan_data, parse_search_info
 from api.schemas.scan import TOTAL_PAGES_PATH
 from api.utils.celery_utils import async_task
-from api.utils.fetching import make_request
+from api.utils.fetching import make_request, report_failure
 from api.utils.url_parsing import parse_url
 
 
 @async_task(celery_app)  # type: ignore
-async def run_periodic_scan(url: str, **kwargs: dict[str, Any]) -> None:
+async def run_periodic_scan(url: str, search_id, **kwargs: dict[str, Any]) -> None:
     logger.info(f"Running periodic scan for {url}")
     api_url = parse_url(url)
     status_code, body = await make_request(api_url)
-    if status_code != 200:
-        logger.critical(
-            f"Periodic Scan for {api_url} has failed with {status_code} status code."
-        )
     async for session in get_async_session():
+        if status_code != 200:
+            logger.critical(
+                f"Periodic Scan for {api_url} has "
+                f"failed with {status_code} status code."
+            )
+            await report_failure(status_code, search_id, session)
         try:
             search_event = await parse_search_info(url, None, body, session)
             await parse_scan_data(url, body, session, search_event)
