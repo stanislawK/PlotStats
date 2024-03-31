@@ -5,8 +5,10 @@ from typing import Any
 import aiohttp
 import lxml.html
 from loguru import logger
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.database import get_cache
+from api.models.scan_failure import ScanFailure
 from api.settings import settings
 
 HEADERS = {
@@ -51,6 +53,8 @@ async def make_request(
             formatted_url, headers=HEADERS, proxy=settings.dc1_url
         ) as resp:
             if resp.status in (404, 403) and retries < 3:
+                if resp.status == 403 and token != "":
+                    cache.set("token", "")
                 logger.warning(
                     f"{resp.status} status code - retrying {retries + 1} time..."
                 )
@@ -67,3 +71,11 @@ async def make_request(
                 return resp.status, {}
             body = await resp.json()
             return 200, body  # type: ignore
+
+
+async def report_failure(
+    status_code: int, search_id: int, session: AsyncSession
+) -> None:
+    failure = ScanFailure(status_code=status_code, search_id=search_id)
+    session.add(failure)
+    await session.commit()

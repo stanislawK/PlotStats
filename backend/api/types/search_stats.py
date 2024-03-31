@@ -3,6 +3,7 @@ from typing import Annotated, List, Optional, Union
 
 import strawberry
 from pydantic import BaseModel
+from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 from strawberry import LazyType
 
@@ -11,7 +12,12 @@ from api.types.category import CategoryType, convert_category_from_db
 from api.types.event_stats import EventStatsType, NoPricesFoundError
 from api.types.general import Error, InputValidationError
 from api.types.scan import PydanticScanSchedule, ScanSchedule
-from api.utils.search import get_search_events_for_search, get_search_stats
+from api.utils.search import (
+    get_last_failures,
+    get_last_successes,
+    get_search_events_for_search,
+    get_search_stats,
+)
 
 
 @strawberry.input
@@ -92,6 +98,17 @@ class SearchEventsStatsType:
     search_events: List[EventStatsType]
 
 
+@strawberry.type
+class SearchStatusType:
+    id: int
+    status: str
+
+
+@strawberry.type
+class SearchesStatusType:
+    statuses: list[SearchStatusType]
+
+
 async def convert_search_stats_from_db(
     session: AsyncSession,
     search: Search,
@@ -148,6 +165,30 @@ def convert_searches_from_db(
             )
         )
     return SearchesType(searches=converted)
+
+
+async def get_last_statuses(session: AsyncSession) -> SearchesStatusType:
+    statuses = []
+    last_failures = await get_last_failures(session)
+    last_successes = await get_last_successes(session)
+    all_searches_ids = (await session.exec(select(Search.id))).all()
+    for id in all_searches_ids:
+        if not isinstance(id, int):
+            continue
+        if not (id in last_successes or id in last_failures):
+            statuses.append(SearchStatusType(id=id, status="unknown"))
+        elif id not in last_failures:
+            statuses.append(SearchStatusType(id=id, status="success"))
+        elif id not in last_successes:
+            statuses.append(SearchStatusType(id=id, status="failed"))
+        else:
+            last_failed = last_failures.get(id)
+            last_success = last_successes.get(id)
+            status = (
+                "success" if last_success > last_failed else "failed"  # type: ignore
+            )
+            statuses.append(SearchStatusType(id=id, status=status))
+    return SearchesStatusType(statuses=statuses)
 
 
 @strawberry.type

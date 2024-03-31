@@ -15,11 +15,18 @@ import api.utils.user as user_utils
 from api.models.category import Category
 from api.models.estate import Estate
 from api.models.price import Price
-from api.models.search import Search
+from api.models.scan_failure import ScanFailure
+from api.models.search import Search, encode_url
 from api.models.search_event import SearchEvent
 from api.models.user import User
 from api.settings import settings
-from api.utils.search import get_search_events_for_search, get_search_stats
+from api.utils.search import (
+    get_last_failures,
+    get_last_successes,
+    get_search_events_for_search,
+    get_search_id_by_url,
+    get_search_stats,
+)
 from api.utils.search_event import (
     get_search_event_avg_stats,
     get_search_event_by_id,
@@ -328,3 +335,68 @@ async def test_get_user_from_token(_db_session: AsyncSession, add_user: User) ->
     assert isinstance(user, User)
     assert user.email == add_user.email
     assert user.id == add_user.id
+
+
+@pytest.mark.asyncio
+async def test_get_last_failures(
+    _db_session: AsyncSession, add_category: Category
+) -> None:
+    search_1 = Search(category=add_category, **examples["search"])
+    search_2 = Search(
+        **{
+            **examples["search"],
+            **{"category": add_category, "url": examples["search"]["url"] + "a"},
+        }
+    )
+    failure_1 = ScanFailure(search=search_1, status_code=404)
+    failure_2 = ScanFailure(search=search_2, status_code=404)
+    failure_3 = ScanFailure(search=search_1, status_code=404)
+    _db_session.add_all([search_1, search_2, failure_1, failure_2, failure_3])
+    await _db_session.commit()
+    _db_session.flush()
+    last_failures = await get_last_failures(session=_db_session)
+    assert len(last_failures) == 2
+    assert search_1.id in last_failures and search_2.id in last_failures
+    assert last_failures.get(search_1.id) == failure_3.date
+
+
+@pytest.mark.asyncio
+async def test_get_last_successes(
+    _db_session: AsyncSession, add_category: Category
+) -> None:
+    search_1 = Search(category=add_category, **examples["search"])
+    search_2 = Search(
+        **{
+            **examples["search"],
+            **{"category": add_category, "url": examples["search"]["url"] + "a"},
+        }
+    )
+    estate = Estate(**examples["estate"])
+    price = Price(**examples["price"], estate=estate)
+    success_1 = SearchEvent(estates=[estate], search=search_1, prices=[price])
+    success_2 = SearchEvent(estates=[estate], search=search_2, prices=[price])
+    success_3 = SearchEvent(estates=[estate], search=search_1, prices=[price])
+    _db_session.add_all([search_1, search_2, success_1, success_2, success_3])
+    await _db_session.commit()
+    _db_session.flush()
+    last_successes = await get_last_successes(session=_db_session)
+    assert len(last_successes) == 2
+    assert search_1.id in last_successes and search_2.id in last_successes
+    assert last_successes.get(search_1.id) == success_3.date
+
+
+@pytest.mark.asyncio
+async def test_get_search_id_by_url(
+    _db_session: AsyncSession, add_category: Category
+) -> None:
+    search_data = examples["search"].copy()
+    url = search_data.pop("url")
+    encoded_url = encode_url(url)
+    search_1 = Search.model_validate(
+        Search(category=add_category, url=encoded_url, **search_data)
+    )
+    _db_session.add(search_1)
+    await _db_session.commit()
+    _db_session.flush()
+    id = await get_search_id_by_url(session=_db_session, url=url)
+    assert id == search_1.id

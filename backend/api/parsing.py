@@ -74,7 +74,6 @@ async def parse_search_info(
     schedule_dict = None
     if schedule is not None:
         schedule_dict = schedule.__dict__
-        setup_scan_periodic_task(url, schedule_dict)
 
     search_modified = False
     if not search:
@@ -103,6 +102,8 @@ async def parse_search_info(
     if search_modified:
         session.add(search)
         await session.commit()
+    if schedule_dict is not None:
+        setup_scan_periodic_task(url, schedule_dict, search.id)
 
     search_event = SearchEvent(search=search)
     session.add(search_event)

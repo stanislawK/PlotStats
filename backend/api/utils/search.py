@@ -1,12 +1,13 @@
 from datetime import datetime
 from typing import Any, Optional, Sequence
 
-from sqlalchemy import and_
+from sqlalchemy import and_, func
 from sqlalchemy.orm import selectinload
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from api.models.search import Search
+from api.models.scan_failure import ScanFailure
+from api.models.search import Search, encode_url
 from api.models.search_event import SearchEvent
 from api.types.event_stats import EventStatsType
 from api.utils.search_event import (
@@ -114,3 +115,32 @@ def get_search_stats(search_events: Sequence[EventStatsType]) -> dict[str, Any]:
     stats["avg_area_total"] = avg_area_in_square_meters  # type: ignore
     stats["avg_terrain_total"] = avg_terrain_area_in_square_meters  # type: ignore
     return stats
+
+
+async def get_last_failures(session: AsyncSession) -> dict[int, datetime]:
+    query = (
+        select(ScanFailure.search_id, func.max(ScanFailure.date).label("last_date"))
+        .select_from(ScanFailure)
+        .group_by(ScanFailure.search_id)  # type: ignore
+    )
+    failures = (await session.exec(query)).all()
+    return {fail[0]: fail[1] for fail in failures if isinstance(fail[0], int)}
+
+
+async def get_last_successes(session: AsyncSession) -> dict[int, datetime]:
+    query = (
+        select(SearchEvent.search_id, func.max(SearchEvent.date).label("last_date"))
+        .select_from(SearchEvent)
+        .group_by(SearchEvent.search_id)  # type: ignore
+    )
+    successes = (await session.exec(query)).all()
+    return {
+        success[0]: success[1] for success in successes if isinstance(success[0], int)
+    }
+
+
+async def get_search_id_by_url(session: AsyncSession, url: str) -> int | None:
+    encoded_url = encode_url(url)
+    search_query = select(Search.id).where(Search.url == encoded_url.decode("ascii"))
+    search_id = (await session.exec(search_query)).first()
+    return search_id

@@ -12,6 +12,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from api.models import Category
 from api.models.estate import Estate
 from api.models.price import Price
+from api.models.scan_failure import ScanFailure
 from api.models.search import Search, decode_url, encode_url
 from api.models.search_event import SearchEvent
 from api.models.user import User
@@ -352,6 +353,17 @@ query allUsers {
     }
   }
 }
+"""
+
+LAST_STATUS_QUERY: str = """
+    query searchesLastStatus {
+        searchesLastStatus {
+            statuses {
+                id
+                status
+            }
+        }
+    }
 """
 
 
@@ -718,11 +730,22 @@ async def test_adhoc_scan_incorrect_category(
 
 @pytest.mark.asyncio
 async def test_adhoc_scan_404_response(
+    _db_session: AsyncSession,
+    add_category: Category,
     authenticated_client: httpx.AsyncClient,
     mocker: MockerFixture,
     cache: fakeredis.FakeRedis,
 ) -> None:
-    url = "https://www.test.io/test"
+    search_data = examples["search"].copy()
+    url = search_data.pop("url")
+    encoded_url = encode_url(url)
+    search_1 = Search.model_validate(
+        Search(category=add_category, url=encoded_url, **search_data)
+    )
+    _db_session.add(search_1)
+    await _db_session.commit()
+    _db_session.flush()
+
     with open("tests/example_files/404_resp.html", "r") as f:
         body = f.read()
     resp = MockAioTextResponse(body, 404)
@@ -752,6 +775,9 @@ async def test_adhoc_scan_404_response(
         in result["data"]["adhocScan"]["message"]
     )
     assert cache.get("token") == "U-X80D14b5VUVY_qgIbBQ"
+    failure_db = (await _db_session.exec(select(ScanFailure))).first()
+    assert failure_db.search_id == search_1.id
+    assert failure_db.status_code == 404
 
 
 @pytest.mark.asyncio
@@ -2142,3 +2168,76 @@ async def test_get_user_list(
     required_fields = {"email", "id", "isActive", "roles"}
     assert required_fields == set(users[0].keys()) == set(users[1].keys())
     assert email in (user["email"] for user in users)
+
+
+@pytest.mark.asyncio
+async def test_searches_last_status_query(
+    authenticated_client: httpx.AsyncClient,
+    _db_session: AsyncSession,
+    add_category: Category,
+) -> None:
+    search_1 = Search(category=add_category, **examples["search"])
+    search_2 = Search(
+        **{
+            **examples["search"],
+            **{"category": add_category, "url": examples["search"]["url"] + "a"},
+        }
+    )
+    search_3 = Search(
+        **{
+            **examples["search"],
+            **{"category": add_category, "url": examples["search"]["url"] + "b"},
+        }
+    )
+    search_4 = Search(
+        **{
+            **examples["search"],
+            **{"category": add_category, "url": examples["search"]["url"] + "c"},
+        }
+    )
+    search_5 = Search(
+        **{
+            **examples["search"],
+            **{"category": add_category, "url": examples["search"]["url"] + "d"},
+        }
+    )
+    estate = Estate(**examples["estate"])
+    price = Price(**examples["price"], estate=estate)
+    failure_1 = ScanFailure(search=search_2, status_code=404)
+    success_1 = SearchEvent(estates=[estate], search=search_3, prices=[price])
+    failure_2 = ScanFailure(search=search_4, status_code=404)
+    success_2 = SearchEvent(estates=[estate], search=search_4, prices=[price])
+    success_3 = SearchEvent(estates=[estate], search=search_5, prices=[price])
+    failure_3 = ScanFailure(search=search_5, status_code=404)
+    _db_session.add_all(
+        [
+            search_1,
+            search_2,
+            search_3,
+            search_4,
+            search_5,
+            failure_1,
+            success_1,
+            failure_2,
+            success_2,
+            success_3,
+            failure_3,
+        ]
+    )
+    await _db_session.commit()
+    _db_session.flush()
+    expected = {
+        search_1.id: "unknown",
+        search_2.id: "failed",
+        search_3.id: "success",
+        search_4.id: "success",
+        search_5.id: "failed",
+    }
+    response = await authenticated_client.get(
+        "/graphql", params={"query": LAST_STATUS_QUERY}
+    )
+    assert response.status_code == 200
+    result = response.json()
+    assert len(result["data"]["searchesLastStatus"]["statuses"]) == len(expected.keys())
+    for status in result["data"]["searchesLastStatus"]["statuses"]:
+        assert expected.get(status["id"]) == status.get("status")

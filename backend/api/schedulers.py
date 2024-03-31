@@ -9,12 +9,14 @@ from redbeat import RedBeatSchedulerEntry
 # Later make sure that when removing search we also remove schedule
 
 
-def setup_scan_periodic_task(url: str, schedule_input: dict[str, Any]) -> None:
+def setup_scan_periodic_task(
+    url: str, schedule_input: dict[str, Any], search_id: int
+) -> None:
     entry = RedBeatSchedulerEntry(
         name=url,
         task="api.periodic_tasks.run_periodic_scan",
         schedule=crontab(**schedule_input),
-        args=[url],
+        args=[url, search_id],
         kwargs={"schedule_name": url},
         app=celery_app,
     )
