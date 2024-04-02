@@ -15,6 +15,10 @@ type UserSearchProps = {
     toSurface?: number;
     url: string;
   };
+  latestStatus: {
+    id: number;
+    status: string;
+  };
   favSearchId?: number;
   isUsers: boolean;
   isAdmin?: boolean;
@@ -22,12 +26,15 @@ type UserSearchProps = {
 
 export default function UserSearch({
   search,
+  latestStatus,
   favSearchId,
   isUsers,
   isAdmin,
 }: UserSearchProps) {
   return (
-    <li className={`py-3 sm:py-4`}>
+    <li
+      className={`py-3 sm:py-4 ${!!isUsers && latestStatus.status == "failed" ? "shadow-[inset_0_-15px_20px_-20px_rgba(255,0,0,0.5)]" : ""}`}
+    >
       <div className={`flex items-center space-x-4`}>
         <div className="flex-shrink-0">
           <CategoryIcon category={search.category.name}></CategoryIcon>
@@ -44,6 +51,18 @@ export default function UserSearch({
             <strong>Size:</strong> {search.fromSurface || "n/a"} sqm -{" "}
             {search.toSurface || "n/a"} sqm
           </p>
+          <div>
+            <p
+              className={`text-sm text-gray-500 truncate dark:text-gray-400 inline`}
+            >
+              <strong>Status:</strong>
+            </p>
+            <p
+              className={`text-sm truncate inline ${latestStatus.status == "success" ? "text-green-500" : latestStatus.status == "failed" ? "text-red-500" : "text-gray-500"}`}
+            >
+              {" " + latestStatus.status}
+            </p>
+          </div>
 
           <a
             href={search.url}

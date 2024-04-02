@@ -285,3 +285,35 @@ export async function getLastEvent(id: number, accessToken: string) {
     console.log(error);
   }
 }
+
+export async function getLastStatuses(accessToken: string) {
+  const query = JSON.stringify({
+    query: `
+    query lastStatus {
+      searchesLastStatus {
+        statuses {
+          id
+          status
+        }
+      }
+    }
+    `,
+  });
+  try {
+    const api_res = await fetch("http://backend:8000/graphql", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "same-origin",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: query,
+    });
+    const res_parsed = await api_res.json();
+    const data = res_parsed.data["searchesLastStatus"];
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}

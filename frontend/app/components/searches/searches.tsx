@@ -27,6 +27,10 @@ type Props = {
     toSurface?: number;
     url: string;
   }[];
+  statuses: {
+    id: number;
+    status: string;
+  }[];
   favSearchId?: number;
   isAdmin: boolean;
 };
@@ -35,6 +39,7 @@ export default async function SearchesLists({
   userSearches,
   allSearches,
   favSearchId,
+  statuses,
   isAdmin,
 }: Props) {
   let userSearchesIds: Array<number>;
@@ -104,6 +109,9 @@ export default async function SearchesLists({
                     favSearchId={favSearchId}
                     isUsers={true}
                     isAdmin={isAdmin}
+                    latestStatus={statuses.find(
+                      (status) => status.id == search.id
+                    )}
                   ></UserSearch>
                 );
               })}
