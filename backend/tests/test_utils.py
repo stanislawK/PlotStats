@@ -24,8 +24,10 @@ from api.utils.search import (
     get_last_failures,
     get_last_successes,
     get_search_events_for_search,
+    get_search_failures,
     get_search_id_by_url,
     get_search_stats,
+    get_search_successes,
 )
 from api.utils.search_event import (
     get_search_event_avg_stats,
@@ -400,3 +402,51 @@ async def test_get_search_id_by_url(
     _db_session.flush()
     id = await get_search_id_by_url(session=_db_session, url=url)
     assert id == search_1.id
+
+
+@pytest.mark.asyncio
+async def test_get_search_failures(
+    _db_session: AsyncSession, add_category: Category
+) -> None:
+    past_date = datetime.today() - timedelta(days=15)
+    out_of_scope = datetime.today() - timedelta(days=32)
+    search_1 = Search(category=add_category, **examples["search"])
+    failure_1 = ScanFailure(search=search_1, status_code=404)
+    failure_2 = ScanFailure(search=search_1, status_code=403, date=past_date)
+    failure_3 = ScanFailure(search=search_1, status_code=404, date=out_of_scope)
+    _db_session.add_all([search_1, failure_1, failure_2, failure_3])
+    await _db_session.commit()
+    _db_session.flush()
+    all_failures = await get_search_failures(session=_db_session, days=30)
+    assert len(all_failures) == 1
+    assert search_1.id in all_failures
+    assert len(all_failures[search_1.id]) == 2
+    assert all(
+        ("date" in fail and "status" in fail for fail in all_failures[search_1.id])
+    )
+
+
+@pytest.mark.asyncio
+async def test_get_search_successes(
+    _db_session: AsyncSession, add_category: Category
+) -> None:
+    search_1 = Search(category=add_category, **examples["search"])
+    estate = Estate(**examples["estate"])
+    price = Price(**examples["price"], estate=estate)
+    past_date = datetime.today() - timedelta(days=15)
+    out_of_scope = datetime.today() - timedelta(days=32)
+    success_1 = SearchEvent(estates=[estate], search=search_1, prices=[price])
+    success_2 = SearchEvent(
+        estates=[estate], search=search_1, prices=[price], date=past_date
+    )
+    success_3 = SearchEvent(
+        estates=[estate], search=search_1, prices=[price], date=out_of_scope
+    )
+    _db_session.add_all([search_1, success_1, success_2, success_3])
+    await _db_session.commit()
+    _db_session.flush()
+    successes = await get_search_successes(session=_db_session, days=30)
+    assert len(successes) == 1
+    assert search_1.id in successes
+    assert len(successes[search_1.id]) == 2
+    assert out_of_scope not in successes[search_1.id]

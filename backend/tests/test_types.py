@@ -19,7 +19,11 @@ from api.types.category import CategoryType
 from api.types.event_stats import EventStatsType
 from api.types.price import convert_price_from_db
 from api.types.scan import AdhocScanInput, PydanticAdhocScanInput
-from api.types.search_stats import convert_search_stats_from_db, get_last_statuses
+from api.types.search_stats import (
+    convert_search_fail_rate,
+    convert_search_stats_from_db,
+    get_last_statuses,
+)
 from api.utils.search_event import get_search_event_prices
 
 from .conftest import MockAioJSONResponse, examples
@@ -251,3 +255,48 @@ async def test_get_last_statuses(
     assert len(statuses) == len(expected.keys())
     for status in statuses:
         assert expected.get(status.id) == status.status
+
+
+@pytest.mark.asyncio
+async def test_get_search_fail_rate(
+    _db_session: AsyncSession, add_category: Category
+) -> None:
+    past_date = datetime.today() - timedelta(days=15)
+    out_of_scope = datetime.today() - timedelta(days=32)
+    search_1 = Search(category=add_category, **examples["search"])
+    estate = Estate(**examples["estate"])
+    price = Price(**examples["price"], estate=estate)
+    failure_1 = ScanFailure(search=search_1, status_code=404)
+    failure_2 = ScanFailure(search=search_1, status_code=403, date=past_date)
+    failure_3 = ScanFailure(search=search_1, status_code=404, date=out_of_scope)
+    success_1 = SearchEvent(estates=[estate], search=search_1, prices=[price])
+    success_2 = SearchEvent(
+        estates=[estate], search=search_1, prices=[price], date=past_date
+    )
+    success_3 = SearchEvent(
+        estates=[estate], search=search_1, prices=[price], date=out_of_scope
+    )
+    _db_session.add_all(
+        [
+            search_1,
+            failure_1,
+            failure_2,
+            failure_3,
+            estate,
+            price,
+            success_1,
+            success_2,
+            success_3,
+        ]
+    )
+    await _db_session.commit()
+    _db_session.flush()
+    fail_rate = await convert_search_fail_rate(session=_db_session, days=30)
+    successes = fail_rate.successes
+    failures = fail_rate.failures
+    assert len(successes) == 1 and len(failures) == 1
+    assert (
+        successes[0].search_id == search_1.id and failures[0].search_id == search_1.id
+    )
+    assert len(successes[0].successes) == 2
+    assert len(failures[0].failures) == 2

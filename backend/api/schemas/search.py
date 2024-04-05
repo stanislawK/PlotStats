@@ -13,6 +13,7 @@ from api.types.general import InputValidationError
 from api.types.search_stats import (
     AssignSearchInput,
     AssignSearchResponse,
+    DaysOutOfRangeError,
     EditScheduleInput,
     EditScheduleResponse,
     FavoriteSearchDoesntExistError,
@@ -27,7 +28,10 @@ from api.types.search_stats import (
     SearchesStatusType,
     SearchEventsStatsInput,
     SearchEventsStatsType,
+    SearchFailRateInput,
+    SearchFailRateResponse,
     SearchStatsInput,
+    convert_search_fail_rate,
     convert_search_stats_from_db,
     convert_searches_from_db,
     get_last_statuses,
@@ -107,6 +111,15 @@ class Query:
     async def searches_last_status(self, info: Info[Any, Any]) -> SearchesStatusType:
         session = info.context["session"]
         return await get_last_statuses(session=session)
+
+    @strawberry.field(permission_classes=[IsAuthenticated])  # type: ignore
+    async def search_fail_rate(
+        self, info: Info[Any, Any], input: SearchFailRateInput
+    ) -> SearchFailRateResponse:
+        if input.days > 180:
+            return DaysOutOfRangeError()
+        session = info.context["session"]
+        return await convert_search_fail_rate(session, input.days)
 
 
 @strawberry.type

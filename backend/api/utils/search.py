@@ -1,4 +1,5 @@
-from datetime import datetime
+from collections import defaultdict
+from datetime import datetime, timedelta
 from typing import Any, Optional, Sequence
 
 from sqlalchemy import and_, func
@@ -137,6 +138,38 @@ async def get_last_successes(session: AsyncSession) -> dict[int, datetime]:
     return {
         success[0]: success[1] for success in successes if isinstance(success[0], int)
     }
+
+
+async def get_search_failures(
+    session: AsyncSession, days: int
+) -> dict[int, list[dict[str, datetime | int]]]:
+    target_date = datetime.today() - timedelta(days=days)
+    query = (
+        select(ScanFailure.search_id, ScanFailure.date, ScanFailure.status_code)
+        .select_from(ScanFailure)
+        .filter(ScanFailure.date >= target_date)  # type: ignore
+    )
+    failures_db = (await session.exec(query)).all()
+    failures = defaultdict(list)
+    for fail in failures_db:
+        failures[fail[0]].append({"date": fail[1], "status": fail[2]})
+    return failures  # type: ignore
+
+
+async def get_search_successes(
+    session: AsyncSession, days: int
+) -> dict[int, list[datetime]]:
+    target_date = datetime.today() - timedelta(days=days)
+    query = (
+        select(SearchEvent.search_id, SearchEvent.date)
+        .select_from(SearchEvent)
+        .filter(SearchEvent.date >= target_date)  # type: ignore
+    )
+    successes_db = (await session.exec(query)).all()
+    successes = defaultdict(list)
+    for success in successes_db:
+        successes[success[0]].append(success[1])
+    return successes  # type: ignore
 
 
 async def get_search_id_by_url(session: AsyncSession, url: str) -> int | None:

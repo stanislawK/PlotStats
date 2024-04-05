@@ -16,7 +16,9 @@ from api.utils.search import (
     get_last_failures,
     get_last_successes,
     get_search_events_for_search,
+    get_search_failures,
     get_search_stats,
+    get_search_successes,
 )
 
 
@@ -109,6 +111,36 @@ class SearchesStatusType:
     statuses: list[SearchStatusType]
 
 
+@strawberry.type
+class ScanFailureType:
+    id: int | None = None
+    date: datetime
+    status: int
+
+
+@strawberry.type
+class SearchFailuresType:
+    search_id: int
+    failures: list[ScanFailureType]
+
+
+@strawberry.type
+class SearchSuccessesType:
+    search_id: int
+    successes: list[datetime]
+
+
+@strawberry.type
+class SearchFailRateType:
+    failures: list[SearchFailuresType]
+    successes: list[SearchSuccessesType]
+
+
+@strawberry.input
+class SearchFailRateInput:
+    days: int
+
+
 async def convert_search_stats_from_db(
     session: AsyncSession,
     search: Search,
@@ -191,6 +223,32 @@ async def get_last_statuses(session: AsyncSession) -> SearchesStatusType:
     return SearchesStatusType(statuses=statuses)
 
 
+async def convert_search_fail_rate(
+    session: AsyncSession, days: int
+) -> SearchFailRateType:
+    successes_db = await get_search_successes(session, days)
+    failures_db = await get_search_failures(session, days)
+    successes = [
+        SearchSuccessesType(search_id=search_id, successes=dates)
+        for search_id, dates in successes_db.items()
+    ]
+    all_failures = []
+    for search_id, search_failures in failures_db.items():
+        all_failures.append(
+            SearchFailuresType(
+                search_id=search_id,
+                failures=[
+                    ScanFailureType(
+                        date=fail["date"],  # type: ignore
+                        status=fail["status"],  # type: ignore
+                    )
+                    for fail in search_failures
+                ],
+            )
+        )
+    return SearchFailRateType(failures=all_failures, successes=successes)
+
+
 @strawberry.type
 class FavoriteSearchDoesntExistError(Error):
     message: str = "Select your favorite search first"
@@ -209,6 +267,11 @@ class SearchDoesntExistError(Error):
 @strawberry.type
 class NoSearchesAvailableError(Error):
     message: str = "No searches available"
+
+
+@strawberry.type
+class DaysOutOfRangeError(Error):
+    message: str = "Provided number of days id out of range"
 
 
 @strawberry.type
@@ -249,4 +312,9 @@ GetSearchEventsStatsResponse = Annotated[
 EditScheduleResponse = Annotated[
     Union[ScheduleEditedSuccessfully, SearchDoesntExistError, InputValidationError],
     strawberry.union("EditScheduleResponse"),
+]
+
+SearchFailRateResponse = Annotated[
+    Union[SearchFailRateType, DaysOutOfRangeError],
+    strawberry.union("SearchFailRateResponse"),
 ]
