@@ -317,3 +317,48 @@ export async function getLastStatuses(accessToken: string) {
     console.log(error);
   }
 }
+
+export async function getFailRate(days: number, accessToken: string) {
+  const query = JSON.stringify({
+    query: `
+    query searchFailRate {
+      searchFailRate(input: {days: ${days}}) {
+        ... on SearchFailRateType {
+          __typename
+          failures {
+            searchId
+            failures {
+              date
+              status
+            }
+          }
+          successes {
+            searchId
+            successes
+          }
+        }
+        ... on DaysOutOfRangeError {
+          __typename
+          message
+        }
+      }
+    }`,
+  });
+  try {
+    const api_res = await fetch("http://backend:8000/graphql", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "same-origin",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: query,
+    });
+    const res_parsed = await api_res.json();
+    const data = res_parsed.data["searchFailRate"];
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
