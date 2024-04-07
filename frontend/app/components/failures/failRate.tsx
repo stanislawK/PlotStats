@@ -1,66 +1,92 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import PriceChange from "./priceChange";
 const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 type Props = {
   failures: Failure[];
-  successes: {
-    searchId: number
-    successes: string[]
-  }[]
+  successes: Success[];
 };
 
 type Failure = {
   searchId: number;
   failures: {
-    date: string
-    status: number
-  }[]
+    date: string;
+    status: number;
+  }[];
 };
 
+type Success = {
+  searchId: number;
+  successes: string[];
+};
 
-export default function SuccessRateChart({ failures, successes }: Props) {
-  const getSuccessDates = successes.flatMap(item => item.successes)
-              .map(dateTime => dateTime.split('T')[0])
+type countsPerDate = {
+  [key: string]: { successes: number; failures: number };
+};
+
+type seriesData = {
+  countsPerDate: countsPerDate;
+  uniqueDatesArray: string[];
+};
+
+const getSeriesData = (
+  failures: Failure[],
+  successes: Success[]
+): seriesData => {
+  const getSuccessDates = successes
+    .flatMap((item) => item.successes)
+    .map((dateTime) => dateTime.split("T")[0]);
   const getFailureDates = failures
-      .flatMap((item) => item.failures.map((failure) => failure.date))
-      .map((dateTime) => dateTime.split("T")[0])
-  const allDates = [...getSuccessDates, ...getFailureDates]
+    .flatMap((item) => item.failures.map((failure) => failure.date))
+    .map((dateTime) => dateTime.split("T")[0]);
+  const allDates = [...getSuccessDates, ...getFailureDates];
   const uniqueDatesSet = new Set<string>(allDates);
-  const uniqueDatesArray: string[] = Array.from(uniqueDatesSet);
-  const countsPerDate: { [key: string]: { successes: number; failures: number } } = {};
-  uniqueDatesSet.forEach(date => {
+  const uniqueDatesArray: string[] = Array.from(uniqueDatesSet).sort((a, b) =>
+    a.localeCompare(b)
+  );
+  const countsPerDate: {
+    [key: string]: { successes: number; failures: number };
+  } = {};
+  uniqueDatesSet.forEach((date) => {
     countsPerDate[date] = { successes: 0, failures: 0 };
   });
   // Count successes per date
-successes.forEach(item => {
-  item.successes.forEach(dateTime => {
-    const date = dateTime.split('T')[0];
-    countsPerDate[date].successes++;
+  successes.forEach((item) => {
+    item.successes.forEach((dateTime) => {
+      const date = dateTime.split("T")[0];
+      countsPerDate[date].successes++;
+    });
   });
-});
-// Count failures per date
-failures.forEach(item => {
-  item.failures.forEach(failure => {
-    const date = failure.date.split('T')[0];
-    countsPerDate[date].failures++;
+  // Count failures per date
+  failures.forEach((item) => {
+    item.failures.forEach((failure) => {
+      const date = failure.date.split("T")[0];
+      countsPerDate[date].failures++;
+    });
   });
-});
+  return { countsPerDate, uniqueDatesArray };
+};
 
-console.log(countsPerDate);
-  console.log(getDates)
-  console.log(uniqueDatesArray)
+export default function FailRateChart({ failures, successes }: Props) {
+  const { countsPerDate, uniqueDatesArray } = getSeriesData(
+    failures,
+    successes
+  );
   const allSeries = {
     uniqueDatesArray: uniqueDatesArray,
-    minPrices: Array.from(
-      events,
-      (event) => event.minPricePerSquareMeter.pricePerSquareMeter
-    ),
-    avgPrice: allAvgPrices,
+    successesArr: Object.values(countsPerDate).map((date) => date.successes),
+    failuresArr: Object.values(countsPerDate).map((date) => date.failures),
   };
-  const avgArea = events[events.length - 1]?.avgAreaInSquareMeters;
+  const failedSum: number = allSeries.failuresArr.reduce(
+    (accumulator, currentValue) => accumulator + currentValue,
+    0
+  );
+  const successSum: number = allSeries.successesArr.reduce(
+    (accumulator, currentValue) => accumulator + currentValue,
+    0
+  );
+  const failRate = ((failedSum / successSum) * 100).toFixed(2);
   const mainChartColors = {
     borderColor: "#F3F4F6",
     labelColor: "#6B7280",
@@ -70,12 +96,12 @@ console.log(countsPerDate);
   const series = [
     {
       name: "Succeeded scans",
-      data: allSeries.avgPrice,
+      data: allSeries.successesArr,
       color: "#32a852",
     },
     {
       name: "Failed scans",
-      data: allSeries.minPrices,
+      data: allSeries.failuresArr,
       color: "#a8323a",
     },
   ];
@@ -115,7 +141,7 @@ console.log(countsPerDate);
       },
     },
     xaxis: {
-      categories: allSeries.dates,
+      categories: allSeries.uniqueDatesArray,
       labels: {
         style: {
           colors: [mainChartColors.labelColor],
@@ -147,7 +173,7 @@ console.log(countsPerDate);
           fontWeight: 500,
         },
         formatter: function (value) {
-          return "PLN" + value;
+          return value;
         },
       },
     },
@@ -182,13 +208,12 @@ console.log(countsPerDate);
         <div className="flex items-center justify-between mb-4">
           <div className="flex-shrink-0">
             <span className="text-xl font-bold leading-none text-gray-900 sm:text-2xl dark:text-white">
-              {avgArea} sq meters
+              {failRate}%
             </span>
             <h3 className="text-base font-light text-gray-500 dark:text-gray-400">
-              Avg area this week
+              30 days fail rate
             </h3>
           </div>
-          <PriceChange allAvgPrices={allAvgPrices}></PriceChange>
         </div>
         <div id="main-chart">
           <ApexChart
@@ -207,7 +232,7 @@ console.log(countsPerDate);
               type="button"
               data-dropdown-toggle="weekly-sales-dropdown"
             >
-              Last 7 days{" "}
+              Last 30 days{" "}
               <svg
                 className="w-4 h-4 ml-2"
                 fill="none"
@@ -293,28 +318,6 @@ console.log(countsPerDate);
                 </a>
               </div>
             </div>
-          </div>
-          <div className="flex-shrink-0">
-            <a
-              href="#"
-              className="inline-flex items-center p-2 text-xs font-medium uppercase rounded-lg text-primary-700 sm:text-sm hover:bg-gray-100 dark:text-primary-500 dark:hover:bg-gray-700"
-            >
-              Sales Report
-              <svg
-                className="w-4 h-4 ml-1"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M9 5l7 7-7 7"
-                ></path>
-              </svg>
-            </a>
           </div>
         </div>
       </div>
