@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 type Props = {
   failure: Failure;
   index: number;
@@ -36,14 +38,12 @@ export default function FailsRow({ failure, index }: Props) {
         {failure.date.split("T")[0]}
       </td>
       <td className="p-4 whitespace-nowrap">
-        <a
-          href=""
+        <Link
           className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-          rel="noopener noreferrer"
-          target="_blank"
+          href={`failures/?ondemand=${failure.searchId}`}
         >
           Run Scan
-        </a>
+        </Link>
       </td>
     </tr>
   );
