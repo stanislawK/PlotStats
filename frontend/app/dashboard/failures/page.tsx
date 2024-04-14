@@ -3,6 +3,8 @@ import { cookies } from "next/headers";
 import { getAllSearches, getFailRate } from "../../utils/searchStats";
 import FailRateChart from "@/app/components/failures/failRate";
 import FailsList from "@/app/components/failures/failsList";
+import { onDemandScan } from "@/app/utils/scan";
+import { redirect } from "next/navigation";
 
 type Props = {
   searchParams: Record<string, string> | null | undefined;
@@ -60,6 +62,7 @@ function getRecentFailures(
 }
 
 export default async function Failures({ searchParams }: Props) {
+  const onDemandSearchId = searchParams?.ondemand;
   const accessToken = getCookie("accessToken", { cookies });
   const allSearches = await getAllSearches(accessToken);
   const failRate = await getFailRate(30, accessToken);
@@ -67,6 +70,17 @@ export default async function Failures({ searchParams }: Props) {
     allSearches.searches,
     failRate.failures
   );
+
+  if (onDemandSearchId !== undefined && !isNaN(parseInt(onDemandSearchId))) {
+    ("use server");
+    const toFetch = allSearches.searches.find(
+      (search) => search.id == onDemandSearchId
+    );
+    if (!!toFetch?.url) {
+      await onDemandScan(toFetch.url, accessToken);
+      redirect("/dashboard/failures");
+    }
+  }
 
   return (
     <>
