@@ -5,6 +5,7 @@ import FailRateChart from "@/app/components/failures/failRate";
 import FailsList from "@/app/components/failures/failsList";
 import { onDemandScan } from "@/app/utils/scan";
 import { redirect } from "next/navigation";
+import RatePerSearchChart from "@/app/components/failures/ratePerSearch";
 
 type Props = {
   searchParams: Record<string, string> | null | undefined;
@@ -40,6 +41,11 @@ type Searches = {
   url: string;
 }[];
 
+type ReducedSearch = {
+  id: number;
+  location: string;
+};
+
 function getRecentFailures(
   searches: Searches,
   failures: Failures
@@ -70,6 +76,14 @@ export default async function Failures({ searchParams }: Props) {
     allSearches.searches,
     failRate.failures
   );
+  const reducedSearches: ReducedSearch[] = allSearches.searches
+    .map(
+      (search): ReducedSearch => ({
+        id: search.id,
+        location: search.location,
+      })
+    )
+    .sort((a, b) => a.id - b.id);
 
   if (onDemandSearchId !== undefined && !isNaN(parseInt(onDemandSearchId))) {
     ("use server");
@@ -93,7 +107,13 @@ export default async function Failures({ searchParams }: Props) {
             ></FailRateChart>
             <FailsList failures={recentFailures.slice(0, 15)}></FailsList>
           </div>
-          <div className="flex items-center justify-center mb-4 rounded bg-gray-50 dark:bg-gray-800"></div>
+          <div className="flex items-center justify-center mb-4 rounded bg-gray-50 dark:bg-gray-800">
+            <RatePerSearchChart
+              failures={failRate.failures}
+              successes={failRate.successes}
+              searches={reducedSearches}
+            ></RatePerSearchChart>
+          </div>
         </div>
       </div>
     </>
