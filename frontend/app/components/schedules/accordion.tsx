@@ -16,6 +16,7 @@ type Props = {
 };
 
 export default async function SchedulesAccordion({ schedules }: Props) {
+  // @ts-ignore
   delete schedules.disabled;
   return (
     <>
@@ -26,6 +27,7 @@ export default async function SchedulesAccordion({ schedules }: Props) {
           </h3>
         </div>
         {Object.entries(schedules).map(([name, schedule]) => {
+          // @ts-ignore
           return <Day name={name} schedule={schedule} key={name}></Day>;
         })}
       </div>

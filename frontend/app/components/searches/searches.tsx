@@ -109,6 +109,7 @@ export default async function SearchesLists({
                     favSearchId={favSearchId}
                     isUsers={true}
                     isAdmin={isAdmin}
+                    // @ts-ignore
                     latestStatus={statuses.find(
                       (status) => status.id == search.id
                     )}

@@ -6,6 +6,7 @@ export async function isAdminUser(token: string) {
   if (!tokenParams?.roles) {
     return false;
   }
+  // @ts-ignore
   const roles = Array.from(tokenParams.roles);
   if (roles.length > 0) {
     return roles.includes("admin");

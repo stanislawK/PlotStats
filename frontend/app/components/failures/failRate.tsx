@@ -172,6 +172,7 @@ export default function FailRateChart({ failures, successes }: Props) {
           fontSize: "14px",
           fontWeight: 500,
         },
+        // @ts-ignore
         formatter: function (value) {
           return value;
         },

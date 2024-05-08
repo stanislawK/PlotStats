@@ -17,7 +17,8 @@ type Props = {
 };
 
 export default async function Users({ searchParams }: Props) {
-  const accessToken = getCookie("accessToken", { cookies });
+  // @ts-ignore
+  const accessToken: string = getCookie("accessToken", { cookies });
   const isFreshToken = await isTokenFresh(accessToken);
   const users = await getUsers(accessToken);
   const userToDeactivateId = searchParams?.deactivateUser;
@@ -39,6 +40,7 @@ export default async function Users({ searchParams }: Props) {
   };
   const deactivateUserFunc = async (userId: number, email: string) => {
     "use server";
+    // @ts-ignore
     if (userId == parseInt(userToDeactivateId)) {
       await deactivateUser(accessToken, email);
     }

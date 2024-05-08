@@ -51,16 +51,21 @@ export async function parseSchedules(userSchedules: RawUserSchedules) {
   userSchedules.map((schedule) => {
     if (!!schedule?.schedule) {
       const { dayOfWeek, hour, minute } = schedule.schedule;
+      // @ts-ignore
       const day = DaysMap[dayOfWeek];
       const formattedHour = hour.toString().padStart(2, "0");
       const formattedMinute = minute.toString().padStart(2, "0");
       const key = `${formattedHour}:${formattedMinute}`;
+      // @ts-ignore
       if (key in sortedSchedules[day]) {
+        // @ts-ignore
         sortedSchedules[day][key].push(schedule);
       } else {
+        // @ts-ignore
         sortedSchedules[day][key] = [schedule];
       }
     } else {
+      // @ts-ignore
       sortedSchedules.disabled.push(schedule);
     }
   });

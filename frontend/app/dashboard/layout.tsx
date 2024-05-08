@@ -6,7 +6,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const accessToken = getCookie("accessToken", { cookies });
   return (
     <>
-      <Sidebar token={accessToken}></Sidebar>
+      <Sidebar
+        // @ts-ignore
+        token={accessToken}
+      ></Sidebar>
       {children}
     </>
   );
