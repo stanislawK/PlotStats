@@ -8,12 +8,15 @@ import { isAdminUser } from "@/app/utils/users";
 
 export default async function Categories() {
   const accessToken = getCookie("accessToken", { cookies });
+  // @ts-ignore
   const categories = await getCategories(accessToken);
   const addCategoryFunc = async (name: string) => {
     "use server";
+    // @ts-ignore
     await addCategory(name, accessToken);
     revalidatePath("/dashboard/schedules");
   };
+  // @ts-ignore
   const isAdmin = await isAdminUser(accessToken);
 
   return (

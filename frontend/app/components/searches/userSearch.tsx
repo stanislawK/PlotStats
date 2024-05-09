@@ -15,7 +15,7 @@ type UserSearchProps = {
     toSurface?: number;
     url: string;
   };
-  latestStatus: {
+  latestStatus?: {
     id: number;
     status: string;
   };
@@ -33,7 +33,7 @@ export default function UserSearch({
 }: UserSearchProps) {
   return (
     <li
-      className={`py-3 sm:py-4 ${!!isUsers && latestStatus.status == "failed" ? "shadow-[inset_0_-15px_20px_-20px_rgba(255,0,0,0.5)]" : ""}`}
+      className={`py-3 sm:py-4 ${!!isUsers && latestStatus?.status == "failed" ? "shadow-[inset_0_-15px_20px_-20px_rgba(255,0,0,0.5)]" : ""}`}
     >
       <div className={`flex items-center space-x-4`}>
         <div className="flex-shrink-0">
@@ -58,9 +58,9 @@ export default function UserSearch({
               <strong>Status:</strong>
             </p>
             <p
-              className={`text-sm truncate inline ${latestStatus.status == "success" ? "text-green-500" : latestStatus.status == "failed" ? "text-red-500" : "text-gray-500"}`}
+              className={`text-sm truncate inline ${latestStatus?.status == "success" ? "text-green-500" : latestStatus?.status == "failed" ? "text-red-500" : "text-gray-500"}`}
             >
-              {" " + latestStatus.status}
+              {" " + latestStatus?.status}
             </p>
           </div>
 

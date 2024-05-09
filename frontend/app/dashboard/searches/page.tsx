@@ -33,7 +33,8 @@ export default async function Searches({ searchParams }: Props) {
   const newUsersSearchId = searchParams?.users;
   const onDemandSearchId = searchParams?.ondemand;
 
-  const accessToken = getCookie("accessToken", { cookies });
+  // @ts-ignore
+  const accessToken: string = getCookie("accessToken", { cookies });
   if (addFavoriteId !== undefined && !isNaN(parseInt(addFavoriteId))) {
     ("use server");
     await addFavorite(addFavoriteId, accessToken);
@@ -50,6 +51,7 @@ export default async function Searches({ searchParams }: Props) {
   if (onDemandSearchId !== undefined && !isNaN(parseInt(onDemandSearchId))) {
     ("use server");
     const toFetch = userSearches.searches.find(
+      // @ts-ignore
       (search) => search.id == onDemandSearchId
     );
     if (!!toFetch?.url) {

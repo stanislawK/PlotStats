@@ -68,14 +68,12 @@ services:
   frontend:
     build:
       context: .
-      dockerfile: config/frontend.Dockerfile
+      dockerfile: config/${FRONTEND_DF}
     container_name: stats_frontend
     depends_on:
       - backend
     ports:
       - 4200:4200
-    volumes:
-      - ./frontend:/frontend  
 
 volumes:
   static_volume:

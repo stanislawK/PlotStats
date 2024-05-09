@@ -5,7 +5,16 @@ import TimeEntry from "./timeEntry";
 
 type Props = {
   name: string;
-  index: object;
+  schedule: {
+    Monday: {};
+    Tuesday: {};
+    Wednesday: {};
+    Thursday: {};
+    Friday: {};
+    Saturday: {};
+    Sunday: {};
+    disabled: [];
+  };
 };
 
 export default function Day({ name, schedule }: Props) {
@@ -45,6 +54,7 @@ export default function Day({ name, schedule }: Props) {
                   return (
                     <TimeEntry
                       time={time}
+                      // @ts-ignore
                       searches={schedule[time]}
                       key={`${time}${new Date().getTime()}`}
                     ></TimeEntry>

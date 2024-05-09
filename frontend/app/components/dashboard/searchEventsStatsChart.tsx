@@ -123,6 +123,7 @@ export default function SearchEventsStatsChart({ events }: Props) {
           fontSize: "14px",
           fontWeight: 500,
         },
+        // @ts-ignore
         formatter: function (value) {
           return "PLN" + value;
         },

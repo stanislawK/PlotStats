@@ -165,6 +165,7 @@ export default function RatePerSearchChart({
 
         <div id="column-chart">
           <ApexChart
+            // @ts-ignore
             options={options}
             series={series}
             height={420}

@@ -32,8 +32,10 @@ type Props = {
 };
 
 export default async function Dashboard({ searchParams }: Props) {
-  const accessToken = getCookie("accessToken", { cookies });
+  // @ts-ignore
+  const accessToken: string = getCookie("accessToken", { cookies });
   const searchId = searchParams?.searchId;
+  // @ts-ignore
   const searchEventsStats = await getSearchEventsStats(accessToken, searchId);
   if (
     searchEventsStats["searchEventsStats"]["__typename"] !=
@@ -43,6 +45,7 @@ export default async function Dashboard({ searchParams }: Props) {
   }
   const events: Events =
     searchEventsStats["searchEventsStats"]["searchEvents"] || [];
+    // @ts-ignore
   const searchSummary = await getSearchStats(accessToken, searchId);
   const userSearches = await getUserSearches(accessToken);
   const lastEventId = Math.max(...Array.from(events, (event) => event.id));

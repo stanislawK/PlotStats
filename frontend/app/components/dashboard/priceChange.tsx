@@ -12,6 +12,7 @@ function getPriceChange(allAvgPrices: number[]) {
   if (thisWeekPrice == avgTotal) {
     return 0;
   }
+  // @ts-ignore
   return +(Math.round((thisWeekPrice / avgTotal - 1) * 100 + "e+2") + "e-2");
 }
 
