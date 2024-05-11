@@ -9,7 +9,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from .settings import settings
 
 async_engine = create_async_engine(
-    settings.db_uri, echo=True, future=True, poolclass=NullPool
+    settings.db_uri, echo=settings.debug, future=True, poolclass=NullPool
 )
 
 
