@@ -17,6 +17,7 @@ celery-redbeat
 redis
 python-jose[cryptography]
 passlib[bcrypt]
+gunicorn
 
 # dev-packages
 black==23.3.0
