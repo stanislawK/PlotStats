@@ -43,6 +43,8 @@ USER nextjs
 EXPOSE 4200
 
 ENV PORT 4200
+ENV HOSTNAME 0.0.0.0
+
 RUN ls
 # server.js is created by next build from the standalone output
 # https://nextjs.org/docs/pages/api-reference/next-config-js/output

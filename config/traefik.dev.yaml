@@ -1,0 +1,12 @@
+api:
+  insecure: true
+  dashboard: true
+
+providers:
+  docker:
+    exposedByDefault: false
+    network: "plotstats_traefik_proxy"
+
+entryPoints:
+  web:
+    address: ":80"

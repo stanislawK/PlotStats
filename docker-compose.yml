@@ -17,6 +17,7 @@ services:
       - ./postgres-data:/var/lib/postgresql/data
 
   redis:
+    restart: unless-stopped
     image: redis:7.2-alpine
     command: redis-server --save 60 1 --loglevel warning --requirepass ${REDIS_PASS}
     ports:
@@ -25,6 +26,7 @@ services:
       - ./redis-data:/data
 
   backend:
+    restart: unless-stopped
     build:
       context: .
       dockerfile: config/backend.Dockerfile
@@ -40,6 +42,7 @@ services:
       - .env
 
   celery:
+    restart: unless-stopped
     build:
       context: .
       dockerfile: config/backend.Dockerfile
@@ -53,6 +56,7 @@ services:
       - .env
 
   celery-beat:
+    restart: unless-stopped
     build:
       context: .
       dockerfile: config/backend.Dockerfile
@@ -66,16 +70,40 @@ services:
       - .env
 
   frontend:
+    restart: unless-stopped
     build:
       context: .
       dockerfile: config/${FRONTEND_DF}
     container_name: stats_frontend
     depends_on:
       - backend
+    labels:
+      - traefik.enable=true
+      - traefik.http.services.frontend.loadbalancer.server.port=4200
+      - traefik.http.routers.frontend.rule=Host(`${TRAEFIK_HOST}`)
+      - traefik.http.routers.frontend.entrypoints=web
+    networks:
+      - traefik_proxy
+      - default
+
+  proxy:
+    image: "traefik:v3.0"
+    container_name: "proxy"
+    env_file: .env
+    restart: unless-stopped
     ports:
-      - 4200:4200
+      - "80:80"
+      - "8080:8080"
+    networks:
+      - traefik_proxy
+    volumes:
+      - "./config/traefik.dev.yaml:/etc/traefik/traefik.yaml"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
 volumes:
   static_volume:
   postgres-data:
   redis-data:
+
+networks:
+  traefik_proxy:
