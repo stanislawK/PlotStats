@@ -21,6 +21,7 @@ class Settings(BaseSettings):
     refresh_token_expire_minutes: int
     dc1_url: str
     redis_pass: str
+    traefik_host: str
     imports: tuple[str] = ("api.periodic_tasks",)
 
     @property
