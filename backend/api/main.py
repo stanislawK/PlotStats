@@ -21,8 +21,9 @@ async def get_context(
 
 
 def create_app() -> FastAPI:
+    graphiql = settings.debug
     graphql_app: GraphQLRouter[BaseSchema, None] = GraphQLRouter(
-        schema=schema, context_getter=get_context  # type: ignore
+        schema=schema, graphiql=graphiql, context_getter=get_context  # type: ignore
     )
     app = FastAPI(debug=settings.debug)
     app.celery_app = create_celery()  # type: ignore
