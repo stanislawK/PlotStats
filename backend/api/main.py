@@ -27,12 +27,15 @@ def create_app() -> FastAPI:
     )
     app = FastAPI(debug=settings.debug)
     app.celery_app = create_celery()  # type: ignore
-    app.include_router(graphql_app, prefix="/graphql")
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["*"],
+        allow_origins=[
+            f"http://{settings.traefik_host}",
+            f"https://{settings.traefik_host}",
+        ],
         allow_credentials=True,
-        allow_methods=["*"],
+        allow_methods=["POST"],
         allow_headers=["*"],
     )
+    app.include_router(graphql_app, prefix="/graphql")
     return app
