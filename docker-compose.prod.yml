@@ -1,0 +1,110 @@
+version: "3"
+
+services:
+  postgres:
+    restart: always
+    image: postgres:15.2
+    environment:
+      POSTGRES_DB: $DB_NAME
+      POSTGRES_USER: $DB_USER
+      POSTGRES_PASSWORD: $DB_PASS
+      POSTGRES_HOST: $DB_HOST
+      POSTGRES_PORT: $DB_PORT
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+
+  redis:
+    restart: unless-stopped
+    image: redis:7.2-alpine
+    command: redis-server --save 60 1 --loglevel warning --requirepass ${REDIS_PASS}
+    volumes:
+      - ./redis-data:/data
+
+  backend:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: config/backend.Dockerfile
+    depends_on:
+      - redis
+      - postgres
+    volumes:
+      - ./backend:/backend
+      - static_volume:/backend/static_root
+    env_file:
+      - .env
+
+  celery:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: config/backend.Dockerfile
+    command: "celery -A api.asgi.celery worker -l INFO"
+    volumes:
+      - ./backend:/backend
+    depends_on:
+      - postgres
+      - redis
+    env_file:
+      - .env
+
+  celery-beat:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: config/backend.Dockerfile
+    command: "celery -A api.asgi.celery beat -S redbeat.RedBeatScheduler --max-interval 30 -l INFO"
+    volumes:
+      - ./backend:/backend
+    depends_on:
+      - postgres
+      - redis
+    env_file:
+      - .env
+
+  frontend:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: config/prodFrontend.Dockerfile
+    container_name: stats_frontend
+    depends_on:
+      - backend
+    labels:
+      - traefik.enable=true
+      - traefik.http.services.frontend.loadbalancer.server.port=4200
+      - traefik.http.routers.frontend.rule=Host(`${TRAEFIK_HOST}`)
+      - traefik.http.routers.frontend.tls=true
+      - traefik.http.routers.frontend.tls.certresolver=cloudflare
+      - traefik.http.routers.frontend.entrypoints=web
+      - traefik.http.routers.frontend.entrypoints=websecure
+    networks:
+      - traefik_proxy
+      - default
+
+  proxy:
+    image: "traefik:v3.0"
+    container_name: "proxy"
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - traefik_proxy
+    environment:
+      - CLOUDFLARE_DNS_API_TOKEN=${CF_DNS_API_TOKEN}
+      - TRAEFIK_CERTIFICATESRESOLVERS_CLOUDFLARE_ACME_EMAIL=${CF_EMAIL}
+    volumes:
+      - "./config/traefik.prod.yaml:/traefik.yaml:ro"
+      - "./config/acme.json:/acme.json"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+volumes:
+  static_volume:
+  postgres-data:
+  redis-data:
+
+networks:
+  traefik_proxy:
