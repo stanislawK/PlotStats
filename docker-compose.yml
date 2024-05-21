@@ -67,7 +67,7 @@ services:
     restart: unless-stopped
     build:
       context: .
-      dockerfile: config/${FRONTEND_DF}
+      dockerfile: config/frontend.Dockerfile
     container_name: stats_frontend
     depends_on:
       - backend

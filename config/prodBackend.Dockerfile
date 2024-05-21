@@ -27,6 +27,8 @@ COPY --from=builder /opt/venv /opt/venv
 
 COPY ./config/scripts/wait-for-it.sh /scripts/wait-for-it.sh
 COPY ./config/backend/run.sh /scripts/run.sh
+COPY ./config/backend/run_celery.sh /scripts/run_celery.sh
+RUN chmod +x /scripts/run_celery.sh
 
 COPY ./config/backend /config
 
@@ -37,6 +39,9 @@ WORKDIR /backend
 RUN chown -R app:app /backend
 RUN chmod 755 /backend
 
+RUN chown -R app:app /scripts
+RUN chmod 755 /scripts
+
 USER app
 
 EXPOSE 8000
@@ -46,4 +51,4 @@ EXPOSE 8000
 # https://pythonspeed.com/articles/multi-stage-docker-python/
 ENV PATH="/opt/venv/bin:$PATH"
 
-CMD /scripts/run.sh
+CMD if [ "$SERVICE_TYPE" = "celery" ]; then /scripts/run_celery.sh; else /scripts/run.sh; fi

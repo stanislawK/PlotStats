@@ -8,7 +8,8 @@ WORKDIR /frontend
 
 # Install dependencies based on the preferred package manager
 COPY ./frontend/package*.json ./frontend/next.config.js* ./frontend/yarn.lock* ./frontend/package-lock.json* ./frontend/pnpm-lock.yaml* ./
-RUN corepack enable pnpm && pnpm install
+
+RUN npm ci
 
 # Rebuild the source code only when needed
 FROM base AS builder
