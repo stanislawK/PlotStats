@@ -48,6 +48,7 @@ export default async function Searches({ searchParams }: Props) {
   const userSearches = await getUserSearches(accessToken, true);
   const allSearches = await getAllSearches(accessToken);
   const lastStatuses = await getLastStatuses(accessToken);
+
   if (onDemandSearchId !== undefined && !isNaN(parseInt(onDemandSearchId))) {
     ("use server");
     const toFetch = userSearches.searches.find(
@@ -73,7 +74,7 @@ export default async function Searches({ searchParams }: Props) {
           allSearches={allSearches.searches}
           favSearchId={userSearches?.favoriteId}
           isAdmin={isAdmin}
-          statuses={lastStatuses.statuses} 
+          statuses={lastStatuses.statuses}
         ></SearchesLists>
         <div className="flex items-center justify-center mb-4 rounded bg-gray-50 dark:bg-gray-800">
           <NewSearch adhocScanFunc={adhocScanFunc}></NewSearch>

@@ -164,7 +164,7 @@ export async function getUserSearches(
     const res_parsed = await api_res.json();
     const data = res_parsed.data["usersSearches"];
     if (data["__typename"] === "NoSearchesAvailableError") {
-      return {};
+      return { searches: [] };
     }
     return data;
   } catch (error) {
@@ -214,6 +214,9 @@ export async function getAllSearches(accessToken: string) {
     });
     const res_parsed = await api_res.json();
     const data = res_parsed.data["allSearches"];
+    if (!data?.searches) {
+      return { searches: [] };
+    }
     return data;
   } catch (error) {
     console.log(error);
