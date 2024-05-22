@@ -76,6 +76,8 @@ services:
       - traefik.http.services.frontend.loadbalancer.server.port=4200
       - traefik.http.routers.frontend.rule=Host(`${TRAEFIK_HOST}`)
       - traefik.http.routers.frontend.entrypoints=web
+    volumes:
+      - ./frontend:/frontend  
     networks:
       - traefik_proxy
       - default
