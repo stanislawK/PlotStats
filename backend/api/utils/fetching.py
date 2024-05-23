@@ -5,11 +5,12 @@ from typing import Any
 import aiohttp
 import lxml.html
 from loguru import logger
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlmodel.ext.asyncio.session import AsyncSession
 
 from api.database import get_cache
 from api.models.scan_failure import ScanFailure
 from api.settings import settings
+from api.utils.search import get_search_id_by_url
 
 HEADERS = {
     "user-agent": (
@@ -69,7 +70,11 @@ async def make_request(
                 cache.delete(f"retried_{url}")
             if resp.status != 200:
                 return resp.status, {}
-            body = await resp.json()
+            try:
+                body = await resp.json()
+            except aiohttp.ContentTypeError:
+                logger.error(f"Incorrect response body status for {url}")
+                return 418, {}
             return 200, body  # type: ignore
 
 
@@ -79,3 +84,19 @@ async def report_failure(
     failure = ScanFailure(status_code=status_code, search_id=search_id)
     session.add(failure)
     await session.commit()
+
+
+async def handle_failed_scan(
+    status_code: int,
+    scan_url: str,
+    base_url: str,
+    session: AsyncSession,
+    search_id: int | None = None,
+) -> None:
+    logger.critical(f"Scan has failed with {status_code} status code for {scan_url}.")
+    if not search_id:
+        search_id = await get_search_id_by_url(session, str(base_url))
+    if search_id:
+        await report_failure(
+            session=session, status_code=status_code, search_id=search_id
+        )

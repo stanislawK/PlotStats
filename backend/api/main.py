@@ -2,7 +2,7 @@ from typing import Any
 
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlmodel.ext.asyncio.session import AsyncSession
 from strawberry.fastapi import GraphQLRouter
 from strawberry.schema import BaseSchema
 

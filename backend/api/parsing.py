@@ -1,8 +1,8 @@
 from typing import Any, Optional
 
 import jmespath
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import select
+from sqlmodel.ext.asyncio.session import AsyncSession
 
 from api.models import Category, Estate, Price, Search, SearchEvent
 from api.models.search import encode_url
@@ -63,14 +63,14 @@ async def parse_search_info(
         Category.name == CATEGORY_MAP[estate_type.lower()]
     )
 
-    category = (await session.exec(cat_query)).first()  # type: ignore
+    category = (await session.exec(cat_query)).first()
     if not category:
         raise CategoryNotFoundError
 
     search_params = jmespath.search("pageProps.filteringQueryParams", body)
     encoded_url = encode_url(url)
     search_query = select(Search).where(Search.url == encoded_url.decode("ascii"))
-    search = (await session.exec(search_query)).first()  # type: ignore
+    search = (await session.exec(search_query)).first()
     schedule_dict = None
     if schedule is not None:
         schedule_dict = schedule.__dict__
@@ -102,7 +102,7 @@ async def parse_search_info(
     if search_modified:
         session.add(search)
         await session.commit()
-    if schedule_dict is not None:
+    if schedule_dict is not None and search.id is not None:
         setup_scan_periodic_task(url, schedule_dict, search.id)
 
     search_event = SearchEvent(search=search)
@@ -142,9 +142,7 @@ async def parse_scan_data(
     existing_estates_query = select(Estate).where(
         Estate.id.in_(estate.id for estate in estates)  # type: ignore
     )
-    existing_estates = (
-        await session.exec(existing_estates_query)  # type: ignore
-    ).all()
+    existing_estates = (await session.exec(existing_estates_query)).all()
     new_estates = [
         estate
         for estate in estates
