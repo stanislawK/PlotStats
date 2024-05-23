@@ -17,8 +17,7 @@ from api.types.scan import (
     ScanFailedError,
     ScanSucceeded,
 )
-from api.utils.fetching import make_request, report_failure
-from api.utils.search import get_search_id_by_url
+from api.utils.fetching import handle_failed_scan, make_request
 from api.utils.url_parsing import parse_url
 
 TOTAL_PAGES_PATH = "pageProps.data.searchAds.pagination.totalPages"
@@ -34,27 +33,23 @@ class Mutation:
             data = input.to_pydantic()
         except ValidationError as error:
             return InputValidationError(message=str(error))
-        url = parse_url(str(data.url))
+        base_url = str(data.url)
+        url = parse_url(base_url)
         status_code, body = await make_request(url)
         session: AsyncSession = info.context["session"]
         if status_code != 200:
-            logger.critical(f"Scan has failed with {status_code} status code.")
-            search_id = await get_search_id_by_url(session, str(data.url))
-            if search_id:
-                await report_failure(
-                    session=session, status_code=status_code, search_id=search_id
-                )
+            await handle_failed_scan(status_code, url, base_url, session)
             return ScanFailedError(
-                message=f"Scan has failed with {status_code} status code."
+                message=f"Scan has failed with {status_code} status code for {url}."
             )
 
         user = info.context["request"].state.user
         try:
             search_event = await parse_search_info(
-                str(data.url), data.schedule, body, session, user
+                base_url, data.schedule, body, session, user
             )
-            await parse_scan_data(str(data.url), body, session, search_event)
-        except CategoryNotFoundError:
+            await parse_scan_data(base_url, body, session, search_event)
+        except (CategoryNotFoundError, TypeError):
             logger.critical(f"Parsing document for {url} has failed.")
             return ScanFailedError(message="Document parsing failed.")
         # Check for pagination
@@ -66,5 +61,10 @@ class Mutation:
             status_code, body = await make_request(
                 url=next_url, wait_before_request=random.randint(10, 20)
             )
-            await parse_scan_data(str(data.url), body, session, search_event)
+            if status_code != 200:
+                await handle_failed_scan(status_code, next_url, base_url, session)
+                return ScanFailedError(
+                    message=f"Scan has failed with {status_code} status code."
+                )
+            await parse_scan_data(base_url, body, session, search_event)
         return ScanSucceeded  # type: ignore

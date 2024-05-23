@@ -93,7 +93,7 @@ services:
     networks:
       - traefik_proxy
     volumes:
-      - "./config/traefik.dev.yaml:/etc/traefik/traefik.yaml"
+      - "./config/traefik.dev.yaml:/traefik.yaml:ro"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
 volumes:

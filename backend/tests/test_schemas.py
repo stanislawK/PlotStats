@@ -797,7 +797,7 @@ async def test_adhoc_scan_404_response(
     result = response.json()
     assert result["data"]["adhocScan"]["__typename"] == "ScanFailedError"
     assert (
-        "Scan has failed with 404 status code."
+        "Scan has failed with 404 status code for "
         in result["data"]["adhocScan"]["message"]
     )
     assert cache.get("token") == "U-X80D14b5VUVY_qgIbBQ"
