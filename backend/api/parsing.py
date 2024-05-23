@@ -172,6 +172,7 @@ async def parse_scan_data(
             search_event=search_event,
         )
         for ad in ads
+        if jmespath.search("totalPrice.value", ad) is not None
     ]
     session.add_all(prices)
     await session.commit()
