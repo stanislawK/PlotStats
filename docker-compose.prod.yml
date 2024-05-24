@@ -95,25 +95,6 @@ services:
           cpus: '0.25'
           memory: 128M
 
-  proxy:
-    image: "traefik:v3.0"
-    container_name: "proxy"
-    restart: unless-stopped
-    security_opt:
-      - no-new-privileges:true
-    ports:
-      - "80:80"
-      - "443:443"
-    networks:
-      - traefik_proxy
-    environment:
-      - CLOUDFLARE_DNS_API_TOKEN=${CF_DNS_API_TOKEN}
-      - TRAEFIK_CERTIFICATESRESOLVERS_CLOUDFLARE_ACME_EMAIL=${CF_EMAIL}
-    volumes:
-      - "./config/traefik.prod.yaml:/traefik.yaml:ro"
-      - "./config/acme.json:/acme.json"
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
-
 volumes:
   static_volume:
   postgres-data:
@@ -121,3 +102,4 @@ volumes:
 
 networks:
   traefik_proxy:
+    external: true
