@@ -2,7 +2,9 @@ FROM python:3.12 AS base
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONPATH "${PYTHONPATH}:/backend/"
-ENV PATH="/opt/venv/bin:$PATH"
+ENV VIRTUAL_ENV=/opt/venv
+RUN python3 -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$"PATH"
 
 # Builder stage to install dependencies
 # This stage is separate so if the requirements.txt file hasn't changed, it will be cached
