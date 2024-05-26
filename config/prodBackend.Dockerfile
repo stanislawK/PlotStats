@@ -4,7 +4,7 @@ ENV PYTHONUNBUFFERED 1
 ENV PYTHONPATH "${PYTHONPATH}:/backend/"
 ENV VIRTUAL_ENV=/opt/venv
 RUN python -m venv $VIRTUAL_ENV
-ENV PATH="$VIRTUAL_ENV/bin:$"PATH"
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 # Builder stage to install dependencies
 # This stage is separate so if the requirements.txt file hasn't changed, it will be cached
