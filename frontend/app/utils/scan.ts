@@ -48,16 +48,20 @@ export async function adhocScan(scan: Scan, accessToken: string) {
     });
     const res_parsed = await api_res.json();
     const data = res_parsed.data["adhocScan"];
+    if (!data) {
+      return { error: true };
+    }
     return data;
   } catch (error) {
     console.log(error);
+    return { error: true };
   }
 }
 
 export async function onDemandScan(url: string, accessToken: string) {
-  const isAdmin = isAdminUser(accessToken)
+  const isAdmin = isAdminUser(accessToken);
   if (!isAdmin) {
-    return {}
+    return {};
   }
   const mutation = JSON.stringify({
     query: `
@@ -96,12 +100,15 @@ export async function onDemandScan(url: string, accessToken: string) {
     });
     const res_parsed = await api_res.json();
     const data = res_parsed.data["adhocScan"];
+    if (!data) {
+      return { error: true };
+    }
     return data;
   } catch (error) {
     console.log(error);
+    return { error: true };
   }
 }
-
 
 export async function addFavorite(id: string, accessToken: string) {
   const mutation = JSON.stringify({

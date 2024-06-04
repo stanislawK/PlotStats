@@ -1,10 +1,10 @@
 import NewSearch from "../../components/searches/newSearch";
 import SearchesLists from "../../components/searches/searches";
+import AdhocScanAlert from "@/app/components/searches/adhocScanAlert";
 import {
   adhocScan,
   addFavorite,
   addToUsers,
-  onDemandScan,
 } from "../../utils/scan";
 import { getCookie } from "cookies-next";
 import { cookies } from "next/headers";
@@ -31,7 +31,6 @@ type Props = {
 export default async function Searches({ searchParams }: Props) {
   const addFavoriteId = searchParams?.favorite;
   const newUsersSearchId = searchParams?.users;
-  const onDemandSearchId = searchParams?.ondemand;
 
   // @ts-ignore
   const accessToken: string = getCookie("accessToken", { cookies });
@@ -49,26 +48,24 @@ export default async function Searches({ searchParams }: Props) {
   const allSearches = await getAllSearches(accessToken);
   const lastStatuses = await getLastStatuses(accessToken);
 
-  if (onDemandSearchId !== undefined && !isNaN(parseInt(onDemandSearchId))) {
-    ("use server");
-    const toFetch = userSearches.searches.find(
-      // @ts-ignore
-      (search) => search.id == onDemandSearchId
-    );
-    if (!!toFetch?.url) {
-      await onDemandScan(toFetch.url, accessToken);
-      redirect("/dashboard/searches");
-    }
-  }
   const adhocScanFunc = async (data: ScanData) => {
     "use server";
-    await adhocScan(data, accessToken);
-    revalidatePath("/dashboard/searches");
+    const scanResult = await adhocScan(data, accessToken);
+    if (
+      !scanResult ||
+      !!scanResult.error ||
+      scanResult.__typename != "ScanSucceeded"
+    ) {
+      redirect("/dashboard/searches?scanState=failure");
+    } else {
+      redirect("/dashboard/searches?scanState=success");
+    }
   };
   const isAdmin = await isAdminUser(accessToken);
   return (
     <div className="p-4 sm:ml-64">
       <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
+        <AdhocScanAlert scanStatus={searchParams?.scanState}></AdhocScanAlert>
         <SearchesLists
           userSearches={userSearches.searches}
           allSearches={allSearches.searches}
