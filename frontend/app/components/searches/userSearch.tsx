@@ -1,5 +1,10 @@
 import Link from "next/link";
 import CategoryIcon from "../ui/categoryIcon";
+import { cookies } from "next/headers";
+import { getCookie } from "cookies-next";
+import { onDemandScan } from "@/app/utils/scan";
+import { redirect } from "next/navigation";
+import OnDemandBtn from "./onDemandBtn";
 
 type UserSearchProps = {
   search: {
@@ -24,13 +29,15 @@ type UserSearchProps = {
   isAdmin?: boolean;
 };
 
-export default function UserSearch({
+export default async function UserSearch({
   search,
   latestStatus,
   favSearchId,
   isUsers,
   isAdmin,
 }: UserSearchProps) {
+  // @ts-ignore
+  const accessToken: string = getCookie("accessToken", { cookies });
   return (
     <li
       className={`py-3 sm:py-4 ${!!isUsers && latestStatus?.status == "failed" ? "shadow-[inset_0_-15px_20px_-20px_rgba(255,0,0,0.5)]" : ""}`}
@@ -99,25 +106,26 @@ export default function UserSearch({
                     On-demand run
                   </div>
                 </div>
-                <Link href={`searches/?ondemand=${search.id}`}>
-                  <svg
-                    className="w-[26px] h-[26px] text-gray-800 dark:text-white mr-2 mt-1 -rotate-45"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="1"
-                      d="m10.051 8.102-3.778.322-1.994 1.994a.94.94 0 0 0 .533 1.6l2.698.316m8.39 1.617-.322 3.78-1.994 1.994a.94.94 0 0 1-1.595-.533l-.4-2.652m8.166-11.174a1.366 1.366 0 0 0-1.12-1.12c-1.616-.279-4.906-.623-6.38.853-1.671 1.672-5.211 8.015-6.31 10.023a.932.932 0 0 0 .162 1.111l.828.835.833.832a.932.932 0 0 0 1.111.163c2.008-1.102 8.35-4.642 10.021-6.312 1.475-1.478 1.133-4.77.855-6.385Zm-2.961 3.722a1.88 1.88 0 1 1-3.76 0 1.88 1.88 0 0 1 3.76 0Z"
-                    />
-                  </svg>
-                </Link>
+                <form
+                  action={async (formData) => {
+                    "use server";
+                    const scanResult = await onDemandScan(
+                      search.url,
+                      accessToken
+                    );
+                    if (
+                      !scanResult ||
+                      !!scanResult.error ||
+                      scanResult.__typename != "ScanSucceeded"
+                    ) {
+                      redirect("/dashboard/searches?scanState=failure");
+                    } else {
+                      redirect("/dashboard/searches?scanState=success");
+                    }
+                  }}
+                >
+                  <OnDemandBtn></OnDemandBtn>
+                </form>
               </span>
             </>
           )}
