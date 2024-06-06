@@ -231,3 +231,18 @@ class MockAioTextResponse:
 
     async def __aenter__(self):  # type: ignore
         return self
+
+
+class MockCffiJSONResponse:
+    def __init__(self, json: dict[str, Any], status_code: int):
+        self._json = json
+        self.status_code = status_code
+
+    def json(self) -> dict[str, Any]:
+        return self._json
+
+
+class MockCffiTextResponse:
+    def __init__(self, text: str, status_code: int):
+        self.text = text
+        self.status_code = status_code

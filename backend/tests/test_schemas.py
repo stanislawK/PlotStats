@@ -21,7 +21,7 @@ from api.types.category import CategoryExistsError
 from api.utils.jwt import get_jwt_payload
 from api.utils.user import get_user_by_email, verify_password
 
-from .conftest import MockAioJSONResponse, MockAioTextResponse, examples
+from .conftest import MockCffiJSONResponse, MockCffiTextResponse, examples
 
 # mypy: ignore-errors
 CATEGORIES_QUERY = """
@@ -681,8 +681,8 @@ async def test_adhoc_scan_correct_response(
     schedule = {"day_of_week": 0, "hour": 1, "minute": 2}
     with open("tests/example_files/body_plot.json", "r") as f:
         body = json.load(f)
-    resp = MockAioJSONResponse(body, 200)
-    mocker.patch("aiohttp.ClientSession.get", return_value=resp)
+    resp = MockCffiJSONResponse(body, 200)
+    mocker.patch("curl_cffi.requests.Session.get", return_value=resp)
     schedule_mock = mocker.patch("api.parsing.setup_scan_periodic_task")
     mutation = f"""
         mutation adhocScan {{
@@ -730,8 +730,8 @@ async def test_adhoc_scan_incorrect_category(
     url = "https://www.test.io/test"
     with open("tests/example_files/body_plot.json", "r") as f:
         body = json.load(f)
-    resp = MockAioJSONResponse(body, 200)
-    mocker.patch("aiohttp.ClientSession.get", return_value=resp)
+    resp = MockCffiJSONResponse(body, 200)
+    mocker.patch("curl_cffi.requests.Session.get", return_value=resp)
     mutation = f"""
         mutation adhocScan {{
             adhocScan(input: {{url: "{url}"}}) {{
@@ -774,8 +774,8 @@ async def test_adhoc_scan_404_response(
 
     with open("tests/example_files/404_resp.html", "r") as f:
         body = f.read()
-    resp = MockAioTextResponse(body, 404)
-    mocker.patch("aiohttp.ClientSession.get", return_value=resp)
+    resp = MockCffiTextResponse(body, 404)
+    mocker.patch("curl_cffi.requests.Session.get", return_value=resp)
     mocker.patch("asyncio.sleep", return_value=0)
     mutation = f"""
         mutation adhocScan {{
@@ -821,8 +821,8 @@ async def test_search_event_stats_without_top(
     url = "https://www.test.io/test"
     with open("tests/example_files/body_plot.json", "r") as f:
         body = json.load(f)
-    resp = MockAioJSONResponse(body, 200)
-    mocker.patch("aiohttp.ClientSession.get", return_value=resp)
+    resp = MockCffiJSONResponse(body, 200)
+    mocker.patch("curl_cffi.requests.Session.get", return_value=resp)
     mutation = f"""
         mutation adhocScan {{
             adhocScan(input: {{
@@ -911,8 +911,8 @@ async def test_search_event_doesnt_exist(
     url = "https://www.test.io/test"
     with open("tests/example_files/body_plot.json", "r") as f:
         body = json.load(f)
-    resp = MockAioJSONResponse(body, 200)
-    mocker.patch("aiohttp.ClientSession.get", return_value=resp)
+    resp = MockCffiJSONResponse(body, 200)
+    mocker.patch("curl_cffi.requests.Session.get", return_value=resp)
     mutation = f"""
         mutation adhocScan {{
             adhocScan(input: {{
@@ -967,8 +967,8 @@ async def test_search_event_unauthorized(
     url = "https://www.test.io/test"
     with open("tests/example_files/body_plot.json", "r") as f:
         body = json.load(f)
-    resp = MockAioJSONResponse(body, 200)
-    mocker.patch("aiohttp.ClientSession.get", return_value=resp)
+    resp = MockCffiJSONResponse(body, 200)
+    mocker.patch("curl_cffi.requests.Session.get", return_value=resp)
     mutation = f"""
         mutation adhocScan {{
             adhocScan(input: {{
@@ -1022,8 +1022,8 @@ async def test_search_doesnt_exist(
     url = "https://www.test.io/test"
     with open("tests/example_files/body_plot.json", "r") as f:
         body = json.load(f)
-    resp = MockAioJSONResponse(body, 200)
-    mocker.patch("aiohttp.ClientSession.get", return_value=resp)
+    resp = MockCffiJSONResponse(body, 200)
+    mocker.patch("curl_cffi.requests.Session.get", return_value=resp)
     mutation = f"""
         mutation adhocScan {{
             adhocScan(input: {{
@@ -1074,8 +1074,8 @@ async def test_search_stats_query(
     url = "https://www.test.io/test"
     with open("tests/example_files/body_plot.json", "r") as f:
         body = json.load(f)
-    resp = MockAioJSONResponse(body, 200)
-    mocker.patch("aiohttp.ClientSession.get", return_value=resp)
+    resp = MockCffiJSONResponse(body, 200)
+    mocker.patch("curl_cffi.requests.Session.get", return_value=resp)
     mutation = f"""
         mutation adhocScan {{
             adhocScan(input: {{
@@ -1174,8 +1174,8 @@ async def test_search_stats_query_unauthorized(
     url = "https://www.test.io/test"
     with open("tests/example_files/body_plot.json", "r") as f:
         body = json.load(f)
-    resp = MockAioJSONResponse(body, 200)
-    mocker.patch("aiohttp.ClientSession.get", return_value=resp)
+    resp = MockCffiJSONResponse(body, 200)
+    mocker.patch("curl_cffi.requests.Session.get", return_value=resp)
     mutation = f"""
         mutation adhocScan {{
             adhocScan(input: {{
@@ -1975,8 +1975,8 @@ async def test_fav_search_event_stats(
     url = "https://www.test.io/test"
     with open("tests/example_files/body_plot.json", "r") as f:
         body = json.load(f)
-    resp = MockAioJSONResponse(body, 200)
-    mocker.patch("aiohttp.ClientSession.get", return_value=resp)
+    resp = MockCffiJSONResponse(body, 200)
+    mocker.patch("curl_cffi.requests.Session.get", return_value=resp)
     mutation = f"""
         mutation adhocScan {{
             adhocScan(input: {{
@@ -2036,8 +2036,8 @@ async def test_search_events_stats(
     url = "https://www.test.io/test"
     with open("tests/example_files/body_plot.json", "r") as f:
         body = json.load(f)
-    resp = MockAioJSONResponse(body, 200)
-    mocker.patch("aiohttp.ClientSession.get", return_value=resp)
+    resp = MockCffiJSONResponse(body, 200)
+    mocker.patch("curl_cffi.requests.Session.get", return_value=resp)
     mutation = f"""
         mutation adhocScan {{
             adhocScan(input: {{
@@ -2094,8 +2094,8 @@ async def test_edit_schedule(
     url = "https://www.test.io/test"
     with open("tests/example_files/body_plot.json", "r") as f:
         body = json.load(f)
-    resp = MockAioJSONResponse(body, 200)
-    mocker.patch("aiohttp.ClientSession.get", return_value=resp)
+    resp = MockCffiJSONResponse(body, 200)
+    mocker.patch("curl_cffi.requests.Session.get", return_value=resp)
     mutation = f"""
         mutation adhocScan {{
             adhocScan(input: {{
@@ -2145,8 +2145,8 @@ async def test_delete_schedule(
     url = "https://www.test.io/test"
     with open("tests/example_files/body_plot.json", "r") as f:
         body = json.load(f)
-    resp = MockAioJSONResponse(body, 200)
-    mocker.patch("aiohttp.ClientSession.get", return_value=resp)
+    resp = MockCffiJSONResponse(body, 200)
+    mocker.patch("curl_cffi.requests.Session.get", return_value=resp)
     mutation = f"""
         mutation adhocScan {{
             adhocScan(input: {{
