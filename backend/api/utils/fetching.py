@@ -2,8 +2,8 @@ import asyncio
 import random
 from typing import Any
 
-import aiohttp
 import lxml.html
+from curl_cffi import requests
 from loguru import logger
 from sqlmodel.ext.asyncio.session import AsyncSession
 
@@ -49,33 +49,32 @@ async def make_request(
     retries = cache.get(f"retried_{url}") or 0
     if not isinstance(retries, int):
         retries = int(retries)  # type: ignore
-    async with aiohttp.ClientSession() as session:
-        async with session.get(
-            formatted_url, headers=HEADERS, proxy=settings.dc1_url
-        ) as resp:
-            if resp.status in (404, 403) and retries < 3:
-                if resp.status == 403 and token != "":
-                    cache.set("token", "")
-                logger.warning(
-                    f"{resp.status} status code - retrying {retries + 1} time..."
-                )
-                body = await resp.text()
-                extract_token(body)
-                delay = random.randint(20, 40)
-                logger.info(f"waiting for {delay} seconds...")
-                cache.incr(f"retried_{url}", 1)
-                await asyncio.sleep(delay)
-                return await make_request(url)
-            if cache.get(f"retried_{url}"):
-                cache.delete(f"retried_{url}")
-            if resp.status != 200:
-                return resp.status, {}
-            try:
-                body = await resp.json()
-            except aiohttp.ContentTypeError:
-                logger.error(f"Incorrect response body status for {url}")
-                return 418, {}
-            return 200, body  # type: ignore
+    session = requests.Session(impersonate="chrome120")
+    resp = session.get(formatted_url, proxies={"https": settings.dc1_url})
+    if resp.status_code in (404, 403) and retries < 3:
+        logger.warning(
+            f"{resp.status_code} status code - retrying {retries + 1} time..."
+        )
+        delay = random.randint(20, 40)
+        logger.info(f"waiting for {delay} seconds...")
+        cache.incr(f"retried_{url}", 1)
+        await asyncio.sleep(delay)
+        if resp.status_code == 403:
+            cache.set("token", "")
+            return await make_request(url)
+        body = resp.text
+        extract_token(body)
+        return await make_request(url)
+    if cache.get(f"retried_{url}"):
+        cache.delete(f"retried_{url}")
+    if resp.status_code != 200:
+        return resp.status_code, {}
+    try:
+        body = resp.json()
+    except ValueError:
+        logger.error(f"Incorrect response body for {url}")
+        return 418, {}
+    return 200, body
 
 
 async def report_failure(

@@ -2,23 +2,24 @@ FROM python:3.12 AS base
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONPATH "${PYTHONPATH}:/backend/"
-ENV VIRTUAL_ENV=/opt/venv \
-    PATH="/opt/venv/bin:$PATH"
+ENV VIRTUAL_ENV=/opt/venv
+RUN pip install uv
+RUN uv venv $VIRTUAL_ENV
+ENV PATH="/opt/venv/bin:$PATH"
 
 # Builder stage to install dependencies
 # This stage is separate so if the requirements.txt file hasn't changed, it will be cached
 FROM base AS builder
 
-RUN apt-get update \
-    && apt-get install -y curl
+# RUN apt-get update \
+#     && apt-get install -y curl
 
-ADD --chmod=755 https://astral.sh/uv/install.sh /install.sh
-RUN /install.sh && rm /install.sh
+# ADD --chmod=755 https://astral.sh/uv/install.sh /install.sh
+# RUN /install.sh && rm /install.sh
 
 COPY ./backend/requirements.txt /backend/
 WORKDIR /backend
-RUN /root/.cargo/bin/uv venv /opt/venv && \
-    /root/.cargo/bin/uv pip install --system --no-cache -r requirements.txt
+RUN uv pip install --no-cache -r requirements.txt
 
 # Final stage to create the runnable image with minimal size
 FROM python:3.12-slim-bookworm AS final

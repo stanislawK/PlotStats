@@ -26,7 +26,7 @@ from api.types.search_stats import (
 )
 from api.utils.search_event import get_search_event_prices
 
-from .conftest import MockAioJSONResponse, examples
+from .conftest import MockCffiJSONResponse, examples
 
 # mypy: ignore-errors
 
@@ -86,8 +86,8 @@ async def test_event_stats_type(
     url = "https://www.test.io/test"
     with open("tests/example_files/body_plot.json", "r") as f:
         body = json.load(f)
-    resp = MockAioJSONResponse(body, 200)
-    mocker.patch("aiohttp.ClientSession.get", return_value=resp)
+    resp = MockCffiJSONResponse(body, 200)
+    mocker.patch("curl_cffi.requests.Session.get", return_value=resp)
     mutation = f"""
         mutation adhocScan {{
             adhocScan(input: {{
@@ -149,8 +149,8 @@ async def test_search_stats_type(
     url = "https://www.test.io/test"
     with open("tests/example_files/body_plot.json", "r") as f:
         body = json.load(f)
-    resp = MockAioJSONResponse(body, 200)
-    mocker.patch("aiohttp.ClientSession.get", return_value=resp)
+    resp = MockCffiJSONResponse(body, 200)
+    mocker.patch("curl_cffi.requests.Session.get", return_value=resp)
     mutation = f"""
         mutation adhocScan {{
             adhocScan(input: {{

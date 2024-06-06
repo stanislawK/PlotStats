@@ -37,7 +37,7 @@ from api.utils.search_event import (
 )
 from api.utils.url_parsing import parse_url
 
-from .conftest import MockAioJSONResponse, examples
+from .conftest import MockCffiJSONResponse, examples
 
 # mypy: ignore-errors
 
@@ -82,8 +82,8 @@ async def test_get_search_event_prices(
     url = "https://www.test.io/test"
     with open("tests/example_files/body_plot.json", "r") as f:
         body = json.load(f)
-    resp = MockAioJSONResponse(body, 200)
-    mocker.patch("aiohttp.ClientSession.get", return_value=resp)
+    resp = MockCffiJSONResponse(body, 200)
+    mocker.patch("curl_cffi.requests.Session.get", return_value=resp)
     mutation = f"""
         mutation adhocScan {{
             adhocScan(input: {{
@@ -138,8 +138,8 @@ async def test_get_search_event_avg_stats(
     url = "https://www.test.io/test"
     with open("tests/example_files/body_plot.json", "r") as f:
         body = json.load(f)
-    resp = MockAioJSONResponse(body, 200)
-    mocker.patch("aiohttp.ClientSession.get", return_value=resp)
+    resp = MockCffiJSONResponse(body, 200)
+    mocker.patch("curl_cffi.requests.Session.get", return_value=resp)
     mutation = f"""
         mutation adhocScan {{
             adhocScan(input: {{
@@ -186,8 +186,8 @@ async def test_get_search_event_min_prices(
     url = "https://www.test.io/test"
     with open("tests/example_files/body_plot.json", "r") as f:
         body = json.load(f)
-    resp = MockAioJSONResponse(body, 200)
-    mocker.patch("aiohttp.ClientSession.get", return_value=resp)
+    resp = MockCffiJSONResponse(body, 200)
+    mocker.patch("curl_cffi.requests.Session.get", return_value=resp)
     mutation = f"""
         mutation adhocScan {{
             adhocScan(input: {{
@@ -243,8 +243,8 @@ async def test_search_events_for_search(
     url = "https://www.test.io/test"
     with open("tests/example_files/body_plot.json", "r") as f:
         body = json.load(f)
-    resp = MockAioJSONResponse(body, 200)
-    mocker.patch("aiohttp.ClientSession.get", return_value=resp)
+    resp = MockCffiJSONResponse(body, 200)
+    mocker.patch("curl_cffi.requests.Session.get", return_value=resp)
     mutation = f"""
         mutation adhocScan {{
             adhocScan(input: {{
