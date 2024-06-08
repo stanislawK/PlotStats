@@ -26,6 +26,8 @@ HEADERS = {
     "Accept": "*/*",
 }
 
+BROWSERS = ["chrome120", "edge101", "safari17_0"]
+
 cache = get_cache()
 
 
@@ -38,8 +40,8 @@ def extract_token(html_body: str) -> None:
 
 
 async def make_request(
-    url: str, wait_before_request: int = 0
-) -> tuple[int, dict[str, Any]]:
+    url: str, wait_before_request: int = 0, session: requests.Session | None = None
+) -> tuple[int, dict[str, Any], requests.Session | None]:
     if wait_before_request:
         logger.info(f"waiting for {wait_before_request} seconds before next request...")
         await asyncio.sleep(wait_before_request)
@@ -49,7 +51,8 @@ async def make_request(
     retries = cache.get(f"retried_{url}") or 0
     if not isinstance(retries, int):
         retries = int(retries)  # type: ignore
-    session = requests.Session(impersonate="chrome120")
+    if not session:
+        session = requests.Session(impersonate="chrome120")
     resp = session.get(formatted_url, proxies={"https": settings.dc1_url})
     if resp.status_code in (404, 403) and retries < 3:
         logger.warning(
@@ -60,21 +63,25 @@ async def make_request(
         cache.incr(f"retried_{url}", 1)
         await asyncio.sleep(delay)
         if resp.status_code == 403:
+            # For blocked requests wait longer and try other browser
+            new_session = requests.Session(impersonate=random.choice(BROWSERS))
+            logger.info(f"waiting for {delay} seconds due to blocked request...")
+            await asyncio.sleep(delay)
             cache.set("token", "")
-            return await make_request(url)
+            return await make_request(url, session=new_session)
         body = resp.text
         extract_token(body)
-        return await make_request(url)
+        return await make_request(url, session=session)
     if cache.get(f"retried_{url}"):
         cache.delete(f"retried_{url}")
     if resp.status_code != 200:
-        return resp.status_code, {}
+        return resp.status_code, {}, None
     try:
         body = resp.json()
     except ValueError:
         logger.error(f"Incorrect response body for {url}")
-        return 418, {}
-    return 200, body
+        return 418, {}, None
+    return 200, body, session
 
 
 async def report_failure(
