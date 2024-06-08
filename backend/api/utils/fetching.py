@@ -40,7 +40,10 @@ def extract_token(html_body: str) -> None:
 
 
 async def make_request(
-    url: str, wait_before_request: int = 0, session: requests.Session | None = None
+    url: str,
+    wait_before_request: int = 0,
+    session: requests.Session | None = None,
+    last_status_code: int | None = None,
 ) -> tuple[int, dict[str, Any], requests.Session | None]:
     if wait_before_request:
         logger.info(f"waiting for {wait_before_request} seconds before next request...")
@@ -54,7 +57,9 @@ async def make_request(
     if not session:
         session = requests.Session(impersonate="chrome120")
     resp = session.get(formatted_url, proxies={"https": settings.dc1_url})
-    if resp.status_code in (404, 403) and retries < 3:
+    if (resp.status_code in (404, 403) and retries < 4) or (
+        resp.status_code == 404 and last_status_code == 403 and retries < 7
+    ):
         logger.warning(
             f"{resp.status_code} status code - retrying {retries + 1} time..."
         )
@@ -68,10 +73,10 @@ async def make_request(
             logger.info(f"waiting for {delay} seconds due to blocked request...")
             await asyncio.sleep(delay)
             cache.set("token", "")
-            return await make_request(url, session=new_session)
+            return await make_request(url, session=new_session, last_status_code=403)
         body = resp.text
         extract_token(body)
-        return await make_request(url, session=session)
+        return await make_request(url, session=session, last_status_code=404)
     if cache.get(f"retried_{url}"):
         cache.delete(f"retried_{url}")
     if resp.status_code != 200:
