@@ -38,6 +38,7 @@ export default async function UserSearch({
 }: UserSearchProps) {
   // @ts-ignore
   const accessToken: string = getCookie("accessToken", { cookies });
+
   return (
     <li
       className={`py-3 sm:py-4 ${!!isUsers && latestStatus?.status == "failed" ? "shadow-[inset_0_-15px_20px_-20px_rgba(255,0,0,0.5)]" : ""}`}
@@ -118,9 +119,9 @@ export default async function UserSearch({
                       !!scanResult.error ||
                       scanResult.__typename != "ScanSucceeded"
                     ) {
-                      redirect("/dashboard/searches?scanState=failure");
+                      redirect("searches?scanState=failure");
                     } else {
-                      redirect("/dashboard/searches?scanState=success");
+                      redirect("searches?scanState=success");
                     }
                   }}
                 >
