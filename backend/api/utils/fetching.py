@@ -45,18 +45,16 @@ async def make_request(
     session: requests.Session | None = None,
     last_status_code: int | None = None,
 ) -> tuple[int, dict[str, Any], requests.Session | None]:
-    if wait_before_request:
-        logger.info(f"waiting for {wait_before_request} seconds before next request...")
-        await asyncio.sleep(wait_before_request)
-    token = cache.get("token") or ""
-    formatted_url = url.format(api_key=token)
+    await wait_before_first_request(wait_before_request)
+    formatted_url = get_formatted_url(url)
     logger.info(f"Sending request to {formatted_url}")
-    retries = cache.get(f"retried_{url}") or 0
-    if not isinstance(retries, int):
-        retries = int(retries)  # type: ignore
-    if not session:
-        session = requests.Session(impersonate="chrome120")
-    resp = session.get(formatted_url, proxies={"https": settings.dc1_url})
+    retries = get_number_of_retries(url)
+    session = session or requests.Session(impersonate="chrome120")
+    try:
+        resp = session.get(formatted_url, proxies={"https": settings.dc1_url})
+    except requests.errors.RequestsError as e:
+        print(str(e))
+        return 401, {}, None
     if (resp.status_code in (404, 403) and retries < 4) or (
         resp.status_code == 404 and last_status_code == 403 and retries < 7
     ):
@@ -68,25 +66,60 @@ async def make_request(
         cache.incr(f"retried_{url}", 1)
         await asyncio.sleep(delay)
         if resp.status_code == 403:
-            # For blocked requests wait longer and try other browser
-            new_session = requests.Session(impersonate=random.choice(BROWSERS))
-            logger.info(f"waiting for {delay} seconds due to blocked request...")
-            await asyncio.sleep(delay)
-            cache.set("token", "")
-            return await make_request(url, session=new_session, last_status_code=403)
+            return await handle_403_response(url)
         body = resp.text
         extract_token(body)
         return await make_request(url, session=session, last_status_code=404)
-    if cache.get(f"retried_{url}"):
-        cache.delete(f"retried_{url}")
+    clean_cached_retries(url)
     if resp.status_code != 200:
         return resp.status_code, {}, None
+    return handle_successful_scan(resp, session, url)
+
+
+def get_formatted_url(url: str) -> str:
+    token = cache.get("token") or ""
+    return url.format(api_key=token)
+
+
+def get_number_of_retries(url: str) -> int:
+    retries = cache.get(f"retried_{url}") or 0
+    if not isinstance(retries, int):
+        retries = int(retries)  # type: ignore
+    return retries
+
+
+async def handle_403_response(
+    url: str,
+) -> tuple[int, dict[str, Any], requests.Session | None]:
+    # For blocked requests wait longer and try other browser
+    delay = random.randint(20, 40)
+    new_session = requests.Session(impersonate=random.choice(BROWSERS))
+    logger.info(f"waiting for {delay} seconds due to blocked request...")
+    await asyncio.sleep(delay)
+    cache.set("token", "")
+    return await make_request(url, session=new_session, last_status_code=403)
+
+
+def handle_successful_scan(
+    resp: requests.Response, session: requests.Session, url: str
+) -> tuple[int, dict[str, Any], requests.Session | None]:
     try:
         body = resp.json()
     except ValueError:
         logger.error(f"Incorrect response body for {url}")
         return 418, {}, None
     return 200, body, session
+
+
+def clean_cached_retries(url: str) -> None:
+    if cache.get(f"retried_{url}"):
+        cache.delete(f"retried_{url}")
+
+
+async def wait_before_first_request(wait_time: int) -> None:
+    if wait_time > 0:
+        logger.info(f"waiting for {wait_time} seconds before next request...")
+        await asyncio.sleep(wait_time)
 
 
 async def report_failure(
