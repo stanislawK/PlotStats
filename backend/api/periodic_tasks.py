@@ -1,17 +1,22 @@
+import asyncio
 import random
 from typing import Any
 
 import jmespath
 from celery import current_app as celery_app
+from curl_cffi import requests
 from loguru import logger
 from redbeat import RedBeatSchedulerEntry
 
-from api.database import get_async_session
+from api.database import get_async_session, get_cache
 from api.parsing import CategoryNotFoundError, parse_scan_data, parse_search_info
 from api.schemas.scan import TOTAL_PAGES_PATH
+from api.settings import settings
 from api.utils.celery_utils import async_task
 from api.utils.fetching import handle_failed_scan, make_request
 from api.utils.url_parsing import parse_url
+
+cache = get_cache()
 
 
 @async_task(celery_app)  # type: ignore
@@ -46,6 +51,35 @@ async def run_periodic_scan(url: str, search_id, **kwargs: dict[str, Any]) -> No
                     await parse_scan_data(url, body, session, search_event)
                 except (CategoryNotFoundError, TypeError):
                     logger.critical(f"Parsing document for {url} has failed.")
+
+
+@async_task(celery_app)  # type: ignore
+async def verify_ip(**kwargs: dict[str, Any]) -> None:
+    logger.info("Verifying IP address")
+    new_ip_resp = requests.get("http://ident.me/")
+    new_ip = new_ip_resp.text
+    configured_ip = cache.get("configured_ip")
+    if new_ip == configured_ip:
+        return
+    cache.set("configured_ip", new_ip)
+    zone = settings.dc1_url.split("zone-")[-1].split(":")[0]
+    requests.delete(
+        settings.unblock_url,
+        headers={
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {settings.bd_token}",
+        },
+        json={"ip": str(configured_ip), "zone": zone},
+    )
+    await asyncio.sleep(5)
+    requests.post(
+        settings.unblock_url,
+        headers={
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {settings.bd_token}",
+        },
+        json={"ip": str(new_ip), "zone": zone},
+    )
 
 
 def remove_scan_periodic_task(url: str) -> None:

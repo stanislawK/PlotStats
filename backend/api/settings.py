@@ -22,6 +22,8 @@ class Settings(BaseSettings):
     dc1_url: str
     redis_pass: str
     traefik_host: str
+    bd_token: str
+    unblock_url: str
     imports: tuple[str] = ("api.periodic_tasks",)
 
     @property
