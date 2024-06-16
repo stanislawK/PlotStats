@@ -52,8 +52,7 @@ async def make_request(
     session = session or requests.Session(impersonate="chrome120")
     try:
         resp = session.get(formatted_url, proxies={"https": settings.dc1_url})
-    except requests.errors.RequestsError as e:
-        print(str(e))
+    except requests.errors.RequestsError:
         return 401, {}, None
     if (resp.status_code in (404, 403) and retries < 4) or (
         resp.status_code == 404 and last_status_code == 403 and retries < 7
