@@ -19,6 +19,7 @@ export async function getSearchEventsStats(
               avgPricePerSquareMeter
               avgTerrainAreaInSquareMeters
               date
+              numberOfOffers
               minPrice {
                 price
                 pricePerSquareMeter

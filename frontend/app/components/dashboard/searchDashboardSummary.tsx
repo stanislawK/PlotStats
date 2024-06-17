@@ -53,8 +53,8 @@ export default async function SearchSummary({ allStats, searches }: Props) {
                 {allStats.toPrice || "N/A"}
               </li>
               <li>
-                Size range: {allStats.fromSurface || "N/A"} sq m -{" "}
-                {allStats.toSurface || "N/A"} sq m
+                Size range: {allStats.fromSurface || "N/A"} m<sup>2</sup> -{" "}
+                {allStats.toSurface || "N/A"} m<sup>2</sup>
               </li>
               <li>
                 Date range: {allStats.dateFrom.substring(0, 10)} -{" "}

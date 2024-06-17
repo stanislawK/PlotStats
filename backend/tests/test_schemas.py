@@ -848,6 +848,7 @@ async def test_search_event_stats_without_top(
                 avgTerrainAreaInSquareMeters
                 avgPrice
                 avgPricePerSquareMeter
+                numberOfOffers
                 minPrice {{
                     price
                     areaInSquareMeters
@@ -878,6 +879,7 @@ async def test_search_event_stats_without_top(
     expected_result = {
         "__typename": "EventStatsType",
         "avgAreaInSquareMeters": 1075.25,
+        "numberOfOffers": 36,
         "avgPrice": 132315.72,
         "avgPricePerSquareMeter": 158.67,
         "avgTerrainAreaInSquareMeters": None,

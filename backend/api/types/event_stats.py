@@ -19,6 +19,7 @@ class EventStatsType:
     date: Optional[datetime] = None
     avg_price: float
     avg_price_per_square_meter: float
+    number_of_offers: int
     avg_area_in_square_meters: Optional[float] = strawberry.UNSET
     avg_terrain_area_in_square_meters: Optional[float] = strawberry.UNSET
     min_price: PriceType

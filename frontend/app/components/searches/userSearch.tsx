@@ -56,8 +56,8 @@ export default async function UserSearch({
             {search.toPrice || "n/a"} PLN;
           </p>
           <p className="text-sm text-gray-500 truncate dark:text-gray-400 2xl:inline">
-            <strong>Size:</strong> {search.fromSurface || "n/a"} sqm -{" "}
-            {search.toSurface || "n/a"} sqm
+            <strong>Size:</strong> {search.fromSurface || "n/a"} m<sup>2</sup> -{" "}
+            {search.toSurface || "n/a"} m<sup>2</sup>
           </p>
           <div>
             <p

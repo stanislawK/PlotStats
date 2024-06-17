@@ -121,6 +121,7 @@ async def test_event_stats_type(
         min_price_per_square_meter=convert_price_from_db(price),
         min_prices=[convert_price_from_db(price)],
         min_prices_per_square_meter=[convert_price_from_db(price)],
+        number_of_offers=1,
     )
     for key, value in event_stats.min_price.__dict__.items():
         if key == "estate":

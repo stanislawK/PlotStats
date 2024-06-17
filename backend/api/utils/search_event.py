@@ -64,6 +64,7 @@ def get_search_event_avg_stats(prices: Sequence["Price"]) -> dict[str, Optional[
     stats[
         "avg_terrain_area_in_square_meters"
     ] = avg_terrain_area_in_square_meters  # type: ignore
+    stats["number_of_offers"] = num_of_prices
     return stats  # type: ignore
 
 
