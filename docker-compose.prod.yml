@@ -78,7 +78,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.services.frontend.loadbalancer.server.port=4200
-      - traefik.http.routers.frontend.rule=Host(`${TRAEFIK_HOST}`)
+      - traefik.http.routers.frontend.rule=Host(`${TRAEFIK_HOST}`)||Host(`${TRAEFIK_HOST_PROD}`)
       - traefik.http.routers.frontend.tls=true
       - traefik.http.routers.frontend.tls.certresolver=cloudflare
       - traefik.http.routers.frontend.entrypoints=web
