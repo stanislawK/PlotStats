@@ -39,8 +39,8 @@ export default function UserSearch({ search, currentSearchId }: UserSearchProps)
               {search.toPrice || "n/a"} PLN;
             </p>
             <p className="text-sm text-gray-500 truncate dark:text-gray-400 inline">
-              <strong>Size:</strong> {search.fromSurface || "n/a"} sqm -{" "}
-              {search.toSurface || "n/a"} sqm
+              <strong>Size:</strong> {search.fromSurface || "n/a"} m<sup>2</sup> -{" "}
+              {search.toSurface || "n/a"} m<sup>2</sup>
             </p>
           </div>
           <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">

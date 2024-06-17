@@ -11,6 +11,7 @@ type Props = {
 type Event = {
   id: number;
   avgAreaInSquareMeters: number;
+  numberOfOffers: number;
   avgPrice: number;
   avgPricePerSquareMeter: number;
   avgTerrainAreaInSquareMeters?: number;
@@ -38,6 +39,7 @@ export default function SearchEventsStatsChart({ events }: Props) {
     avgPrice: allAvgPrices,
   };
   const avgArea = events[events.length - 1]?.avgAreaInSquareMeters;
+  const lastNumberOfOffers = events[events.length - 1]?.numberOfOffers;
   const mainChartColors = {
     borderColor: "#F3F4F6",
     labelColor: "#6B7280",
@@ -46,12 +48,12 @@ export default function SearchEventsStatsChart({ events }: Props) {
   };
   const series = [
     {
-      name: "Avg Price per sqm (PLN)",
+      name: "Avg Price per m<sup>2</sup> (PLN)",
       data: allSeries.avgPrice,
       color: "#1A56DB",
     },
     {
-      name: "Min Price per sqm (PLN)",
+      name: "Min Price per m<sup>2</sup> (PLN)",
       data: allSeries.minPrices,
       color: "#FDBA8C",
     },
@@ -160,10 +162,10 @@ export default function SearchEventsStatsChart({ events }: Props) {
         <div className="flex items-center justify-between mb-4">
           <div className="flex-shrink-0">
             <span className="text-xl font-bold leading-none text-gray-900 sm:text-2xl dark:text-white">
-              {avgArea} sq meters
+              Offers this week: {lastNumberOfOffers}
             </span>
             <h3 className="text-base font-light text-gray-500 dark:text-gray-400">
-              Avg area this week
+            {avgArea} m<sup>2</sup> (Avg area this week)
             </h3>
           </div>
           <PriceChange allAvgPrices={allAvgPrices}></PriceChange>

@@ -170,6 +170,7 @@ async def test_get_search_event_avg_stats(
         "avg_price": 132315.72,
         "avg_price_per_square_meter": 158.67,
         "avg_terrain_area_in_square_meters": None,
+        "number_of_offers": 36,
     }
     assert avg_stats == expected_output
 

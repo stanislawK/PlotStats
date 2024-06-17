@@ -16,6 +16,7 @@ type Events = {
   id: number;
   avgAreaInSquareMeters: number;
   avgPrice: number;
+  numberOfOffers: number;
   avgPricePerSquareMeter: number;
   avgTerrainAreaInSquareMeters?: number;
   date: string;
