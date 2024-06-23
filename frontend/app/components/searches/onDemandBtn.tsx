@@ -9,16 +9,17 @@ export default function OnDemandBtn() {
       {!pending && (
         <button type="submit">
           <svg
-            className="w-[26px] h-[26px] text-gray-800 dark:text-white mr-2 mt-1 -rotate-45 hover:text-red-500"
+            className="w-[26px] h-[26px] text-gray-800 dark:text-white mr-2 mt-1 hover:-translate-y-2"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
             fill="none"
-            viewBox="0 0 24 24"
+            viewBox="2 -13 24 20"
             type="submit"
           >
             <path
+              className="-rotate-45"
               stroke="currentColor"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -32,7 +33,7 @@ export default function OnDemandBtn() {
         <div role="status">
           <svg
             aria-hidden="true"
-            className="inline w-[26px] h-[26px] text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+            className="inline w-[26px] h-[26px] text-gray-200 animate-spin dark:text-gray-600 fill-blue-600 mr-2"
             viewBox="0 0 100 101"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
