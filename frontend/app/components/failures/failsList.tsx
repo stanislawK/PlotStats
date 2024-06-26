@@ -13,6 +13,9 @@ type Failure = {
 };
 
 export default function FailsList({ failures }: Props) {
+  const sortedFailures = failures.sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+  );
   return (
     <>
       <div className="p-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:border-gray-700 sm:p-6 dark:bg-gray-800 xl:max-h-[65vh] xl:overflow-y-auto">
@@ -66,7 +69,7 @@ export default function FailsList({ failures }: Props) {
                     </tr>
                   </thead>
                   <tbody className="bg-white dark:bg-gray-800">
-                    {failures.map((failure, id) => {
+                    {sortedFailures.map((failure, id) => {
                       return (
                         <FailsRow
                           index={id}
