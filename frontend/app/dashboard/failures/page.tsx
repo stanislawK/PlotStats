@@ -3,8 +3,6 @@ import { cookies } from "next/headers";
 import { getAllSearches, getFailRate } from "../../utils/searchStats";
 import FailRateChart from "@/app/components/failures/failRate";
 import FailsList from "@/app/components/failures/failsList";
-import { onDemandScan } from "@/app/utils/scan";
-import { redirect } from "next/navigation";
 import RatePerSearchChart from "@/app/components/failures/ratePerSearch";
 
 type Props = {
@@ -25,6 +23,7 @@ type RecentFailure = {
   distanceRadius: number;
   date: string;
   status: number;
+  url: string;
 };
 
 type Searches = {
@@ -62,6 +61,8 @@ function getRecentFailures(
       recentFailure.location = search.location;
       // @ts-ignore
       recentFailure.distanceRadius = search.distanceRadius;
+      // @ts-ignore
+      recentFailure.url = search.url;
       recentFailure.date = singleFail.date;
       recentFailure.status = singleFail.status;
       recentFailures.push(recentFailure);
@@ -72,7 +73,6 @@ function getRecentFailures(
 }
 
 export default async function Failures({ searchParams }: Props) {
-  const onDemandSearchId = searchParams?.ondemand;
   const accessToken = getCookie("accessToken", { cookies });
   // @ts-ignore
   const allSearches = await getAllSearches(accessToken);
@@ -94,19 +94,6 @@ export default async function Failures({ searchParams }: Props) {
       // @ts-ignore
       (a, b) => a.id - b.id
     );
-
-  if (onDemandSearchId !== undefined && !isNaN(parseInt(onDemandSearchId))) {
-    ("use server");
-    const toFetch = allSearches.searches.find(
-      // @ts-ignore
-      (search) => search.id == onDemandSearchId
-    );
-    if (!!toFetch?.url) {
-      // @ts-ignore
-      await onDemandScan(toFetch.url, accessToken);
-      redirect("/dashboard/failures");
-    }
-  }
 
   return (
     <>

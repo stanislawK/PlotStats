@@ -10,6 +10,7 @@ type Failure = {
   distanceRadius: number;
   date: string;
   status: number;
+  url: string;
 };
 
 export default function FailsList({ failures }: Props) {
