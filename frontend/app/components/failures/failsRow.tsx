@@ -1,4 +1,8 @@
-import Link from "next/link";
+import RunScanBtn from "./runScanBtn";
+import { onDemandScan } from "@/app/utils/scan";
+import { cookies } from "next/headers";
+import { getCookie } from "cookies-next";
+import { redirect } from "next/navigation";
 
 type Props = {
   failure: Failure;
@@ -11,9 +15,12 @@ type Failure = {
   distanceRadius: number;
   date: string;
   status: number;
+  url: string;
 };
 
 export default function FailsRow({ failure, index }: Props) {
+  // @ts-ignore
+  const accessToken: string = getCookie("accessToken", { cookies });
   const isEven = index % 2 === 0;
   return (
     <tr
@@ -38,12 +45,15 @@ export default function FailsRow({ failure, index }: Props) {
         {failure.date.split("T")[0]}
       </td>
       <td className="p-4 whitespace-nowrap">
-        <Link
-          className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-          href={`failures/?ondemand=${failure.searchId}`}
+        <form
+          action={async (formData) => {
+            "use server";
+            await onDemandScan(failure.url, accessToken);
+            redirect("failures");
+          }}
         >
-          Run Scan
-        </Link>
+          <RunScanBtn></RunScanBtn>
+        </form>
       </td>
     </tr>
   );

@@ -73,10 +73,26 @@ export default function FailRateChart({ failures, successes }: Props) {
     failures,
     successes
   );
+  const countsPerDateSorted = Object.entries(countsPerDate)
+    .sort(
+      ([date1], [date2]) =>
+        new Date(date1).getTime() - new Date(date2).getTime()
+    )
+    .reduce(
+      (acc, [date, metrics]) => {
+        acc[date] = metrics;
+        return acc;
+      },
+      {} as Record<string, { successes: number; failures: number }>
+    );
   const allSeries = {
     uniqueDatesArray: uniqueDatesArray,
-    successesArr: Object.values(countsPerDate).map((date) => date.successes),
-    failuresArr: Object.values(countsPerDate).map((date) => date.failures),
+    successesArr: Object.values(countsPerDateSorted).map(
+      (date) => date.successes
+    ),
+    failuresArr: Object.values(countsPerDateSorted).map(
+      (date) => date.failures
+    ),
   };
   const failedSum: number = allSeries.failuresArr.reduce(
     (accumulator, currentValue) => accumulator + currentValue,
