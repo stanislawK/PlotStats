@@ -45,3 +45,9 @@ create-migration:
 
 migrate:
 	$(COMPOSE_DEV) run --rm backend alembic upgrade head
+
+upgrade-package:
+	uv pip compile - -o requirements.txt --upgrade-package ruff
+
+sync-environment:
+	uv pip sync requirements.txt

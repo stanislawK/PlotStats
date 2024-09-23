@@ -103,7 +103,7 @@ def handle_successful_scan(
     resp: requests.Response, session: requests.Session, url: str
 ) -> tuple[int, dict[str, Any], requests.Session | None]:
     try:
-        body = resp.json()
+        body = resp.json()  # type: ignore
     except ValueError:
         logger.error(f"Incorrect response body for {url}")
         return 418, {}, None
