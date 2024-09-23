@@ -57,10 +57,25 @@ async def run_periodic_scan(url: str, search_id, **kwargs: dict[str, Any]) -> No
 async def verify_ip(**kwargs: dict[str, Any]) -> None:
     logger.info("Verifying IP address")
     new_ip_resp = requests.get("http://ident.me/")
-    new_ip = new_ip_resp.text
-    configured_ip = cache.get("configured_ip")
+    new_ip: str = new_ip_resp.text
+    configured_ip: str | None = cache.get("configured_ip")  # type: ignore
     if new_ip == configured_ip:
+        if new_ip and len(new_ip) > 2:
+            logger.info(f"No changes to IP address: ...{new_ip[-3::]}")
+        else:
+            logger.error(f"IP address incorrect {new_ip}")
         return
+    if new_ip and len(new_ip) > 2 and configured_ip and len(configured_ip) > 2:
+        logger.info(
+            f"IP address changed: from ...{configured_ip[-3::]} to ...{new_ip[-3::]}"
+        )
+    else:
+        logger.error(
+            (
+                f"Either new: {new_ip} or configured: {configured_ip} "
+                "IP address is incorrect"
+            )
+        )
     cache.set("configured_ip", new_ip)
     zone = settings.dc1_url.split("zone-")[-1].split(":")[0]
     requests.delete(
