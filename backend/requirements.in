@@ -18,7 +18,7 @@ redis
 python-jose[cryptography]
 passlib[bcrypt]
 gunicorn
-curl_cffi
+curl_cffi>=0.7.1
 
 # dev-packages
 black==23.3.0
