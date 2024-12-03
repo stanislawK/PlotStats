@@ -78,7 +78,7 @@ async def verify_ip(**kwargs: dict[str, Any]) -> None:
         )
     cache.set("configured_ip", new_ip)
     zone = settings.dc1_url.split("zone-")[-1].split(":")[0]
-    requests.delete(
+    del_resp = requests.delete(
         settings.unblock_url,
         headers={
             "Content-Type": "application/json",
@@ -86,8 +86,15 @@ async def verify_ip(**kwargs: dict[str, Any]) -> None:
         },
         json={"ip": str(configured_ip), "zone": zone},
     )
+    if not del_resp.ok:
+        logger.error(
+            (
+                f"Failed to delete IP address {configured_ip} with "
+                f"status code {del_resp.status_code}"
+            )
+        )
     await asyncio.sleep(5)
-    requests.post(
+    update_resp = requests.post(
         settings.unblock_url,
         headers={
             "Content-Type": "application/json",
@@ -95,6 +102,13 @@ async def verify_ip(**kwargs: dict[str, Any]) -> None:
         },
         json={"ip": str(new_ip), "zone": zone},
     )
+    if not update_resp.ok:
+        logger.error(
+            (
+                f"Failed to unblock IP address {new_ip} with "
+                f"status code {update_resp.status_code}"
+            )
+        )
 
 
 def remove_scan_periodic_task(url: str) -> None:
