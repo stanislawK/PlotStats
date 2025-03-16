@@ -1,6 +1,7 @@
 from datetime import datetime
 from typing import TYPE_CHECKING, List, Optional
 
+from sqlalchemy import BigInteger, Column, ForeignKey
 from sqlmodel import Field, Relationship, SQLModel
 
 if TYPE_CHECKING:
@@ -12,7 +13,8 @@ class SearchEventEstate(SQLModel, table=True):
         default=None, foreign_key="searchevent.id", primary_key=True
     )
     estate_id: Optional[int] = Field(
-        default=None, foreign_key="estate.id", primary_key=True
+        default=None,
+        sa_column=Column(BigInteger(), ForeignKey("estate.id"), primary_key=True),
     )
 
 

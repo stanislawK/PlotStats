@@ -1,6 +1,7 @@
 from datetime import datetime
 from typing import TYPE_CHECKING, List, Optional
 
+from sqlalchemy import BigInteger, Column
 from sqlmodel import Field, Relationship, SQLModel
 
 from .search_event import SearchEvent, SearchEventEstate
@@ -10,7 +11,10 @@ if TYPE_CHECKING:
 
 
 class Estate(SQLModel, table=True):
-    id: int = Field(primary_key=True)
+    id: int = Field(
+        default=None,
+        sa_column=Column(BigInteger(), primary_key=True, autoincrement=False),
+    )
     title: str
     street: Optional[str] = Field(default=None)
     city: Optional[str] = Field(index=True)
