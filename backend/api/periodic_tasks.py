@@ -76,7 +76,6 @@ async def verify_ip(**kwargs: dict[str, Any]) -> None:
                 "IP address is incorrect"
             )
         )
-    cache.set("configured_ip", new_ip)
     zone = settings.dc1_url.split("zone-")[-1].split(":")[0]
     del_resp = requests.delete(
         settings.unblock_url,
@@ -109,6 +108,9 @@ async def verify_ip(**kwargs: dict[str, Any]) -> None:
                 f"status code {update_resp.status_code}"
             )
         )
+    else:
+        cache.set("configured_ip", new_ip)
+        logger.info(f"New IP address set to ...{new_ip[-3::]}")
 
 
 def remove_scan_periodic_task(url: str) -> None:
